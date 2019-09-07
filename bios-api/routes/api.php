@@ -18,3 +18,5 @@ use Illuminate\Http\Request;
 });*/
 
 Route::get('user-dump', 'Api\UserController@getUser');
+Route::get('bid-dump', 'Api\BidController@getBid');
+Route::get('section-dump', 'Api\SectionController@getSection');
