@@ -1,0 +1,3 @@
+***REMOVED***
+	session_start();
+	
