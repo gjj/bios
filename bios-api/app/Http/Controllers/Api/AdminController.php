@@ -22,7 +22,27 @@ class AdminController extends Controller {
 	}
 
 	public function authenticate(Request $request) {
-		// Not implemented.
+		$r = $request->getContent();
+		parse_str($r, $data);
+
+		$login = DB::table('users')
+			->where('username', '=', $data['username'])
+			->where('password', '=', $data['password'])
+			->orderBy('course')
+			->get();
+
+		if ($login) {
+			return response()->json([
+				'status' => 'success',
+				'token' => 'X'
+			], 200);
+		}
+		else {
+			return response()->json([
+				'status' => 'failure',
+				'token' => 'X'
+			], 200);
+		}
 	}
 
 	public function bootstrap(Request $request) {
