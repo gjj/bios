@@ -17,12 +17,13 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
+// Required admin APIs as per specifications.
 Route::get('user-dump', 'Api\UserController@getUser');
 Route::get('bid-dump', 'Api\BidController@getBid');
 Route::get('section-dump', 'Api\SectionController@getSection');
 Route::get('dump', 'Api\AdminController@getDump');
 
-Route::get('authenticate', 'Api\AdminController@authenticate'); // post
+Route::post('authenticate', 'Api\AdminController@authenticate'); // post
 Route::post('bootstrap', 'Api\AdminController@bootstrap');
 Route::post('start', 'Api\AdminController@start');
 Route::post('stop', 'Api\AdminController@stop');
@@ -31,3 +32,6 @@ Route::get('update-bid', 'Api\BidController@updateBid');
 Route::get('delete-bid', 'Api\BidController@deleteBid');
 
 Route::get('drop-section', 'Api\BidController@dropSection');
+
+// Our own API routes, yay!
+
