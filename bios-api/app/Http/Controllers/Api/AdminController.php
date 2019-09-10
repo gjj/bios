@@ -22,16 +22,13 @@ class AdminController extends Controller {
 	}
 
 	public function authenticate(Request $request) {
-		$r = $request->getContent();
-		parse_str($r, $data);
 
 		$login = DB::table('users')
-			->where('username', '=', $data['username'])
-			->where('password', '=', $data['password'])
-			->orderBy('course')
+			->where('user_id', '=', $request->input('userId'))
+			->where('password', '=', $request->input('password'))
+			->where('role', '=', '1')
 			->get();
-
-		if ($login) {
+		if (count($login)) {
 			return response()->json([
 				'status' => 'success',
 				'token' => 'X'
@@ -40,7 +37,7 @@ class AdminController extends Controller {
 		else {
 			return response()->json([
 				'status' => 'failure',
-				'token' => 'X'
+				'message' => 'Invalid username or password.'
 			], 200);
 		}
 	}
