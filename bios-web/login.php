@@ -1,7 +1,6 @@
 <?php
-	// Always start this first
-	session_start();
-	
+	require_once("config/db.php");
+
 	if (isset($_POST['userId']) and isset($_POST['password'])) {
 		$data = array(
 			'userId' => $_POST['userId'],
@@ -13,7 +12,8 @@
 
 		if (isset($result->status)) {
 			if ($result->status == "success") {
-				$_SESSION['token'] == $result->token;
+				$_SESSION['token'] = $result->token;
+				header("Location: home");
 			}
 			else {
 				echo $result->message;
