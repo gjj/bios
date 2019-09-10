@@ -22,7 +22,7 @@ Route::get('bid-dump', 'Api\BidController@getBid');
 Route::get('section-dump', 'Api\SectionController@getSection');
 Route::get('dump', 'Api\AdminController@getDump');
 
-Route::post('authenticate', 'Api\AdminController@authenticate');
+Route::get('authenticate', 'Api\AdminController@authenticate'); // post
 Route::post('bootstrap', 'Api\AdminController@bootstrap');
 Route::post('start', 'Api\AdminController@start');
 Route::post('stop', 'Api\AdminController@stop');

@@ -170,6 +170,13 @@ class BidController extends Controller {
 	}
 
 	private function activeOrLatestRound() {
-		return 1;
+		$query = DB::table('rounds')
+			->select(
+				'round',
+				'start'
+			)
+			->orderBy('start'); // Descending.
+
+		return $query->round;
 	}
 }
