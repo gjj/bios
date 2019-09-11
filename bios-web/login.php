@@ -6,14 +6,21 @@
 			'userId' => $_POST['userId'],
 			'password' => $_POST['password']
 		);
-		$result = callAPI("POST", "http://localhost/bios/bios-api/public/app/json/authenticate", $data);
 
+		$result = callAPI("POST", "http://localhost/bios/bios-api/public/app/json/authenticate", $data);
+		
 		$result = json_decode($result);
 
 		if (isset($result->status)) {
 			if ($result->status == "success") {
-				$_SESSION['token'] = $result->token;
-				header("Location: home");
+				if (isset($result->token)) {
+					$_SESSION['token'] = $result->token;
+					header("Location: home");
+				}
+				else {
+					$_SESSION['token'] = $result->session;
+					header("Location: home");
+				}
 			}
 			else {
 				echo $result->message;

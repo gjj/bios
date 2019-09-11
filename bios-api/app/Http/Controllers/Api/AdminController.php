@@ -22,17 +22,26 @@ class AdminController extends Controller {
 	}
 
 	public function authenticate(Request $request) {
-
 		$login = DB::table('users')
 			->where('user_id', '=', $request->input('userId'))
 			->where('password', '=', $request->input('password'))
-			->where('role', '=', '1')
-			->get();
-		if (count($login)) {
-			return response()->json([
-				'status' => 'success',
-				'token' => 'X'
-			], 200);
+			#->where('role', '=', '1')
+			->first();
+
+		if (isset($login->role)) {
+			if ($login->role == 1) {
+				return response()->json([
+					'status' => 'success',
+					'token' => 'X'
+				], 200);
+			}
+			else {
+				return response()->json([
+					'status' => 'success',
+					'userid' => $login->user_id,
+					'session' => 'OK'
+				], 200);
+			}
 		}
 		else {
 			return response()->json([
@@ -80,12 +89,13 @@ class AdminController extends Controller {
 		
 		$students = DB::table('students')
 			->select(
-				'user_id AS userid',
+				'students.user_id AS userid',
 				'password',
 				'name',
 				'school',
 				'edollar'
 			)
+			->join('users', 'users.user_id', '=', 'students.user_id')
 			->orderBy('userid')
 			->get();
 
