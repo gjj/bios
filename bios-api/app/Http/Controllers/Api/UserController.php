@@ -44,14 +44,26 @@ class UserController extends Controller {
 				$query = $query->where('users.user_id', '=', $r->userid)
 					->first();
 				if ($query) {
-					return response()->json([
+					/*return response()->json([
 						'status' => 'success',
 						'userid' => $query->userid,
 						'password' => $query->password,
 						'name' => $query->name,
 						'school' => $query->school,
 						'edollar' => $query->edollar
-					], 200);
+					], 200);*/
+
+					$result = (object) [
+						'status' => 'success',
+						'userid' => $query->userid,
+						'password' => $query->password,
+						'name' => $query->name,
+						'school' => $query->school,
+						'edollar' => $query->edollar
+					];
+
+					return response(json_encode($result, JSON_PRESERVE_ZERO_FRACTION))
+						->header("Content-Type", "application/json");
 				}
 				else {
 					array_push($messages, "Invalid user ID.");
