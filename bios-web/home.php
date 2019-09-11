@@ -23,29 +23,43 @@
 
 	<!-- Custom styles for this template-->
 	<link href="assets/css/bios.css" rel="stylesheet">
-	<link href="assets/css/fontawesome.min.css" rel="stylesheet">
+	<link href="assets/css/bios-dashboard.css" rel="stylesheet">
+
+	<link href="assets/css/fontawesome-all.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css" />
+
+	<style>
+		.fc-view-container { 
+		  overflow-x: scroll; 
+		}
+		.fc-view.fc-agendaDay-view.fc-agenda-view{
+		  width: 500%;
+		}
+		/* **For 2 day view** */
+		.fc-view.fc-agendaTwoDay-view.fc-agenda-view{
+		  width: 500%;
+		}
+	</style>
 </head>
 
 <body>
-
-	<!-- Page Wrapper -->
 	<div id="wrapper">
 
 		<!-- Sidebar -->
-		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+		<ul class="navbar-nav bg-gray-900 sidebar sidebar-dark accordion">
 
 			<!-- Sidebar - Brand -->
-			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-				<div class="sidebar-brand-text mx-3">MerlionU BIOS</div>
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+				<div class="sidebar-brand-text mx-3">Merlion University BIOS</div>
 			</a>
 
 			<!-- Divider -->
 			<hr class="sidebar-divider my-0">
 
-			<!-- Nav Item - Dashboard -->
 			<li class="nav-item active">
-				<a class="nav-link" href="index.html">
-					<span>Dashboard</span>
+				<a class="nav-link" href="">
+					<span>Home</span>
 				</a>
 			</li>
 
@@ -79,7 +93,6 @@
 					<!-- Topbar Navbar -->
 					<ul class="navbar-nav ml-auto">
 
-						<!-- Nav Item - Search Dropdown (Visible Only XS) -->
 						<li class="nav-item dropdown no-arrow d-sm-none">
 							<a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="fas fa-search fa-fw"></i>
@@ -131,8 +144,10 @@
 					</div>
 
 					<div class="row">
+						<div class="col-md-12">
+							<div id="calendar"></div>
+						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -144,6 +159,40 @@
 
 	<!-- Custom scripts for all pages-->
 	<script src="assets/js/sb-admin-2.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js"></script>
+
+	<script>
+	    $(document).ready(function() {
+	        // page is now ready, initialize the calendar...
+	        $('#calendar').fullCalendar({
+	            // put your options and callbacks here
+	            defaultView: 'agendaWeek',
+	            minTime: "08:00:00",
+	            maxTime: "22:30:00",
+	            contentHeight: 100,
+	            firstDay: 1,
+	            nowIndicator: true,
+	            events: {
+	            	url: 'https://tools.learn.helloholo.sg/api/v1/calendar',
+	            	type: 'GET',
+	            	data: {
+	            		param: 1
+	            	},
+	            	textColor: 'white'
+	        ***REMOVED***,
+	            error: function() {
+	            	alert('API error.');
+	        ***REMOVED***,
+	            header: {
+					left: 'prev,next today myCustomButton',
+					center: 'title',
+					right: 'month,agendaWeek,agendaDay'
+				},
+				height: 'auto'
+	    ***REMOVED***);
+	***REMOVED***);
+	</script>
 
 </body>
 

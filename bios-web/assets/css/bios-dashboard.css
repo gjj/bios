@@ -65,7 +65,6 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #858796;
   text-align: left;
   background-color: #fff;
 }
@@ -11102,15 +11101,15 @@ a:focus {
 }
 
 .topbar.navbar-light .navbar-nav .nav-item .nav-link {
-  color: #d1d3e2;
+  /*color: #d1d3e2;*/
 }
 
 .topbar.navbar-light .navbar-nav .nav-item .nav-link:hover {
-  color: #b7b9cc;
+  /*color: #b7b9cc;*/
 }
 
 .topbar.navbar-light .navbar-nav .nav-item .nav-link:active {
-  color: #858796;
+  /*color: #858796;*/
 }
 
 .sidebar {

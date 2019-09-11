@@ -7,7 +7,7 @@
 			'password' => $_POST['password']
 		);
 
-		$result = callAPI("POST", "http://localhost/bios/bios-api/public/app/json/authenticate", $data);
+		$result = callAPI("POST", "http://localhost/bios/app/json/authenticate", $data);
 		
 		$result = json_decode($result);
 
