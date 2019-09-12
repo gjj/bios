@@ -23,6 +23,7 @@
 				}
 			}
 			else {
+				echo $result;
 				echo $result->message;
 			}
 		}
