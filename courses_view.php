@@ -140,37 +140,52 @@
                         </p>
 
                         ***REMOVED***
-                            $prerequisites = $courseDAO->prerequisites($course['course']);
+                            $prerequisites = $courseDAO->searchPrerequisites($course['course']);
+                            $prerequisitesOf = $courseDAO->searchPrerequisitesOf($course['course']);
 
-                            if ($prerequisites) {
+                            if ($prerequisites or $prerequisitesOf) {
                         ?>
-                        <span><b>Prerequisite</b></span>
+                        <span><b>Prerequisite Tree</b></span>
                             <section>
                                 <div class="container">
+                                    ***REMOVED***
+                                        if ($prerequisitesOf) {
+                                            
+                                    ?>
                                     <!-- The current viewed course is a prerequisite of the following -->
                                     <ul class="tree">
+
+                                        ***REMOVED*** 
+                                            foreach ($prerequisitesOf as $prerequisiteOf) {
+                                        ?>
                                         <li class="branch prereqBranch">
                                             <div class="node prereqNode">
-                                                <div class="label label-info">Node1</div>
+                                                <a href="courses_view?code=***REMOVED*** echo $prerequisiteOf; ?>">***REMOVED*** echo $prerequisiteOf; ?></a>
                                             </div>
                                         </li>
-                                        <li class="branch prereqBranch">
-                                            <div class="node prereqNode">
-                                                <div class="label label-info">Node2</div>
-                                            </div>
-                                        </li>
+                                        ***REMOVED***
+                                        ***REMOVED***
+                                        ?>
                                     </ul>
                                     <div class="node conditional">needs</div>
 
+                                    ***REMOVED***
+                                    ***REMOVED***
+                                    ?>
+
                                     <!-- Root -->
-                                    <ul class="prereqTree root">
+                                    <ul class="tree root">
                                         <li class="branch">
-                                            <div class="node">
-                                                <div class="label label-info">***REMOVED*** echo $course['course']; ?></div>
+                                            <div class="node***REMOVED*** if (!$prerequisitesOf) echo " prereqNode"; ?>">
+                                                ***REMOVED*** echo $course['course']; ?>
                                             </div>
                                         </li>
                                     </ul>
 
+                                    ***REMOVED***
+                                        if ($prerequisites) {
+                                            
+                                    ?>
                                     <!-- Requires the following courses -->
                                     <div class="node conditional">all of</div>
                                     <ul class="tree">
@@ -185,6 +200,7 @@
                                         </li>
                                         ***REMOVED***
                                         ***REMOVED***
+                                    ***REMOVED***
                                         ?>
                                     </ul>
                                 </div>
