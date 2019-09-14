@@ -8,7 +8,7 @@
 									Home</span>
                                 </a>
                                 <a class="nav-link" href="courses">
-									Courses</span>
+									Course Offerings</span>
 								</a>
 							</li>
 						</ul>
