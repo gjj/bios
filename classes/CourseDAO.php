@@ -51,7 +51,7 @@ class CourseDAO {
 		return $result;
 	}
 
-	public function prerequisites($courseCode) {
+	public function searchPrerequisites($courseCode) {
 		$sql = "SELECT prerequisite FROM prerequisites WHERE course = :courseCode";
 
 		$connMgr = new ConnectionManager();
@@ -67,6 +67,28 @@ class CourseDAO {
 
 		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
 			array_push($result, $row['prerequisite']);
+		}
+		
+		// Returns my result set on success.
+		return $result;
+	}
+
+	public function searchPrerequisitesOf($courseCode) {
+		$sql = "SELECT course FROM prerequisites WHERE prerequisite = :courseCode";
+
+		$connMgr = new ConnectionManager();
+		$db = $connMgr->getConnection();
+
+		$query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+
+		$query->execute();
+
+		$result = array();
+
+		while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+			array_push($result, $row['course']);
 		}
 		
 		// Returns my result set on success.
