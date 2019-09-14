@@ -11,18 +11,56 @@
 
 	// Begin session.
 	session_start();
+
+	// Check page.
+	if (defined('BIOS_ADMIN')) {
+		if (isLoggedIn() and currentUserRole() != 1) {
+			header("Location: ../");
+		}
+	}
+
+	function isLoggedIn() {
+		if (isset($_SESSION['userid'])) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	function currentUser() {
+		if (isset($_SESSION['userid']) and isset($_SESSION['role'])) {
+			$userId = $_SESSION['userid'];
+			$role = $_SESSION['role'];
+
+			if ($role == 0) {
+				$studentDAO = new StudentDAO();
+				return $studentDAO->retrieveById($userId);
+			}
+		}
+	}
+
+	function currentUserRole() {
+		if (isset($_SESSION['role'])) {
+			return $_SESSION['role'];
+		}
+	}
 	
 	function printErrors() {
-		if(isset($_SESSION['errors'])){
-			echo "<ul id='errors' style='color:red;'>";
+		if (isset($_SESSION['errors'])) {
+			echo $_SESSION['errors'];
 			
-			foreach ($_SESSION['errors'] as $value) {
+			/*foreach ($_SESSION['errors'] as $value) {
 				echo "<li>" . $value . "</li>";
 			}
 			
-			echo "</ul>";   
+			echo "</ul>";*/
 			unset($_SESSION['errors']);
 		}    
+	}
+
+	function addError($message) {
+		$_SESSION['errors'] = $message;
 	}
 
 	function isMissingOrEmpty($name) {
@@ -32,6 +70,18 @@
 	
 		// client did send the value over
 		$value = $_REQUEST[$name];
+		if (empty($value)) {
+			return "$name cannot be empty";
+		}
+	}
+
+	// Added new helper function for JSON.
+	function isMissingOrEmptyJson($name, $json) {
+		if (!array_key_exists($name, $json)) {
+			return "$name parameter not found";
+		}
+		
+		$value = $json->$name;
 		if (empty($value)) {
 			return "$name cannot be empty";
 		}

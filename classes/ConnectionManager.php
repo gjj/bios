@@ -11,7 +11,9 @@ class ConnectionManager {
 
 		$connectionString = "mysql:host={$host};dbname={$databaseName};port={$port}";
 
-		$connection = new PDO($connectionString, $username, $password);
+		$connection = new PDO($connectionString, $username, $password, array(
+			PDO::ATTR_EMULATE_PREPARES => false
+		));
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		return $connection;
 	}
