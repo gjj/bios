@@ -26,14 +26,19 @@
 
 			// Then we check for authentication. As discussed in our meeting, role 0 - students, role 1 - admin.
 			if ($role == 1) {
-				header("Location: home?admin");				
+				header("Location: admin/home");				
 			}
 			else {
 				header("Location: home");
 			}
 		}
 		else {
-			 //header("Location: .");
+			addError("Invalid username or password.");
+			header("Location: .");
 		}
+	}
+	else {
+		addError("Invalid username or password.");
+		header("Location: .");
 	}
 ?>
