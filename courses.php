@@ -45,7 +45,7 @@
                         </p>-->
 
                         ***REMOVED***
-                            $prerequisites = $courseDAO->prerequisites($course['course']);
+                            $prerequisites = $courseDAO->searchPrerequisites($course['course']);
 
                             if ($prerequisites) {
                         ?>
