@@ -1,6 +1,14 @@
 ***REMOVED***
 	require_once 'includes/common.php';
 
+	if (isLoggedIn()) {
+		if (currentUserRole() == 1) {
+			header("Location: admin/home");
+		}
+		else {
+			header("Location: home");
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +30,24 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Login</h4>
+
+							***REMOVED***
+								if (isset($_SESSION['errors'])) {
+							?>
+							<div class="alert alert-danger alert-dismissible fade show" role="alert">
+								***REMOVED***
+									printErrors();
+								?>
+								
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							***REMOVED***
+								}
+							?>
+
 							<form method="POST" action="login">
 								<div class="form-group">
 									<label for="userId">User ID</label>
@@ -45,7 +71,8 @@
 			</div>
 		</div>
 	</section>
-    
+	
+    <script type="text/javascript" src="assets/js/jquery.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="assets/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
