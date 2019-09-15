@@ -26,7 +26,7 @@
 					display:flex;
 					overflow-y:auto;
 					align-items:center;
-					padding:3rem 0
+					padding:1rem 0
 				}
 				@media (min-width:576px){
 					.container{
@@ -133,7 +133,7 @@
 		<div class="row">
 			<div class="col-md-8">
 				<div class="row pb-5">
-					<div class="col-md-8">
+					<div class="col-md-12">
 						<p class="pt-2">
 							<?php echo $course['description']; ?>
 						</p>
@@ -214,46 +214,55 @@
 						<?php
 							}
 						?>
+						<section>
+							<span><b>Exam</b></span>
+							<p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?> - <?php echo $course['exam end']; ?> • X hours</p>
+						</section>
 
 						<section>
 							<span><b>Sections Offered</b></span>
 
+							<?php
+								$sectionDAO = new SectionDAO();
+								$sections = $sectionDAO->retrieveByCode($course['course']);
+
+								if ($sections) {
+							?>
 							<table class="table">
-							  <thead class="thead-dark">
-							    <tr>
-							      <th scope="col">#</th>
-							      <th scope="col">First</th>
-							      <th scope="col">Last</th>
-							      <th scope="col">Handle</th>
-							    </tr>
-							  </thead>
-							  <tbody>
-							    <tr>
-							      <th scope="row">1</th>
-							      <td>Mark</td>
-							      <td>Otto</td>
-							      <td>@mdo</td>
-							    </tr>
-							    <tr>
-							      <th scope="row">2</th>
-							      <td>Jacob</td>
-							      <td>Thornton</td>
-							      <td>@fat</td>
-							    </tr>
-							    <tr>
-							      <th scope="row">3</th>
-							      <td>Larry</td>
-							      <td>the Bird</td>
-							      <td>@twitter</td>
-							    </tr>
-							  </tbody>
+								<thead class="thead-dark">
+							    	<tr>
+							      		<th scope="col">Section</th>
+							      		<th scope="col">Day</th>
+							      		<th scope="col">Start</th>
+							      		<th scope="col">End</th>
+							      		<th scope="col">Instructor</th>
+							      		<th scope="col">Venue</th>
+							      		<th scope="col">Size</th>
+										<th scope="col"></th>
+							    	</tr>
+								</thead>
+							  	<tbody>
+								  	<?php
+										foreach ($sections as $section) {
+									?>
+							    	<tr>
+							      		<th scope="row"><?php echo $section['section']; ?></th>
+							      		<td><?php echo $section['day']; ?></td>
+							      		<td><?php echo $section['start']; ?></td>
+							     		<td><?php echo $section['end']; ?></td>
+							     		<td><?php echo $section['instructor']; ?></td>
+							     		<td><?php echo $section['venue']; ?></td>
+							     		<td><?php echo $section['size']; ?></td>
+							     		<td><button class="btn btn-info">Add to cart</button></td>
+							   		</tr>
+									<?php
+										}
+									?>
+							  	</tbody>
 							</table>
-						</section>
-					</div>
-					<div class="col-md-4">
-						<section>
-							<span><b>Exam</b></span>
-							<p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?> - <?php echo $course['exam end']; ?> • X hours</p>
+							<?php
+								}
+							?>
 						</section>
 					</div>
 				</div>
