@@ -38,6 +38,25 @@ class SectionDAO {
 		// Returns my result set on success.
 		return $result;
     }
+
+    public function retrieveByCode($courseCode) {
+		$sql = "SELECT course, section, day, TIME_FORMAT(start, '%k%i') AS 'start', TIME_FORMAT(end, '%k%i') AS 'end', instructor, venue, size FROM sections WHERE sections.course = :courseCode";
+
+		$connMgr = new ConnectionManager();
+		$db = $connMgr->getConnection();
+
+		$query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+
+		$query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        $result = $this->updateDayOfWeek($result);
+		
+		// Returns my result set on success.
+		return $result;
+    }
     
     public function updateDayOfWeek($query) {
         $dayOfWeek = array(
