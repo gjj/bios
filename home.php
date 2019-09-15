@@ -28,10 +28,23 @@
 		</p>
 		<hr class="my-4">
 		<p>
-			There are no active rounds currently. <!-- TODO: Implement current round text. -->
+			***REMOVED***
+				$roundDAO = new RoundDAO();
+				$round = $roundDAO->getCurrentRound();
+
+				if ($round['round'] == 1) {
+					echo "Course Bidding Round 1 is currently ongoing.";
+				}
+				elseif ($round['round'] == 2) {
+					echo "Course Bidding Round 2 is currently ongoing.";
+				}
+				else {
+					echo "There are no active rounds currently.";
+				}
+			?>
 		</p>
 		<p class="lead">
-			<a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+			<a class="btn btn-primary btn-lg" href="courses" role="button">View course offerings</a>
 		</p>
 	</div>
 
