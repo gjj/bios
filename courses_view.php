@@ -1,13 +1,42 @@
 ***REMOVED***
 	require_once 'includes/common.php';
 
-	if (!isset($_SESSION['userid'])) {
+	if (!isLoggedIn()) {
 		header("Location: .");
+	}
+
+	$courseDAO = new CourseDAO();
+	$roundDAO = new RoundDAO();
+	$sectionDAO = new SectionDAO();
+	$roundDAO = new RoundDAO();
+	$bidDAO = new BidDAO();
+
+	$currentRound = $roundDAO->getCurrentRound();
+	$user = currentUser();
+	
+	if (!isEmpty($_POST['course']) and !isEmpty($_POST['section'])) {
+		$courseCode = $_POST['course'];
+		$section = $_POST['section'];
+
+		// Do further validation. Make sure POST-ed course and section code exists
+		if ($sectionDAO->sectionExists($courseCode, $section)) {
+			if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
+				$bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
+			}
+			else {
+				addError("Already added to cart!");
+			}
+		}
+		else {
+			addError("Course and section code pair does not exist. Nice try!");
+		}
 	}
 
 	if (isset($_GET['code'])) {
 		$code = $_GET['code'];
-		$courseDAO = new CourseDAO();
+
+
+
 		$course = $courseDAO->retrieveByCode($code);
 	
 	
@@ -223,11 +252,25 @@
 							<span><b>Sections Offered</b></span>
 
 							***REMOVED***
-								$sectionDAO = new SectionDAO();
 								$sections = $sectionDAO->retrieveByCode($course['course']);
 
 								if ($sections) {
+									if (isset($_SESSION['errors'])) {
 							?>
+								<div class="alert alert-danger alert-dismissible fade show" role="alert">
+									***REMOVED***
+										printErrors();
+									?>
+									
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+
+								***REMOVED***
+									}
+								?>
+
 							<table class="table">
 								<thead class="thead-dark">
 							    	<tr>
@@ -253,7 +296,13 @@
 							     		<td>***REMOVED*** echo $section['instructor']; ?></td>
 							     		<td>***REMOVED*** echo $section['venue']; ?></td>
 							     		<td>***REMOVED*** echo $section['size']; ?></td>
-							     		<td><button class="btn btn-info">Add to cart</button></td>
+							     		<td>
+											<form action="" method="post">
+												<input type="hidden" name="course" value="***REMOVED*** echo $course['course']; ?>" />
+												<input type="hidden" name="section" value="***REMOVED*** echo $section['section']; ?>" />
+												<button class="btn btn-info" type="submit"***REMOVED*** if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) echo "disabled"; ?>>Add to cart</button>
+											</form>
+										</td>
 							   		</tr>
 									***REMOVED***
 										}

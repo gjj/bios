@@ -48,14 +48,14 @@
                     ];
             ***REMOVED***
                 else {
-                    $studentDAO = new StudentDAO();
-                    $query = $studentDAO->retrieveById($requestJson->userid);
+                    $userDAO = new UserDAO();
+                    $user = $userDAO->retrieveStudentById($requestJson->userid);
                     
-                    if ($query) {
+                    if ($user) {
                         $result = [
                             "status" => "success"
                         ];
-                        $result = array_merge($result, $query);
+                        $result = array_merge($result, $user);
                 ***REMOVED***
                     else {
                         $errors = ["Invalid user ID."];
@@ -76,4 +76,4 @@
     ***REMOVED***
 ***REMOVED***
 
-    echo json_encode($result);
+    echo json_encode($result, JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK);
