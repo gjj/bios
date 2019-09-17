@@ -2,7 +2,7 @@
 	require_once 'includes/common.php';
 
 	// Check if form has posted the userId and password fields i.e. not empty.
-	if (isset($_POST['userId']) and isset($_POST['password'])) {
+	if (!isEmpty($_POST['userId']) and !isEmpty($_POST['password'])) {
 		$userId = $_POST['userId'];
 		$password = $_POST['password'];
 
@@ -11,7 +11,6 @@
 
 		// Since we know that login(userId, pw) returns the record on success, or nothing on failure, we assign a variable to hold the results.
 		$login = $userDAO->login($userId, $password);
-		print_r($login);
 		
 		// If it's not empty...
 		if ($login) {
@@ -19,7 +18,7 @@
 			$username = $login['userid'];
 			$password = $login['password'];
 			$role = $login['role'];
-
+			
 			// Keep in session.
 			$_SESSION['userid'] = $username;
 			$_SESSION['role'] = $role;
