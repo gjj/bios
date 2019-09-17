@@ -19,8 +19,8 @@
         $token = $_GET['token'];
 
         if (verify_token($token)) {
-            $studentDAO = new StudentDAO();
-            $students = $studentDAO->retrieveAll();
+            $userDAO = new UserDAO();
+            $users = $userDAO->retrieveAllStudents();
 
             $courseDAO = new CourseDAO();
             $courses = $courseDAO->retrieveAll();
@@ -32,7 +32,7 @@
                 "status" => "success",
                 "course" => $courses,
                 "section" => $sections,
-                "student" => $students,
+                "student" => $users,
             ];
         }
         else {
@@ -44,4 +44,4 @@
         }
     }
 
-    echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);
+    echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK);

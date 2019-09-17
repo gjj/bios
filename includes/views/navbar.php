@@ -10,6 +10,9 @@
                                 <a class="nav-link" href="courses">
 									Course Offerings</span>
 								</a>
+								<a class="nav-link" href="cart">
+									Cart</span>
+								</a>
 							</li>
 						</ul>
 					</div>
