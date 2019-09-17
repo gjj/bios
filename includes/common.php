@@ -32,11 +32,9 @@
 		if (isset($_SESSION['userid']) and isset($_SESSION['role'])) {
 			$userId = $_SESSION['userid'];
 			$role = $_SESSION['role'];
-
-			if ($role == 0) {
-				$studentDAO = new StudentDAO();
-				return $studentDAO->retrieveById($userId);
-			}
+			
+			$userDAO = new UserDAO();
+			return $userDAO->retrieveById($userId);
 		}
 	}
 

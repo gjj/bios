@@ -57,6 +57,26 @@ class SectionDAO {
 		// Returns my result set on success.
 		return $result;
 ***REMOVED***
+
+    public function sectionExists($courseCode, $section) {
+		$sql = "SELECT course, section, day, TIME_FORMAT(start, '%k%i') AS 'start', TIME_FORMAT(end, '%k%i') AS 'end' FROM sections WHERE sections.course = :courseCode AND sections.section = :section";
+
+		$connMgr = new ConnectionManager();
+		$db = $connMgr->getConnection();
+
+		$query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+
+		$query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        $result = $this->updateDayOfWeek($result);
+		
+		// Returns my result set on success.
+		return $result;
+***REMOVED***
     
     public function updateDayOfWeek($query) {
         $dayOfWeek = array(
