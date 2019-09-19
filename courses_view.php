@@ -14,7 +14,10 @@
 	$currentRound = $roundDAO->getCurrentRound();
 	$user = currentUser();
 	
+	if (!empty($_POST))
 	if (!isEmpty($_POST['course']) and !isEmpty($_POST['section'])) {
+
+
 		$courseCode = $_POST['course'];
 		$section = $_POST['section'];
 
