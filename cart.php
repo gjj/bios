@@ -60,14 +60,87 @@
         </div>
 
         <div class="row pb-5">
-            
 			<div class="col-md-12">
                 <h5>My Cart</h5>
+
+                <?php
+								if (isset($_SESSION['errors'])) {
+							?>
+							<div class="alert alert-danger alert-dismissible fade show" role="alert">
+								<?php
+									printErrors();
+								?>
+								
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							<?php
+								}
+							?>
+
+                <section>
+                    <form action="cart_checkout" method="post">
+                        <table class="table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Course Code</th>
+                                    <th scope="col">Section</th>
+                                    <th scope="col">Day</th>
+                                    <th scope="col">Start</th>
+                                    <th scope="col">End</th>
+                                    <th scope="col">Instructor</th>
+                                    <th scope="col">Venue</th>
+                                    <th scope="col">Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    $bids = $bidDAO->retrieveAllCartItemsByUser($user['userid'], $currentRound['round']);
+                                    
+                                    $i = 0;
+                                    foreach ($bids as $bid) {
+                                        
+                                ?>
+                                <tr>
+                                    <!-- This is just one way of passing data over, using hidden fields. Because our design is like that... -->
+                                    <td>
+                                        <input type="checkbox" name="checkout[]" value="<?php echo $i; ?>" />
+                                    </td>
+                                    <td><?php echo $bid['code'];?><input type="hidden" name="code[]" value="<?php echo $bid['code'];?>" /></td>
+                                    <td><?php echo $bid['section'];?><input type="hidden" name="section[]" value="<?php echo $bid['section'];?>" /></td>
+                                    <td><?php echo $bid['day'];?></td>
+                                    <td><?php echo $bid['start'];?></td>
+                                    <td><?php echo $bid['end'];?></td>
+                                    <td><?php echo $bid['instructor'];?></td>
+                                    <td><?php echo $bid['venue'];?></td>
+                                    <td><?php echo $bid['size'];?></td>
+                                </tr>
+                                <?php
+                                        $i++;
+                                    }
+                                ?>
+                            </tbody>
+                        </table>
+                        <p>
+                            <button type="submit" class="btn btn-info">Checkout</button>
+                        </p>
+                    </form>
+				</section>
+            </div>
+        </div>
+
+        <div class="row pb-5">
+            <div class="col-md-12">
+                <h5>My Bids</h5>
                 <section>
 					<table class="table">
 						<thead class="thead-dark">
 							<tr>
-							    <th scope="col">Checkout</th>
+							    <th scope="col"></th>
+                                <th scope="col">Bid (e$)</th>
                                 <th scope="col">Course Code</th>
                                 <th scope="col">Section</th>
 							    <th scope="col">Day</th>
@@ -79,32 +152,34 @@
 							</tr>
 						</thead>
 						<tbody>
-                            <?php
-                                $bids = $bidDAO->retrieveAllBidsByUser($user['userid'], $currentRound['round']);
-                                
-                                foreach ($bids as $bid) {
-                            ?>
-							<tr>
-                                <td>
-                                    <input type="checkbox" name="checkout[]" />
-                                </td>
-                                <td><?php echo $bid['code'];?></td>
-							    <td><?php echo $bid['section'];?></td>
-							    <td><?php echo $bid['day'];?></td>
-							    <td><?php echo $bid['start'];?></td>
-							    <td><?php echo $bid['end'];?></td>
-							    <td><?php echo $bid['instructor'];?></td>
-							    <td><?php echo $bid['venue'];?></td>
-							    <td><?php echo $bid['size'];?></td>
-							</tr>
-                            <?php
-                                }
-                            ?>
-						</tbody>
-					</table>
-				</section>
+                                <?php
+                                    $bids = $bidDAO->retrieveAllBidsByUser($user['userid'], $currentRound['round']);
+                                    
+                                    foreach ($bids as $bid) {
+                                ?>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="input" name="checkout[]" />
+                                    </td>
+                                    <td><?php echo $bid['amount'];?></td>
+                                    <td><?php echo $bid['code'];?></td>
+                                    <td><?php echo $bid['section'];?></td>
+                                    <td><?php echo $bid['day'];?></td>
+                                    <td><?php echo $bid['start'];?></td>
+                                    <td><?php echo $bid['end'];?></td>
+                                    <td><?php echo $bid['instructor'];?></td>
+                                    <td><?php echo $bid['venue'];?></td>
+                                    <td><?php echo $bid['size'];?></td>
+                                </tr>
+                                <?php
+                                    }
+                                ?>
+                        </tbody>
+                    </table>
+                </section>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-12">
             <h5>My Calendar</h5>
