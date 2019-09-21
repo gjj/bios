@@ -7,6 +7,15 @@
 		header("Location: .");
 ***REMOVED***
 
+    $courseDAO = new CourseDAO();
+	$roundDAO = new RoundDAO();
+	$sectionDAO = new SectionDAO();
+	$roundDAO = new RoundDAO();
+    $bidDAO = new BidDAO();
+    
+	$currentRound = $roundDAO->getCurrentRound();
+    $user = currentUser();
+
     if ($_POST) {
         if ($_POST['checkout']) {
            $courseSections = array();
@@ -22,16 +31,22 @@
 
            $_SESSION['courseSections'] = $courseSections;
 
+           // Check duplicates. Logic validation 1/7.
            $selectedCourses = array_column($courseSections, 'course');
 
            $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
 
            if (count($duplicates)) {
-               addError("You can only bid for one section per course!");
+               addError("You can only bid for one section per course! ");
                header("Location: cart");
        ***REMOVED***
 
-           print_r($selectedCourses);
+           if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
+            addError("Timetable conflict! ");
+            header("Location: cart");
+       ***REMOVED***
+
+           print_r($courseSections);
 
     ***REMOVED***
         else {
@@ -41,14 +56,6 @@
     else {
         header("Location: cart");
 ***REMOVED***
-    $courseDAO = new CourseDAO();
-	$roundDAO = new RoundDAO();
-	$sectionDAO = new SectionDAO();
-	$roundDAO = new RoundDAO();
-    $bidDAO = new BidDAO();
-    
-	$currentRound = $roundDAO->getCurrentRound();
-    $user = currentUser();
 
     include 'includes/views/header.php';
 ?>

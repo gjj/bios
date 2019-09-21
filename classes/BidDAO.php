@@ -97,22 +97,25 @@ class BidDAO {
         return $isDeleteOK;
 ***REMOVED***
 
-    public function checkTimetableConflicts($userId, $courseCodes, $sections, $round) {
-		$sql = "SELECT bids.*, sections.day, sections.start, sections.end FROM bids, sections WHERE bids.course = sections.course AND bids.section = sections.section ORDER BY day, start";
+    public function checkTimetableConflicts($userId, $courseSections, $round) {
+        $inClauseBuilder = "";
+        // SANITISE INPUTS PLSSSS!! this is vulnerable to SQL injection.
+        for ($i = 0; $i < count($courseSections); $i++) {
+            $inClauseBuilder .= "('{$courseSections[$i]['course']}', '{$courseSections[$i]['section']}')";
 
+            if ($i != (count($courseSections)-1)) {
+                $inClauseBuilder .= ", ";
+        ***REMOVED***
+    ***REMOVED***
 
-        // not done
-
+        $sql = "SELECT course, day, start, end FROM sections WHERE (course, section) IN (" . $inClauseBuilder . ")  ORDER BY day, start";
+        
         // sort by Day, then search
 		$connMgr = new ConnectionManager();
 		$db = $connMgr->getConnection();
 
 		$query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
-        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-        $query->bindParam(':courseCode', $coursecourse, PDO::PARAM_STR);
-        $query->bindParam(':section', $section, PDO::PARAM_STR);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
 
 		$query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
