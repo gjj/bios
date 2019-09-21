@@ -13,7 +13,7 @@
 
            foreach ($_POST['checkout'] as $rowNumber) {
                 $courseSection = array(
-                    'code' => $_POST['code'][$rowNumber],
+                    'course' => $_POST['course'][$rowNumber],
                     'section' => $_POST['section'][$rowNumber]
                 );
 
@@ -22,7 +22,7 @@
 
            $_SESSION['courseSections'] = $courseSections;
 
-           $selectedCourses = array_column($courseSections, 'code');
+           $selectedCourses = array_column($courseSections, 'course');
 
            $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
 
@@ -30,6 +30,9 @@
                addError("You can only bid for one section per course!");
                header("Location: cart");
            }
+
+           print_r($selectedCourses);
+
         }
         else {
             header("Location: cart");
@@ -77,14 +80,14 @@
                                 <?php
                                     $i = 0;
                                     foreach ($courseSections as $courseSection) {
-                                        $bid = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $courseSection['code'], $courseSection['section'], $currentRound['round']);
+                                        $bid = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $courseSection['course'], $courseSection['section'], $currentRound['round']);
                                 ?>
                                 <tr>
                                     <td>
                                         <input type="number" name="amount[]" class="form-control" />
                                     </td>
-                                    <td><?php echo $bid['code'];?><input type="hidden" name="code[]" value="<?php echo $bid['code'];?>" /></td>
-                                    <td><?php echo $bid['section'];?><input type="hidden" name="section[]" value="<?php echo $bid['section'];?>" /></td>
+                                    <td><?php echo $bid['course'];?></td>
+                                    <td><?php echo $bid['section'];?></td>
                                     <td><?php echo $bid['day'];?></td>
                                     <td><?php echo $bid['start'];?></td>
                                     <td><?php echo $bid['end'];?></td>

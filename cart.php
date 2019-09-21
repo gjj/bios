@@ -94,14 +94,17 @@
                                     <th scope="col">Instructor</th>
                                     <th scope="col">Venue</th>
                                     <th scope="col">Size</th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    $bids = $bidDAO->retrieveAllCartItemsByUser($user['userid'], $currentRound['round']);
+                                    $cartItems = $bidDAO->retrieveAllCartItemsByUser($user['userid'], $currentRound['round']);
                                     
                                     $i = 0;
-                                    foreach ($bids as $bid) {
+
+                                    if ($cartItems) {
+                                        foreach ($cartItems as $cartItem) {
                                         
                                 ?>
                                 <tr>
@@ -109,23 +112,34 @@
                                     <td>
                                         <input type="checkbox" name="checkout[]" value="<?php echo $i; ?>" />
                                     </td>
-                                    <td><?php echo $bid['code'];?><input type="hidden" name="code[]" value="<?php echo $bid['code'];?>" /></td>
-                                    <td><?php echo $bid['section'];?><input type="hidden" name="section[]" value="<?php echo $bid['section'];?>" /></td>
-                                    <td><?php echo $bid['day'];?></td>
-                                    <td><?php echo $bid['start'];?></td>
-                                    <td><?php echo $bid['end'];?></td>
-                                    <td><?php echo $bid['instructor'];?></td>
-                                    <td><?php echo $bid['venue'];?></td>
-                                    <td><?php echo $bid['size'];?></td>
+                                    <td><?php echo $cartItem['course'];?><input type="hidden" name="course[]" value="<?php echo $cartItem['course'];?>" /></td>
+                                    <td><?php echo $cartItem['section'];?><input type="hidden" name="section[]" value="<?php echo $cartItem['section'];?>" /></td>
+                                    <td><?php echo $cartItem['day'];?></td>
+                                    <td><?php echo $cartItem['start'];?></td>
+                                    <td><?php echo $cartItem['end'];?></td>
+                                    <td><?php echo $cartItem['instructor'];?></td>
+                                    <td><?php echo $cartItem['venue'];?></td>
+                                    <td><?php echo $cartItem['size'];?></td>
+                                    <td><a href="cart_delete?course=<?php echo $cartItem['course'];?>&section=<?php echo $cartItem['section'];?>">Delete</a></td>
                                 </tr>
                                 <?php
-                                        $i++;
+                                            $i++;
+                                        }
+                                    }
+                                    else {
+                                ?>
+
+                                <tr>
+                                    <td colspan="10">No cart items currently. Why not <a href="courses">add some courses</a> to your cart?</td>
+                                </tr>
+
+                                <?php
                                     }
                                 ?>
                             </tbody>
                         </table>
                         <p>
-                            <button type="submit" class="btn btn-info">Checkout</button>
+                            <button type="submit" class="btn btn-info"<?php if (!$cartItems) echo " disabled"; ?>>Checkout</button>
                         </p>
                     </form>
 				</section>
@@ -155,14 +169,15 @@
                                 <?php
                                     $bids = $bidDAO->retrieveAllBidsByUser($user['userid'], $currentRound['round']);
                                     
-                                    foreach ($bids as $bid) {
+                                    if ($bids) {
+                                        foreach ($bids as $bid) {
                                 ?>
                                 <tr>
                                     <td>
                                         <input type="checkbox" class="input" name="checkout[]" />
                                     </td>
                                     <td><?php echo $bid['amount'];?></td>
-                                    <td><?php echo $bid['code'];?></td>
+                                    <td><?php echo $bid['course'];?></td>
                                     <td><?php echo $bid['section'];?></td>
                                     <td><?php echo $bid['day'];?></td>
                                     <td><?php echo $bid['start'];?></td>
@@ -170,6 +185,14 @@
                                     <td><?php echo $bid['instructor'];?></td>
                                     <td><?php echo $bid['venue'];?></td>
                                     <td><?php echo $bid['size'];?></td>
+                                </tr>
+                                <?php
+                                        }
+                                    }
+                                    else {
+                                ?>
+                                <tr>
+                                    <td colspan="10">No bids currently.</td>
                                 </tr>
                                 <?php
                                     }
