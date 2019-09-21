@@ -35,13 +35,12 @@
 		}
 	}
 
-	if (isset($_GET['code'])) {
-		$code = $_GET['code'];
+	if (isset($_GET['course'])) {
+		$courseCode = $_GET['course'];
 
 
 
-		$course = $courseDAO->retrieveByCode($code);
-	
+		$course = $courseDAO->retrieveByCode($courseCode);
 	
 		$viewData['title'] = $course['course'] . " " . $course['title'];
 		$viewData['styles'] = "
@@ -189,7 +188,7 @@
 										?>
 										<li class="branch prereqBranch">
 											<div class="node color-0 prereqNode">
-												<a href="courses_view?code=***REMOVED*** echo $prerequisiteOf; ?>">
+												<a href="courses_view?course=***REMOVED*** echo $prerequisiteOf; ?>">
 													***REMOVED*** echo $prerequisiteOf; ?>
 												</a>
 											</div>
@@ -289,6 +288,9 @@
 								</thead>
 							  	<tbody>
 								  	***REMOVED***
+									  	// Put here so that we only run 1x SQL query
+										$courseCompleted = $bidDAO->hasCompletedCourse($user['userid'], $course['course']);
+										
 										foreach ($sections as $section) {
 									?>
 							    	<tr>
@@ -303,7 +305,23 @@
 											<form action="" method="post">
 												<input type="hidden" name="course" value="***REMOVED*** echo $course['course']; ?>" />
 												<input type="hidden" name="section" value="***REMOVED*** echo $section['section']; ?>" />
-												<button class="btn btn-info" type="submit"***REMOVED*** if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) echo "disabled"; ?>>Add to cart</button>
+												***REMOVED***
+													if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
+												?>
+												<button class="btn btn-info" type="submit" disabled>Added to cart</button>
+												***REMOVED***
+													}
+													elseif ($courseCompleted) {
+												?>
+												<button class="btn btn-info" type="submit" disabled>Course completed</button>
+												***REMOVED***
+													}
+													else {
+												?>
+												<button class="btn btn-info" type="submit">Add to cart</button>
+												***REMOVED***
+													}
+												?>
 											</form>
 										</td>
 							   		</tr>

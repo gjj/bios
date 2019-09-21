@@ -28,7 +28,7 @@
                 <div class="row pb-5">
                     <div class="col-md-8">
                         <header>
-                            <h5><a href="courses_view?code=***REMOVED*** echo $course['course']; ?>">***REMOVED*** echo $course['course'] . " " . $course['title']; ?></a></h5>
+                            <h5><a href="courses_view?course=***REMOVED*** echo $course['course']; ?>">***REMOVED*** echo $course['course'] . " " . $course['title']; ?></a></h5>
                             <span>***REMOVED*** echo $course['school']; ?> • 1 Credit Unit</span>
                         </header>
                         

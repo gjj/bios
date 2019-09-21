@@ -13,7 +13,7 @@
 
            foreach ($_POST['checkout'] as $rowNumber) {
                 $courseSection = array(
-                    'code' => $_POST['code'][$rowNumber],
+                    'course' => $_POST['course'][$rowNumber],
                     'section' => $_POST['section'][$rowNumber]
                 );
 
@@ -22,7 +22,7 @@
 
            $_SESSION['courseSections'] = $courseSections;
 
-           $selectedCourses = array_column($courseSections, 'code');
+           $selectedCourses = array_column($courseSections, 'course');
 
            $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
 
@@ -30,6 +30,9 @@
                addError("You can only bid for one section per course!");
                header("Location: cart");
        ***REMOVED***
+
+           print_r($selectedCourses);
+
     ***REMOVED***
         else {
             header("Location: cart");
@@ -77,14 +80,14 @@
                                 ***REMOVED***
                                     $i = 0;
                                     foreach ($courseSections as $courseSection) {
-                                        $bid = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $courseSection['code'], $courseSection['section'], $currentRound['round']);
+                                        $bid = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $courseSection['course'], $courseSection['section'], $currentRound['round']);
                                 ?>
                                 <tr>
                                     <td>
                                         <input type="number" name="amount[]" class="form-control" />
                                     </td>
-                                    <td>***REMOVED*** echo $bid['code'];?><input type="hidden" name="code[]" value="***REMOVED*** echo $bid['code'];?>" /></td>
-                                    <td>***REMOVED*** echo $bid['section'];?><input type="hidden" name="section[]" value="***REMOVED*** echo $bid['section'];?>" /></td>
+                                    <td>***REMOVED*** echo $bid['course'];?></td>
+                                    <td>***REMOVED*** echo $bid['section'];?></td>
                                     <td>***REMOVED*** echo $bid['day'];?></td>
                                     <td>***REMOVED*** echo $bid['start'];?></td>
                                     <td>***REMOVED*** echo $bid['end'];?></td>
