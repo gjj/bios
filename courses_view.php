@@ -21,8 +21,11 @@
 		$courseCode = $_POST['course'];
 		$section = $_POST['section'];
 
-		// Do further validation. Make sure POST-ed course and section code exists
-		if ($sectionDAO->sectionExists($courseCode, $section)) {
+		if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
+			addError("You've already completed the course. Why do you want to take again?");
+		}
+		else if ($sectionDAO->sectionExists($courseCode, $section)) {
+			// Do further validation. Make sure POST-ed course and section code exists
 			if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
 				$bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
 			}
