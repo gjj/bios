@@ -319,4 +319,20 @@ class BidDAO {
 
         return $query;
 ***REMOVED***
+
+    public function retrieveResults($userId) {
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        
+        $sql = "SELECT course, result FROM bids WHERE user_id = :userId  AND result = '-' or result = 'in' or result = 'out'";
+		$query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+
+		$query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+***REMOVED***
 }
