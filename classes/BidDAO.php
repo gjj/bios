@@ -108,7 +108,9 @@ class BidDAO {
         ***REMOVED***
     ***REMOVED***
 
-        $sql = "SELECT course, day, start, end FROM sections WHERE (course, section) IN (" . $inClauseBuilder . ")  ORDER BY day, start";
+        $sql = "SELECT course, day, start, end FROM sections WHERE (course, section) IN (" . $inClauseBuilder . ")  ";
+        $sql .= "UNION SELECT course, day, start, end FROM sections WHERE (course, section) IN (SELECT course, section FROM bids WHERE user_id = :userId AND result = 'submitted')";
+        $sql .= " ORDER BY day, start";
         
         // sort by Day, then search
 		$connMgr = new ConnectionManager();
@@ -116,6 +118,7 @@ class BidDAO {
 
 		$query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
 
 		$query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
