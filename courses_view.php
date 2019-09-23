@@ -5,6 +5,7 @@
 		header("Location: .");
 	}
 
+
 	$courseDAO = new CourseDAO();
 	$roundDAO = new RoundDAO();
 	$sectionDAO = new SectionDAO();
@@ -13,7 +14,7 @@
 
 	$currentRound = $roundDAO->getCurrentRound();
 	$user = currentUser();
-	
+
 	if (!empty($_POST))
 	if (!isEmpty($_POST['course']) and !isEmpty($_POST['section'])) {
 
@@ -24,7 +25,7 @@
 		if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
 			addError("You've already completed the course. Why do you want to take again?");
 		}
-		else if ($sectionDAO->sectionExists($courseCode, $section)) {
+		elseif ($sectionDAO->sectionExists($courseCode, $section)) {
 			// Do further validation. Make sure POST-ed course and section code exists
 			if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
 				$bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
@@ -228,7 +229,7 @@
 													?>
 													<li class="branch">
 														<div class="node">
-															<a href="courses_view?code=***REMOVED*** echo $prerequisite; ?>">***REMOVED*** echo $prerequisite; ?></a>
+															<a href="courses_view?course=***REMOVED*** echo $prerequisite; ?>">***REMOVED*** echo $prerequisite; ?></a>
 														</div>
 													</li>
 													***REMOVED***
@@ -293,7 +294,10 @@
 								  	***REMOVED***
 									  	// Put here so that we only run 1x SQL query
 										$courseCompleted = $bidDAO->hasCompletedCourse($user['userid'], $course['course']);
-										
+										$ownSchoolCourse = $bidDAO->checkOwnSchoolCourse($user['school'], $course['course']);
+										$hasPrerequisites = $bidDAO->hasPrerequisites($course['course']);
+										$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $course['course']);
+
 										foreach ($sections as $section) {
 									?>
 							    	<tr>
@@ -310,19 +314,29 @@
 												<input type="hidden" name="section" value="***REMOVED*** echo $section['section']; ?>" />
 												***REMOVED***
 													if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
-												?>
-												<button class="btn btn-info" type="submit" disabled>Added to cart</button>
-												***REMOVED***
+														echo '<button class="btn btn-info" type="submit" disabled>Added to cart</button>';
 													}
-													elseif ($courseCompleted) {
-												?>
-												<button class="btn btn-info" type="submit" disabled>Course completed</button>
-												***REMOVED***
+													else if ($courseCompleted) {
+														echo '<button class="btn btn-info" type="submit" disabled>Course completed</button>';
+													}
+													else if ($hasPrerequisites) {
+														if ($hasCompletedPrerequisites) {
+															echo '<button class="btn btn-info" type="submit">Add to cart</button>';
+														}
+														else {
+															echo '<button class="btn btn-info" type="submit" disabled>Prerequisite uncompleted</button>';															
+														}
+													}
+													else if ($currentRound['round'] == 1) {
+														if (!$ownSchoolCourse) {
+															echo '<button class="btn btn-info" type="submit" disabled>Not own school course</button>';
+														}
+														else {
+															echo '<button class="btn btn-info" type="submit">Add to cart</button>';
+														}
 													}
 													else {
-												?>
-												<button class="btn btn-info" type="submit">Add to cart</button>
-												***REMOVED***
+														echo '<button class="btn btn-info" type="submit">Add to cart</button>';
 													}
 												?>
 											</form>
