@@ -165,6 +165,11 @@ class BidDAO {
 		return false;
     }
 
+    /*
+     * Check if course has already been completed. Why do you want to take the same course again, right?
+     * "course completed"	student has already completed this course.
+     * bid.csv validation 5/7
+     */
     public function hasCompletedCourse($userId, $courseCode) {
 		$sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course = :courseCode";
 
@@ -209,6 +214,11 @@ class BidDAO {
         return $isAddOK;
     }
 
+     /*
+     * Check if user 
+     * "section limit reached"	student has already bidded for 5 sections.
+     * bid.csv validation 6/7
+     */
     public function countBids($userId, $round) {
 		$sql = "SELECT * FROM bids WHERE user_id = :userId AND result = 'cart' AND round = :round";
 
