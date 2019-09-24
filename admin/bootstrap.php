@@ -1,5 +1,5 @@
 <?php
-require_once 'common.php';
+require_once '../includes/common.php';
 
 function doBootstrap() {
 
@@ -33,20 +33,20 @@ function doBootstrap() {
             $zip->close();
             
             // Not completed
-			// $bids_path = "$temp_dir/";
-			// $courses_path = "$temp_dir/";
-            // $courses_completed_path = "$temp_dir/";
-            // $prerequisites_path = "$temp_dir/";
+			$bids_path = "$temp_dir/bid.csv";
+			$courses_path = "$temp_dir/course.csv";
+            $courses_completed_path = "$temp_dir/course_completed.csv";
+            $prerequisites_path = "$temp_dir/prerequisite.csv";
             // $rounds_path = "$temp_dir/";
-            // $sections_path = "$temp_dir/";
+            $sections_path = "$temp_dir/section.csv";
             // $users_path = "$temp_dir/";
 			
-			// $bids = @fopen($bids, "r");
-			// $courses = @fopen($courses_path, "r");
-            // $courses_completed = @fopen($courses_completed_path, "r");
-            // $prerequisites = @fopen($prerequisites_path, "r");
+			$bids = @fopen($bids, "r");
+			$courses = @fopen($courses_path, "r");
+            $courses_completed = @fopen($courses_completed_path, "r");
+            $prerequisites = @fopen($prerequisites_path, "r");
             // $rounds = @fopen($rounds_path, "r");
-			// $sections = @fopen($sections_path, "r");
+			$sections = @fopen($sections_path, "r");
 			// $users = @fopen($users_path, "r"); 
 			
             if (empty($bids) || empty($courses) || empty($courses_completed)
@@ -70,18 +70,18 @@ function doBootstrap() {
 					fclose($prerequisites);
 					@unlink($prerequisites_path);
                 } 
-                if (!empty($rounds)){
-					fclose($rounds);
-					@unlink($rounds_path);
-                } 
+                // if (!empty($rounds)){
+				// 	fclose($rounds);
+				// 	@unlink($rounds_path);
+                // } 
                 if (!empty($sections)){
 					fclose($sections);
 					@unlink($sections_path);
                 } 
-                if (!empty($users)){
-					fclose($users);
-					@unlink($users_path);
-                } 
+                // if (!empty($users)){
+				// 	fclose($users);
+				// 	@unlink($users_path);
+                // } 
 				
 				
 			}
@@ -100,16 +100,58 @@ function doBootstrap() {
                 $courseDAO -> removeAllCompletedCourses();
                 $courseDAO -> removeAllPrerequisites();
 
-                $roundDAO = new RoundDAO();
-                $roundDAO -> removeAll();
+                // $roundDAO = new RoundDAO();
+                // $roundDAO -> removeAll();
 
                 $sectionDAO = new SectionDAO();
                 $sectionDAO -> removeAll();
 
-                $userDAO = new UserDAO();
-                $userDAO -> removeAll();
+                // $userDAO = new UserDAO();
+                // $userDAO -> removeAll();
 
+                fclose($courseDAO);
+				@unlink($courses_path);
+
+                fclose($BidDAO);
+                @unlink($bids_path);
+                
+                fclose($sectionDAO);
+                @unlink($sections_path);
+                
+                // fclose($userDAO);
+				// @unlink($users_path);
 			}
 		}
+    }
+     
+    if (!isEmpty($errors))
+	{	
+		$sortclass = new Sort();
+		$errors = $sortclass->sort_it($errors,"bootstrap");
+		$result = [ 
+			"status" => "error",
+			"messages" => $errors
+		];
 	}
+
+	else
+	{	
+		$result = [ 
+			"status" => "success",
+			"num-record-loaded" => [
+				"bid.csv" => $bids_processed,
+				"course.csv" => $courses_processed,
+                "course_completed.csv" => $courses_completed_processed,
+                "prerequisite.csv" => $prerequisites_processed,
+                "section.csv" => $sections_processed
+                //user.csv
+                //round.csv
+			]
+		];
+	}
+	header('Content-Type: application/json');
+	echo json_encode($result, JSON_PRETTY_PRINT);
+
+
+}
 ?>
