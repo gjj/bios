@@ -84,4 +84,16 @@ class UserDAO {
 		// Returns my result set on success.
 		return $result;
 	}
+
+	public function removeAll() {
+        $sql = 'TRUNCATE TABLE users';
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->execute();
+        $count = $stmt->rowCount();
+***REMOVED*** 
 }
