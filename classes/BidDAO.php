@@ -524,4 +524,16 @@ class BidDAO {
 
 		return $result;
 ***REMOVED***
+
+    public function removeAll() {
+        $sql = 'TRUNCATE TABLE bids';
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->execute();
+        $count = $stmt->rowCount();
+***REMOVED*** 
 }
