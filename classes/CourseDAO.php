@@ -94,4 +94,40 @@ class CourseDAO {
 		// Returns my result set on success.
 		return $result;
 	}
+
+	public function removeAllCourses() {
+        $sql = 'TRUNCATE TABLE courses';
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->execute();
+        $count = $stmt->rowCount();
+	} 
+	
+	public function removeAllCompletedCourses() {
+        $sql = 'TRUNCATE TABLE courses_completed';
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->execute();
+        $count = $stmt->rowCount();
+	} 
+	
+	public function removeAllPrerequisites() {
+        $sql = 'TRUNCATE TABLE prerequisites';
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->execute();
+        $count = $stmt->rowCount();
+    } 
 }
