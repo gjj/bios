@@ -33,7 +33,6 @@ function doBootstrap() {
             $zip->close();
             
             // Not completed
-			// $bids_path = "$temp_dir/";
 			$bids_path = "$temp_dir/bid.csv";
 			$courses_path = "$temp_dir/course.csv";
             $courses_completed_path = "$temp_dir/course_completed.csv";
@@ -140,9 +139,13 @@ function doBootstrap() {
 		$result = [ 
 			"status" => "success",
 			"num-record-loaded" => [
-				"pokemon.csv" => $pokemon_processed,
-				"pokemon_type.csv" => $pokemon_type_processed,
-				"User.csv" => $User_processed
+				"bid.csv" => $bids_processed,
+				"course.csv" => $courses_processed,
+                "course_completed.csv" => $courses_completed_processed,
+                "prerequisite.csv" => $prerequisites_processed,
+                "section.csv" => $sections_processed
+                //user.csv
+                //round.csv
 			]
 		];
 	}
