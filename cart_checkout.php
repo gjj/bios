@@ -16,8 +16,29 @@
 	$currentRound = $roundDAO->getCurrentRound();
     $user = currentUser();
 
+    if (isset($_SESSION['courseSections'])) {
+        $bids = $_SESSION['courseSections'];
+***REMOVED***
     
+    if ($_POST) {
+        // Retrieve all my name="amount[]" fields.
+        $sum = 0;
+        for ($i = 0; $i < count($_POST['amount']); $i++) {
+            $amount = $_POST['amount'][$i];
+            $bids[$i]['amount'] = $amount;
+            $sum += $amount;
+    ***REMOVED***
 
+        // Validation: Make sure I sum(amount[]) < my current edollar!!!!
+        if ($sum > $user['edollar']) {
+            addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
+    ***REMOVED***
+        else {
+            foreach ($bids as $bid) {
+                $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+        ***REMOVED***
+    ***REMOVED***
+***REMOVED***
     include 'includes/views/header.php';
 ?>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
@@ -29,8 +50,24 @@
 			<div class="col-md-12">
                 <h5>My Selected Sections</h5>
                 <h6> You currently have e$***REMOVED*** echo $user['edollar']; ?> </h6>
+                            ***REMOVED***
+								if (isset($_SESSION['errors'])) {
+							?>
+							<div class="alert alert-danger alert-dismissible fade show" role="alert">
+								***REMOVED***
+									printErrors();
+								?>
+								
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							***REMOVED***
+								}
+							?>
                 <section>
-                <form action="cart_checkout_process" method="post">
+                <form action="" method="post">
                         <table class="table">
                             <thead class="thead-dark">
                                 <tr>
@@ -48,21 +85,21 @@
                             <tbody>
                                 ***REMOVED***
                                     $i = 0;
-                                    foreach ($courseSections as $courseSection) {
-                                        $bid = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $courseSection['course'], $courseSection['section'], $currentRound['round']);
+                                    foreach ($bids as $bid) {
+                                        $cartItems = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $bid['course'], $bid['section'], $currentRound['round']);
                                 ?>
                                 <tr>
                                     <td>
-                                        <input type="number" name="amount[]" class="form-control" />
+                                        <input type="number" name="amount[]" class="form-control" step="0.01" required />
                                     </td>
-                                    <td>***REMOVED*** echo $bid['course'];?></td>
-                                    <td>***REMOVED*** echo $bid['section'];?></td>
-                                    <td>***REMOVED*** echo $bid['day'];?></td>
-                                    <td>***REMOVED*** echo $bid['start'];?></td>
-                                    <td>***REMOVED*** echo $bid['end'];?></td>
-                                    <td>***REMOVED*** echo $bid['instructor'];?></td>
-                                    <td>***REMOVED*** echo $bid['venue'];?></td>
-                                    <td>***REMOVED*** echo $bid['size'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['course'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['section'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['day'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['start'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['end'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['instructor'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['venue'];?></td>
+                                    <td>***REMOVED*** echo $cartItems['size'];?></td>
                                 </tr>
                                 ***REMOVED***
                                         $i++;
