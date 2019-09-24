@@ -96,4 +96,16 @@ class SectionDAO {
 
         return $query;
     }
+
+    public function removeAll() {
+        $sql = 'TRUNCATE TABLE sections';
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->execute();
+        $count = $stmt->rowCount();
+    } 
 }
