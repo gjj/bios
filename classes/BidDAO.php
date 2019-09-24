@@ -370,7 +370,7 @@ class BidDAO {
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 		
 		// Returns my result set on success.
-		return $result;
+		return count($result);
     }
 
     /*
@@ -421,7 +421,6 @@ class BidDAO {
 		$sql = "UPDATE bids SET result = 'submitted', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
         
         // Note: It's update and not add because we combine into one table.
-        //$sql = 'UPDATE user SET gender=:gender, password=:password, name=:name WHERE username=:username';
 
 		$connMgr = new ConnectionManager();
 		$db = $connMgr->getConnection();
@@ -446,7 +445,6 @@ class BidDAO {
 		$sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'submitted' AND round = :round";
         
         // Note: It's update and not add because we combine into one table.
-        //$sql = 'UPDATE user SET gender=:gender, password=:password, name=:name WHERE username=:username';
 
 		$connMgr = new ConnectionManager();
 		$db = $connMgr->getConnection();
