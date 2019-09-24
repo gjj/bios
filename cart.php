@@ -39,17 +39,24 @@
             }
 
             if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
-                addError("Timetable conflict!");
+                addError("Timetable conflict with either your bidded courses or your confirmed courses!");
             }
            
             if ($bidDAO->checkExamConflicts($user['userid'], $courseSections, $currentRound['round'])) {
-                addError("Exam conflict!");
-                header("Location: cart");
+                addError("Exam conflict with either your bidded courses or your confirmed courses!");
             }
 
-            // If no errors, then I redirect to cart_checkout.php.
+            $count = count($_POST['checkout']);
+            $countBiddedMods = $bidDAO->countBids($user['userid'], $currentRound['round']);
+            
+            if (($count + $countBiddedMods) > 5) {
+                addError("You can only bid for up to 5 sections! You currently have {$count} bidded/confirmed courses, and you're bidding for {$countBiddedMods} more.");
+            }
+
+            // If no errors, then we redirect to cart_checkout.php.
             if (!isset($_SESSION['errors'])) {
                 $_SESSION['courseSections'] = $courseSections;
+                header("Location: cart_checkout");
             }
         }
     }
@@ -101,7 +108,7 @@
 			<div class="col-md-12">
                 <h5>My Cart</h5>
 
-                <?php
+                            <?php
 								if (isset($_SESSION['errors'])) {
 							?>
 							<div class="alert alert-danger alert-dismissible fade show" role="alert">
