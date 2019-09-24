@@ -15,6 +15,44 @@
     
 	$currentRound = $roundDAO->getCurrentRound();
     $user = currentUser();
+    $cartItems = $bidDAO->retrieveAllCartItemsByUser($user['userid'], $currentRound['round']);
+
+    if ($_POST) {
+        if ($_POST['checkout']) {
+            $courseSections = array();
+
+            foreach ($_POST['checkout'] as $rowNumber) {
+                $courseSection = array(
+                    'course' => $cartItems[$rowNumber]['course'],
+                    'section' => $cartItems[$rowNumber]['section']
+                );
+
+                array_push($courseSections, $courseSection);
+            }
+            
+            // Check duplicates. Logic validation 1/7.
+            $selectedCourses = array_column($courseSections, 'course');
+            $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
+
+            if (count($duplicates)) {
+               addError("You can only bid for one section per course! ");
+            }
+
+            if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
+                addError("Timetable conflict!");
+            }
+           
+            if ($bidDAO->checkExamConflicts($user['userid'], $courseSections, $currentRound['round'])) {
+                addError("Exam conflict!");
+                header("Location: cart");
+            }
+
+            // If no errors, then I redirect to cart_checkout.php.
+            if (!isset($_SESSION['errors'])) {
+                $_SESSION['courseSections'] = $courseSections;
+            }
+        }
+    }
 
     $viewData['styles'] = "
         <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css\" />
@@ -81,7 +119,7 @@
 							?>
 
                 <section>
-                    <form action="cart_checkout" method="post">
+                    <form action="" method="post">
                         <table class="table">
                             <thead class="thead-dark">
                                 <tr>
@@ -99,7 +137,6 @@
                             </thead>
                             <tbody>
                                 <?php
-                                    $cartItems = $bidDAO->retrieveAllCartItemsByUser($user['userid'], $currentRound['round']);
                                     
                                     $i = 0;
 
@@ -112,7 +149,7 @@
                                     <td>
                                         <input type="checkbox" name="checkout[]" value="<?php echo $i; ?>" />
                                     </td>
-                                    <td><?php echo $cartItem['course'];?><input type="hidden" name="course[]" value="<?php echo $cartItem['course'];?>" /></td>
+                                    <td><?php echo $cartItem['course'];?></td>
                                     <td><?php echo $cartItem['section'];?><input type="hidden" name="section[]" value="<?php echo $cartItem['section'];?>" /></td>
                                     <td><?php echo $cartItem['day'];?></td>
                                     <td><?php echo $cartItem['start'];?></td>

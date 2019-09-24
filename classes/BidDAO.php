@@ -241,10 +241,11 @@ class BidDAO {
             array_push($courses, $courseSections[$i]['course']);
         }
 
-        $sql = "SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (" . implode(",", $courses) . ") ";
+
+        $sql = "SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (\"" . implode("\", \"", $courses) . "\") ";
         $sql .= "UNION SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (SELECT course FROM bids WHERE user_id = :userId AND ((result = 'submitted' AND round = :round) OR result = '-' OR result = 'in')) ";
-        $sql .= "ORDER BY day, start";
-        
+        $sql .= "ORDER BY exam_date, exam_start";
+
         // sort by Day, then search
 		$connMgr = new ConnectionManager();
 		$db = $connMgr->getConnection();
@@ -265,8 +266,8 @@ class BidDAO {
                 $timeslot2 = $result[$i + 1];
 
                 // Only makes sense for me to check if both timeslot's day is the same. In other words, Monday 3pm lesson and Tuesday 3pm lesson = no clash!
-                if ($timeslot1['day'] == $timeslot2['day']) {
-                    if ($timeslot1['end'] >= $timeslot2['start']) {
+                if ($timeslot1['exam_date'] == $timeslot2['exam_date']) {
+                    if ($timeslot1['exam_end'] >= $timeslot2['exam_start']) {
                         return true;
                     }
                 }

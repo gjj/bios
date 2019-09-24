@@ -16,46 +16,7 @@
 	$currentRound = $roundDAO->getCurrentRound();
     $user = currentUser();
 
-    if ($_POST) {
-        if ($_POST['checkout']) {
-           $courseSections = array();
-
-           foreach ($_POST['checkout'] as $rowNumber) {
-                $courseSection = array(
-                    'course' => $_POST['course'][$rowNumber],
-                    'section' => $_POST['section'][$rowNumber]
-                );
-
-                array_push($courseSections, $courseSection);
-           }
-
-           $_SESSION['courseSections'] = $courseSections;
-
-           // Check duplicates. Logic validation 1/7.
-           $selectedCourses = array_column($courseSections, 'course');
-
-           $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
-
-           if (count($duplicates)) {
-               addError("You can only bid for one section per course! ");
-               header("Location: cart");
-           }
-
-           if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
-            addError("Timetable conflict! ");
-            header("Location: cart");
-           }
-
-           print_r($courseSections);
-
-        }
-        else {
-            header("Location: cart");
-        }
-    }
-    else {
-        header("Location: cart");
-    }
+    
 
     include 'includes/views/header.php';
 ?>
@@ -109,7 +70,7 @@
                             </tbody>
                         </table>
                         <p>
-                            <button type="submit" class="btn btn-info">Checkout</button>
+                            <button type="submit" class="btn btn-info">Bid</button>
                         </p>
                     </form>
 				</section>
