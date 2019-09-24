@@ -418,27 +418,43 @@ class BidDAO {
 ***REMOVED***
 
     public function addBid($userId, $courseCode, $section, $amount, $round) {
-		$sql = "UPDATE bids SET result = 'submitted', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
-        
-        // Note: It's update and not add because we combine into one table.
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        try {
+            // We start our transaction.
+            $db->beginTransaction();
 
-		$query = $db->prepare($sql);
-        $query->setFetchMode(PDO::FETCH_ASSOC);
-        $query->bindParam(':amount', $amount, PDO::PARAM_STR);
-        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-        $query->bindParam(':section', $section, PDO::PARAM_STR);
-        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
-		
-		$isUpdateOk = False;
-        if ($query->execute()) {
-            $isUpdateOk = True;
+            // Note: It's update and not add because our bids/cart info etc is all in one bids table.
+            $sql = "UPDATE bids SET result = 'submitted', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(':amount', $amount, PDO::PARAM_STR);
+            $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+            $query->bindParam(':section', $section, PDO::PARAM_STR);
+            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+            $query->execute();
+
+            // We begin our second transaction.
+            $sql = "UPDATE users SET edollar = edollar - :amount WHERE user_id = :userId";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(':amount', $amount, PDO::PARAM_STR);
+            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+
+            $query->execute();
+
+            // We've got this far without an exception, so commit the changes.
+            $db->commit();
+            return true;
     ***REMOVED***
+        catch (Exception $e) {
+            $db->rollback();
 
-        return $isUpdateOk;
+            return false;
+    ***REMOVED***        
 ***REMOVED***
 
     public function updateBid($userId, $courseCode, $section, $amount, $round) {
