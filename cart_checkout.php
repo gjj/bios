@@ -28,6 +28,7 @@
         <div class="row pb-5">
 			<div class="col-md-12">
                 <h5>My Selected Sections</h5>
+                <h6> You currently have e$***REMOVED*** echo $user['edollar']; ?> </h6>
                 <section>
                 <form action="cart_checkout_process" method="post">
                         <table class="table">
