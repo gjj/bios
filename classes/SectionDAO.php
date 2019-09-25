@@ -101,11 +101,40 @@ class SectionDAO {
         $sql = 'TRUNCATE TABLE sections';
         
         $connMgr = new ConnectionManager();
-        $conn = $connMgr->getConnection();
+        $db = $connMgr->getConnection();
         
-        $stmt = $conn->prepare($sql);
+        $query = $db->prepare($sql);
         
-        $stmt->execute();
-        $count = $stmt->rowCount();
+        $query->execute();
+        $count = $query->rowCount();
 ***REMOVED*** 
+
+    public function add($section) {
+        $sql = 'INSERT INTO sections (course,section,day,start,end,instructor,venue,size) VALUES (:course, :section, :day, :start, :end, :instructor, :venue, :size)';
+        
+        $connMgr = new ConnectionManager();       
+        $db = $connMgr->getConnection();
+         
+        $query = $db->prepare($sql); 
+
+        $query->bindParam(':course', $section->courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section->section, PDO::PARAM_STR);
+        $query->bindParam(':day', $section->day, PDO::PARAM_STR);
+        $query->bindParam(':start', $section->start, PDO::PARAM_STR);
+        $query->bindParam(':end', $section->end, PDO::PARAM_STR);
+        $query->bindParam(':instructor', $section->instructor, PDO::PARAM_STR);
+        $query->bindParam(':venue', $section->venue, PDO::PARAM_STR);
+        $query->bindParam(':size', $section->size, PDO::PARAM_STR);
+
+
+        $isAddOK = False;
+        if ($query->execute()) {
+            $isAddOK = True;
+    ***REMOVED***
+
+        return $isAddOK;
+***REMOVED***
+
+
+
 }
