@@ -127,13 +127,22 @@ function doBootstrap() {
 					$userId = $data[0];
 					$completed_course = $data[1];
 					// $courses_completedObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
-					$courseDAO->add($userId, $completed_course);
+					$courseDAO->addCompletedCourses($userId, $completed_course);
 					$courses_completed_processed++;
+				}
+				$data = fgetcsv($prerequisites);
+				while(($data = fgetcsv($prerequisites)) !== false){
+					$course = $data[0];
+					$prerequisite = $data[1];
+					$courseDAO->addPrerequisites($course,$prerequisite);
+					$prerequisites_processed++;
 				}
 
 
                 fclose($courseDAO);
 				@unlink($courses_path);
+				@unlink($courses_completed_path);
+				@unlink($prerequisites_path);
 
 				// fclose($BidDAO);
                 // @unlink($bids_path);
@@ -143,6 +152,7 @@ function doBootstrap() {
 			    
                 fclose($userDAO);
 				@unlink($students_path);
+				
 			}
 		}
 ***REMOVED***
