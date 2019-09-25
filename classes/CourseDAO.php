@@ -129,5 +129,53 @@ class CourseDAO {
         
         $stmt->execute();
         $count = $stmt->rowCount();
-***REMOVED*** 
+	} 
+
+	public function addCourses($course) {
+        $sql = 'INSERT INTO courses (course,school,title,description,exam_date,exam_start,exam_end) VALUES (:course, :school, :title, :description, :exam_date, :exam_start, :exam_end)';
+        
+        $connMgr = new ConnectionManager();       
+        $db = $connMgr->getConnection();
+         
+        $query = $db->prepare($sql); 
+
+        $query->bindParam(':course', $course->courseCode, PDO::PARAM_STR);
+        $query->bindParam(':school', $course->school, PDO::PARAM_STR);
+        $query->bindParam(':title', $course->title, PDO::PARAM_STR);
+        $query->bindParam(':description', $course->description, PDO::PARAM_STR);
+        $query->bindParam(':exam_date', $course->examDate, PDO::PARAM_STR);
+        $query->bindParam(':exam_start', $course->examStart, PDO::PARAM_STR);
+        $query->bindParam(':exam_end', $course->examEnd, PDO::PARAM_STR);
+
+
+        $isAddOK = False;
+        if ($query->execute()) {
+            $isAddOK = True;
+    ***REMOVED***
+
+        return $isAddOK;
+	}
+	
+	// Incomplete
+	// public function addCompletedCourses($course) {
+    //     $sql = 'INSERT INTO courses_completed (user_id,course) VALUES (:user_id, :course)';
+        
+    //     $connMgr = new ConnectionManager();       
+    //     $db = $connMgr->getConnection();
+         
+    //     $query = $db->prepare($sql); 
+
+	// 	$query->bindParam(':user_id', $user_id, PDO::PARAM_STR)
+
+    //     $isAddOK = False;
+    //     if ($query->execute()) {
+    //         $isAddOK = True;
+    // ***REMOVED***
+
+    //     return $isAddOK;
+	// }
+
+
+
+
 }
