@@ -158,14 +158,32 @@ class CourseDAO {
 	
 	// Incomplete
 	public function addCompletedCourses($userId, $course) {
-        $sql = 'INSERT INTO courses_completed (user_id,course) VALUES (:user_id, :course)';
+        $sql = 'INSERT INTO courses_completed (user_id,course) VALUES (:userId, :course)';
         
         $connMgr = new ConnectionManager();       
         $db = $connMgr->getConnection();
          
         $query = $db->prepare($sql); 
 
-		$query->bindParam(':user_id', $user_id, PDO::PARAM_STR)
+		$query->bindParam(':userId', $userId, PDO::PARAM_STR)
+
+        $isAddOK = False;
+        if ($query->execute()) {
+            $isAddOK = True;
+        }
+
+        return $isAddOK;
+	}
+
+	public function addPrerequisites($course,$prerequisite) {
+        $sql = 'INSERT INTO prerequisites (course,prerequisite) VALUES (:course, :prerequisite)';
+        
+        $connMgr = new ConnectionManager();       
+        $db = $connMgr->getConnection();
+         
+        $query = $db->prepare($sql); 
+
+		$query->bindParam(':course', $course, PDO::PARAM_STR)
 
         $isAddOK = False;
         if ($query->execute()) {
