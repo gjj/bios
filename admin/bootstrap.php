@@ -11,13 +11,12 @@ function doBootstrap() {
 	$temp_dir = sys_get_temp_dir();
 
 	# keep track of number of lines successfully processed for each file
+	$students_processed=0;
 	$bids_processed=0;
 	$courses_processed=0;
     $courses_completed_processed=0;
     $prerequisites_processed=0;
-    $rounds_processed=0;
     $sections_processed=0;
-    $users_processed=0;
 
 	# check file size
 	if ($_FILES["bootstrap-file"]["size"] <= 0)
@@ -45,10 +44,9 @@ function doBootstrap() {
 			$courses = @fopen($courses_path, "r");
             $courses_completed = @fopen($courses_completed_path, "r");
             $prerequisites = @fopen($prerequisites_path, "r");
-            $rounds = @fopen($rounds_path, "r");
 			$sections = @fopen($sections_path, "r");
 			
-			if (empty($sections)){
+			if (empty($courses)){
             // if (empty($bids) || empty($courses) || empty($courses_completed)
             // || empty($prerequisites)|| empty($sections)){#|| empty($users)|| empty($rounds)){
 				$errors[] = "input files not found";
@@ -87,46 +85,64 @@ function doBootstrap() {
 				$connMgr = new ConnectionManager();
 				$conn = $connMgr->getConnection();
 
-				# start processing
-				
-				# truncate current SQL tables
-				// $BidDAO = new BidDAO();
-				// $BidDAO -> removeAll();
+				// Truncate all tables 
+				$userDAO = new UserDAO();
+				$userDAO -> removeAll();
 
-				// $courseDAO = new CourseDAO();
-                // $courseDAO -> removeAllCourses();
-                // $courseDAO -> removeAllCompletedCourses();
-                // $courseDAO -> removeAllPrerequisites();
+				$BidDAO = new BidDAO();
+				$BidDAO -> removeAll();
+
+				$courseDAO = new CourseDAO();
+                $courseDAO -> removeAllCourses();
+                $courseDAO -> removeAllCompletedCourses();
+                $courseDAO -> removeAllPrerequisites();
 
                 // $roundDAO = new RoundDAO();
                 // $roundDAO -> removeAll();
 
                 $sectionDAO = new SectionDAO();
 				$sectionDAO -> removeAll();
+
+				$data = fgetcsv($students);
+				while(($data = fgetcsv($students)) !== false){
+					$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5]);
+					$userDAO->add($studentObj);
+					$students_processed++;
+				}
+
+				$data = fgetcsv($courses);
+				while(($data = fgetcsv($courses)) !== false){
+					$coursesObj = new Course( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6]);
+					$courseDAO->addCourses($coursesObj);
+					$courses_path++;
+				}
 				$data = fgetcsv($sections);
 				while(($data = fgetcsv($sections)) !== false){
-					
 					$sectionsObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
 					$sectionDAO->add($sectionsObj);
 					$sections_processed++;
 				}
+				$data = fgetcsv($courses_completed);
+				while(($data = fgetcsv($courses_completed)) !== false){
+					$userId = $data[0];
+					$completed_course = $data[1];
+					// $courses_completedObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
+					$courseDAO->add($userId, $completed_course);
+					$courses_completed_processed++;
+				}
 
-				
 
-                // $userDAO = new UserDAO();
-                // $userDAO -> removeAll();
+                fclose($courseDAO);
+				@unlink($courses_path);
 
-                // fclose($courseDAO);
-				// @unlink($courses_path);
-
-                // fclose($BidDAO);
+				// fclose($BidDAO);
                 // @unlink($bids_path);
                 
                 fclose($sectionDAO);
-                @unlink($sections_path);
-                
-                // fclose($userDAO);
-				// @unlink($users_path);
+				@unlink($sections_path);
+			    
+                fclose($userDAO);
+				@unlink($students_path);
 			}
 		}
 ***REMOVED***
@@ -146,13 +162,12 @@ function doBootstrap() {
 		$result = [ 
 			"status" => "success",
 			"num-record-loaded" => [
+				"student.csv" => $students_processed,
 				"bid.csv" => $bids_processed,
 				"course.csv" => $courses_processed,
                 "course_completed.csv" => $courses_completed_processed,
                 "prerequisite.csv" => $prerequisites_processed,
                 "section.csv" => $sections_processed
-                //user.csv
-                //round.csv
 			]
 		];
 	}

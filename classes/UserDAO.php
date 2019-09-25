@@ -95,5 +95,29 @@ class UserDAO {
         
         $stmt->execute();
         $count = $stmt->rowCount();
-***REMOVED*** 
+	} 
+	
+	public function add($user) {
+        $sql = 'INSERT INTO student (userid,password,name,school,edollar) VALUES (:userid, :password, :name, :school, :edollar)';
+        
+        $connMgr = new ConnectionManager();       
+        $db = $connMgr->getConnection();
+         
+        $query = $db->prepare($sql); 
+
+        $query->bindParam(':userid', $userId->userId, PDO::PARAM_STR);
+        $query->bindParam(':password', $userId->password, PDO::PARAM_STR);
+        $query->bindParam(':name', $userId->name, PDO::PARAM_STR);
+        $query->bindParam(':school', $userId->school, PDO::PARAM_STR);
+        $query->bindParam(':edollar', $userId->edollar, PDO::PARAM_STR);
+
+
+        $isAddOK = False;
+        if ($query->execute()) {
+            $isAddOK = True;
+    ***REMOVED***
+
+        return $isAddOK;
+	}
+
 }
