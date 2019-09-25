@@ -90,6 +90,28 @@ class BidDAO {
 		return $result;
     }
 
+    public function retrieveBidsByCodeAndSection($userId, $courseCode, $section, $round) {
+		$sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = 'submitted'";
+
+		$connMgr = new ConnectionManager();
+		$db = $connMgr->getConnection();
+
+		$query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+		$query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        //$result = $this->updateDayOfWeek($result);
+		
+		// Returns my result set on success.
+		return $result;
+    }
+
     /**
      * Check if the course and section pair has already been added to cart.
      * @params $userId The user ID to search for.
@@ -550,5 +572,21 @@ class BidDAO {
         
         $stmt->execute();
         $count = $stmt->rowCount();
-    } 
+    }
+
+    public function getAllBidsForCalendar($userId) {
+		$sql = "SELECT bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND (result = 'submitted' OR result = 'in')";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+
+		$query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		return $result;
+    }
 }
