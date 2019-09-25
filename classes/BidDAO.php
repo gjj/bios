@@ -589,4 +589,47 @@ class BidDAO {
 
 		return $result;
     }
+
+
+    public function refundbidamount($userId, $courseCode, $section) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        
+        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
+        
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+
+        $sql = "UPDATE users SET edollar = edollar + ($query) WHERE user_id = :userId";
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+
+        $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
+        
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        $isDeleteOK = false;
+
+        if ($query->execute()) {
+            $isDeleteOK = true;
+        }
+
+        return $isDeleteOK;
+    }
+
 }
