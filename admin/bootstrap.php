@@ -32,27 +32,30 @@ function doBootstrap() {
 			$zip->extractTo($temp_dir);
             $zip->close();
             
-            // Not completed
+			// Not completed
+			$students_path = "$temp_dir/student.csv";
 			$bids_path = "$temp_dir/bid.csv";
 			$courses_path = "$temp_dir/course.csv";
             $courses_completed_path = "$temp_dir/course_completed.csv";
             $prerequisites_path = "$temp_dir/prerequisite.csv";
-            // $rounds_path = "$temp_dir/";
             $sections_path = "$temp_dir/section.csv";
-            // $users_path = "$temp_dir/";
-			
-			$bids = @fopen($bids, "r");
+            
+			$students = @fopen($students_path, "r");
+			$bids = @fopen($bids_path, "r");
 			$courses = @fopen($courses_path, "r");
             $courses_completed = @fopen($courses_completed_path, "r");
             $prerequisites = @fopen($prerequisites_path, "r");
-            // $rounds = @fopen($rounds_path, "r");
+            $rounds = @fopen($rounds_path, "r");
 			$sections = @fopen($sections_path, "r");
-			// $users = @fopen($users_path, "r"); 
 			
 			if (empty($sections)){
             // if (empty($bids) || empty($courses) || empty($courses_completed)
             // || empty($prerequisites)|| empty($sections)){#|| empty($users)|| empty($rounds)){
 				$errors[] = "input files not found";
+				if (!empty($students)){
+					fclose($students);
+					@unlink($students_path);
+            ***REMOVED*** 
 				if (!empty($bids)){
 					fclose($bids); 
 					@unlink($bids_path);
@@ -70,19 +73,13 @@ function doBootstrap() {
                 if (!empty($prerequisites)){
 					fclose($prerequisites);
 					@unlink($prerequisites_path);
-            ***REMOVED*** 
-                // if (!empty($rounds)){
-				// 	fclose($rounds);
-				// 	@unlink($rounds_path);
-                // } 
+				} 
+				
                 if (!empty($sections)){
 					fclose($sections);
 					@unlink($sections_path);
             ***REMOVED*** 
-                // if (!empty($users)){
-				// 	fclose($users);
-				// 	@unlink($users_path);
-                // } 
+
 				
 				
 			}
