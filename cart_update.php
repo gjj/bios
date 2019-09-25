@@ -37,7 +37,7 @@
     ***REMOVED***
         else {
             foreach ($bids as $bid) {
-                $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+                $bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
         ***REMOVED***
 
             header("Location: cart");
