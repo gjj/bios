@@ -16,9 +16,10 @@
 	$currentRound = $roundDAO->getCurrentRound();
     $user = currentUser();
     $cartItems = $bidDAO->retrieveAllCartItemsByUser($user['userid'], $currentRound['round']);
+    $bids = $bidDAO->retrieveAllBidsByUser($user['userid'], $currentRound['round']);
 
     if ($_POST) {
-        if ($_POST['checkout']) {
+        if (isset($_POST['checkoutForm'])) {
             $courseSections = array();
 
             foreach ($_POST['checkout'] as $rowNumber) {
@@ -50,13 +51,32 @@
             $countBiddedMods = $bidDAO->countBids($user['userid'], $currentRound['round']);
             
             if (($count + $countBiddedMods) > 5) {
-                addError("You can only bid for up to 5 sections! You currently have {$count} bidded/confirmed courses, and you're bidding for {$countBiddedMods} more.");
+                addError("You can only bid for up to 5 sections! You currently have {$countBiddedMods} bidded/confirmed courses, and you're bidding for {$count} more.");
             }
 
             // If no errors, then we redirect to cart_checkout.php.
             if (!isset($_SESSION['errors'])) {
                 $_SESSION['courseSections'] = $courseSections;
                 header("Location: cart_checkout");
+            }
+        }
+
+        else if (isset($_POST['updateForm'])) {
+            $courseSections = array();
+            
+            foreach ($_POST['update'] as $rowNumber) {
+                $courseSection = array(
+                    'course' => $bids[$rowNumber]['course'],
+                    'section' => $bids[$rowNumber]['section']
+                );
+
+                array_push($courseSections, $courseSection);
+            }
+            // If no errors, then we redirect to cart_checkout.php.
+            if (!isset($_SESSION['errors'])) {
+                $_SESSION['courseSections'] = $courseSections;
+
+                header("Location: cart_update");
             }
         }
     }
@@ -74,11 +94,8 @@
                     // put your options and callbacks here
                     defaultView: 'agendaWeek',
                     events: {
-                        url: 'api/v1/calendar',
+                        url: 'json/misc/calendar_sections',
                         type: 'GET',
-                        data: {
-                            param: 1
-                        },
                         textColor: 'white'
                     },
                     error: function() {
@@ -157,7 +174,7 @@
                                         <input type="checkbox" name="checkout[]" value="<?php echo $i; ?>" />
                                     </td>
                                     <td><?php echo $cartItem['course'];?></td>
-                                    <td><?php echo $cartItem['section'];?><input type="hidden" name="section[]" value="<?php echo $cartItem['section'];?>" /></td>
+                                    <td><?php echo $cartItem['section'];?></td>
                                     <td><?php echo $cartItem['day'];?></td>
                                     <td><?php echo $cartItem['start'];?></td>
                                     <td><?php echo $cartItem['end'];?></td>
@@ -183,7 +200,7 @@
                             </tbody>
                         </table>
                         <p>
-                            <button type="submit" class="btn btn-info"<?php if (!$cartItems) echo " disabled"; ?>>Checkout</button>
+                            <input type="submit" name="checkoutForm" class="btn btn-info"<?php if (!$cartItems) echo " disabled"; ?> value="Checkout" />
                         </p>
                     </form>
 				</section>
@@ -194,55 +211,60 @@
             <div class="col-md-12">
                 <h5>My Bids</h5>
                 <section>
-					<table class="table">
-						<thead class="thead-dark">
-							<tr>
-							    <th scope="col"></th>
-                                <th scope="col">Bid (e$)</th>
-                                <th scope="col">Course Code</th>
-                                <th scope="col">Section</th>
-							    <th scope="col">Day</th>
-							    <th scope="col">Start</th>
-							    <th scope="col">End</th>
-							    <th scope="col">Instructor</th>
-							    <th scope="col">Venue</th>
-							    <th scope="col">Size</th>
-							</tr>
-						</thead>
-						<tbody>
-                                <?php
-                                    $bids = $bidDAO->retrieveAllBidsByUser($user['userid'], $currentRound['round']);
-                                    
-                                    if ($bids) {
-                                        foreach ($bids as $bid) {
-                                ?>
+                    <form action="" method="post">
+                        <table class="table">
+                            <thead class="thead-dark">
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="input" name="checkout[]" />
-                                    </td>
-                                    <td><?php echo $bid['amount'];?></td>
-                                    <td><?php echo $bid['course'];?></td>
-                                    <td><?php echo $bid['section'];?></td>
-                                    <td><?php echo $bid['day'];?></td>
-                                    <td><?php echo $bid['start'];?></td>
-                                    <td><?php echo $bid['end'];?></td>
-                                    <td><?php echo $bid['instructor'];?></td>
-                                    <td><?php echo $bid['venue'];?></td>
-                                    <td><?php echo $bid['size'];?></td>
+                                    <th scope="col"></th>
+                                    <th scope="col">Bid (e$)</th>
+                                    <th scope="col">Course Code</th>
+                                    <th scope="col">Section</th>
+                                    <th scope="col">Day</th>
+                                    <th scope="col">Start</th>
+                                    <th scope="col">End</th>
+                                    <th scope="col">Instructor</th>
+                                    <th scope="col">Venue</th>
+                                    <th scope="col">Size</th>
                                 </tr>
-                                <?php
+                            </thead>
+                            <tbody>
+                                    <?php        
+                                        $i = 0;                                
+                                        if ($bids) {
+                                            foreach ($bids as $bid) {
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" class="input" name="update[]" value="<?php echo $i; ?>" />
+                                        </td>
+                                        <td><?php echo $bid['amount'];?></td>
+                                        <td><?php echo $bid['course'];?></td>
+                                        <td><?php echo $bid['section'];?></td>
+                                        <td><?php echo $bid['day'];?></td>
+                                        <td><?php echo $bid['start'];?></td>
+                                        <td><?php echo $bid['end'];?></td>
+                                        <td><?php echo $bid['instructor'];?></td>
+                                        <td><?php echo $bid['venue'];?></td>
+                                        <td><?php echo $bid['size'];?></td>
+                                    </tr>
+                                    <?php
+                                                $i++;
+                                            }
                                         }
-                                    }
-                                    else {
-                                ?>
-                                <tr>
-                                    <td colspan="10">No bids currently.</td>
-                                </tr>
-                                <?php
-                                    }
-                                ?>
-                        </tbody>
-                    </table>
+                                        else {
+                                    ?>
+                                    <tr>
+                                        <td colspan="10">No bids currently.</td>
+                                    </tr>
+                                    <?php
+                                        }
+                                    ?>
+                            </tbody>
+                        </table>
+                        <p>
+                            <input type="submit" name="updateForm" class="btn btn-info"<?php if (!$bids) echo " disabled"; ?> value="Update" />
+                        </p>
+                    </form>
                 </section>
             </div>
         </div>
