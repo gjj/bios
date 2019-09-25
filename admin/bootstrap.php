@@ -49,11 +49,12 @@ function doBootstrap() {
 			$sections = @fopen($sections_path, "r");
 			// $users = @fopen($users_path, "r"); 
 			
-            if (empty($bids) || empty($courses) || empty($courses_completed)
-            || empty($prerequisites)|| empty($rounds)|| empty($sections)|| empty($users)){
+			if (empty($sections)){
+            // if (empty($bids) || empty($courses) || empty($courses_completed)
+            // || empty($prerequisites)|| empty($sections)){#|| empty($users)|| empty($rounds)){
 				$errors[] = "input files not found";
 				if (!empty($bids)){
-					fclose($bids);
+					fclose($bids); 
 					@unlink($bids_path);
 				} 
 				
@@ -92,28 +93,37 @@ function doBootstrap() {
 				# start processing
 				
 				# truncate current SQL tables
-				$BidDAO = new BidDAO();
-				$BidDAO -> removeAll();
+				// $BidDAO = new BidDAO();
+				// $BidDAO -> removeAll();
 
-				$courseDAO = new CourseDAO();
-                $courseDAO -> removeAllCourses();
-                $courseDAO -> removeAllCompletedCourses();
-                $courseDAO -> removeAllPrerequisites();
+				// $courseDAO = new CourseDAO();
+                // $courseDAO -> removeAllCourses();
+                // $courseDAO -> removeAllCompletedCourses();
+                // $courseDAO -> removeAllPrerequisites();
 
                 // $roundDAO = new RoundDAO();
                 // $roundDAO -> removeAll();
 
                 $sectionDAO = new SectionDAO();
-                $sectionDAO -> removeAll();
+				$sectionDAO -> removeAll();
+				$data = fgetcsv($sections);
+				while(($data = fgetcsv($sections)) !== false){
+					
+					$sectionsObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
+					$sectionDAO->add($sectionsObj);
+					$sections_processed++;
+				}
+
+				
 
                 // $userDAO = new UserDAO();
                 // $userDAO -> removeAll();
 
-                fclose($courseDAO);
-				@unlink($courses_path);
+                // fclose($courseDAO);
+				// @unlink($courses_path);
 
-                fclose($BidDAO);
-                @unlink($bids_path);
+                // fclose($BidDAO);
+                // @unlink($bids_path);
                 
                 fclose($sectionDAO);
                 @unlink($sections_path);
