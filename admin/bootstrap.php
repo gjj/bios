@@ -39,7 +39,7 @@ function doBootstrap() {
             $prerequisites_path = "$temp_dir/prerequisite.csv";
             // $rounds_path = "$temp_dir/";
             $sections_path = "$temp_dir/section.csv";
-            // $users_path = "$temp_dir/";
+            $users_path = "$temp_dir/student.csv";
 			
 			$bids = @fopen($bids, "r");
 			$courses = @fopen($courses_path, "r");
@@ -49,7 +49,7 @@ function doBootstrap() {
 			$sections = @fopen($sections_path, "r");
 			// $users = @fopen($users_path, "r"); 
 			
-			if (empty($sections)){
+			if (empty($courses)){
             // if (empty($bids) || empty($courses) || empty($courses_completed)
             // || empty($prerequisites)|| empty($sections)){#|| empty($users)|| empty($rounds)){
 				$errors[] = "input files not found";
@@ -93,25 +93,42 @@ function doBootstrap() {
 				# start processing
 				
 				# truncate current SQL tables
-				// $BidDAO = new BidDAO();
-				// $BidDAO -> removeAll();
+				$BidDAO = new BidDAO();
+				$BidDAO -> removeAll();
 
-				// $courseDAO = new CourseDAO();
-                // $courseDAO -> removeAllCourses();
-                // $courseDAO -> removeAllCompletedCourses();
-                // $courseDAO -> removeAllPrerequisites();
+				$courseDAO = new CourseDAO();
+                $courseDAO -> removeAllCourses();
+                $courseDAO -> removeAllCompletedCourses();
+                $courseDAO -> removeAllPrerequisites();
 
                 // $roundDAO = new RoundDAO();
                 // $roundDAO -> removeAll();
 
-                $sectionDAO = new SectionDAO();
-				$sectionDAO -> removeAll();
-				$data = fgetcsv($sections);
-				while(($data = fgetcsv($sections)) !== false){
+                // $sectionDAO = new SectionDAO();
+				// $sectionDAO -> removeAll();
+				// $data = fgetcsv($sections);
+
+				// while(($data = fgetcsv($sections)) !== false){
 					
-					$sectionsObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
-					$sectionDAO->add($sectionsObj);
-					$sections_processed++;
+				// 	$sectionsObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
+				// 	$sectionDAO->add($sectionsObj);
+				// 	$sections_processed++;
+				// }
+
+
+				while(($data = fgetcsv($courses)) !== false){
+					$coursesObj = new Course( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6]);
+					$courseDAO->addCourses($coursesObj);
+					$courses_path++;
+				}
+					
+
+
+				while(($data = fgetcsv($userID)) !== false){
+					
+					$userObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5]);
+					$UserDAO->add($userObj);
+					$users_processed++;
 				}
 
 				
@@ -119,17 +136,20 @@ function doBootstrap() {
                 // $userDAO = new UserDAO();
                 // $userDAO -> removeAll();
 
-                // fclose($courseDAO);
-				// @unlink($courses_path);
+                fclose($courseDAO);
+				@unlink($courses_path);
 
-                // fclose($BidDAO);
+				// fclose($BidDAO);
                 // @unlink($bids_path);
                 
-                fclose($sectionDAO);
-                @unlink($sections_path);
+                // fclose($sectionDAO);
+				// @unlink($sections_path);
+				
+
+
                 
-                // fclose($userDAO);
-				// @unlink($users_path);
+                fclose($userDAO);
+				@unlink($users_path);
 			}
 		}
     }
