@@ -604,13 +604,16 @@ class BidDAO {
         $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->execute();
 
-        $sql = "UPDATE users SET edollar = edollar + ($query) WHERE user_id = :userId";
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        $sql = "UPDATE users SET edollar = edollar + (:amount) WHERE user_id = :userId";
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':amount', $result['amount'], PDO::PARAM_STR);
         $query->execute();
 
         $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
