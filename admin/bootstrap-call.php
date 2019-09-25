@@ -1,6 +1,5 @@
 <?php
 require_once '../includes/common.php';
-#require_once 'include/protect.php';
 
 ?>
 
