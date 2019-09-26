@@ -480,9 +480,21 @@ class BidDAO {
     }
 
     public function updateBid($userId, $courseCode, $section, $amount, $round) {
-		$sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'submitted' AND round = :round";
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
         
-        // Note: It's update and not add because we combine into one table.
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+
+        $currentAmount = $query->fetch(PDO::FETCH_ASSOC);
+
+		$sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'submitted' AND round = :round";
 
 		$connMgr = new ConnectionManager();
 		$db = $connMgr->getConnection();
@@ -494,6 +506,18 @@ class BidDAO {
         $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+        $difference = $amount - $currentAmount['amount'];
+
+        return $difference;
+
+        $sql = "UPDATE users SET edollar = :amount WHERE user_id = :userId";
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':amount', $difference, PDO::PARAM_STR);
+        $query->execute();
 		
 		$isUpdateOk = False;
         if ($query->execute()) {

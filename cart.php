@@ -247,7 +247,7 @@
                                         <td><?php echo $bid['instructor'];?></td>
                                         <td><?php echo $bid['venue'];?></td>
                                         <td><?php echo $bid['size'];?></td>
-                                        <td><a href="bid_delete?course=<?php echo $cartItem['course'];?>&section=<?php echo $cartItem['section'];?>">Delete</a></td>
+                                        <td><a href="bid_delete?course=<?php echo $bid['course'];?>&section=<?php echo $bid['section'];?>">Delete</a></td>
                                     </tr>
                                     <?php
                                                 $i++;
