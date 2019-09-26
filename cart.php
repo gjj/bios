@@ -247,7 +247,7 @@
                                         <td>***REMOVED*** echo $bid['instructor'];?></td>
                                         <td>***REMOVED*** echo $bid['venue'];?></td>
                                         <td>***REMOVED*** echo $bid['size'];?></td>
-                                        <td><a href="bid_delete?course=***REMOVED*** echo $cartItem['course'];?>&section=***REMOVED*** echo $cartItem['section'];?>">Delete</a></td>
+                                        <td><a href="bid_delete?course=***REMOVED*** echo $bid['course'];?>&section=***REMOVED*** echo $bid['section'];?>">Delete</a></td>
                                     </tr>
                                     ***REMOVED***
                                                 $i++;

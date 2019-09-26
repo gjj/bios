@@ -18,8 +18,6 @@
 
     if (isset($_SESSION['courseSections'])) {
         $bids = $_SESSION['courseSections'];
-        print_r($bids);
-
 ***REMOVED***
     
     if ($_POST) {
@@ -28,7 +26,8 @@
         for ($i = 0; $i < count($_POST['amount']); $i++) {
             $amount = $_POST['amount'][$i];
             $bids[$i]['amount'] = $amount;
-            $sum += $amount;
+            print_r($bids);
+            $sum += ($bids[$i]['old_amount'] - $amount); // Sum only the increment or decrement.
     ***REMOVED***
 
         // Validation: Make sure I sum(current bid - amount[]) < my current edollar!!!!
@@ -37,10 +36,10 @@
     ***REMOVED***
         else {
             foreach ($bids as $bid) {
-                $bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+                print_r($bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']));
         ***REMOVED***
 
-            header("Location: cart");
+            //header("Location: cart");
     ***REMOVED***
 ***REMOVED***
     include 'includes/views/header.php';
@@ -89,8 +88,10 @@
                             <tbody>
                                 ***REMOVED***
                                     $i = 0;
-                                    foreach ($bids as $bid) {
+                                    for ($i = 0; $i < count($bids); $i++) {
+                                        $bid = $bids[$i];
                                         $cartItems = $bidDAO->retrieveBidsByCodeAndSection($user['userid'], $bid['course'], $bid['section'], $currentRound['round']);
+                                        $bids[$i]['old_amount'] = $cartItems['amount'];
                                 ?>
                                 <tr>
                                     <td>
@@ -106,7 +107,6 @@
                                     <td>***REMOVED*** echo $cartItems['size'];?></td>
                                 </tr>
                                 ***REMOVED***
-                                        $i++;
                                 ***REMOVED***
                                 ?>
                             </tbody>
