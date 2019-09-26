@@ -732,4 +732,26 @@ class BidDAO
         return $result;
 ***REMOVED***
 
+	public function add($userId,$amount,$code,$section) {
+        $sql = 'INSERT INTO bids (user_id,amount,course,section) VALUES (:user_id, :amount, :course, :section)';
+        
+        $connMgr = new ConnectionManager();       
+        $db = $connMgr->getConnection();
+         
+        $query = $db->prepare($sql); 
+
+        $query->bindParam(':user_id', $userId , PDO::PARAM_STR);
+        $query->bindParam(':amount', $amount, PDO::PARAM_STR);
+        $query->bindParam(':course', $code, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+
+
+        $isAddOK = False;
+        if ($query->execute()) {
+            $isAddOK = True;
+    ***REMOVED***
+
+        return $isAddOK;
+	}
+
 }
