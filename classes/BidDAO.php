@@ -17,7 +17,7 @@ class BidDAO
 ***REMOVED***
     public function retrieveAllBidsByUser($userId, $round)
     {
-        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = 'submitted'";
+        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = '-'";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -96,7 +96,7 @@ class BidDAO
 
     public function retrieveBidsByCodeAndSection($userId, $courseCode, $section, $round)
     {
-        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = 'submitted'";
+        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = '-'";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -127,7 +127,7 @@ class BidDAO
 ***REMOVED***
     public function checkIfAddedToCart($userId, $courseCode, $section, $round)
     {
-        $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND (result = 'cart' OR result = 'submitted')) OR result = 'in')";
+        $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in')";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -192,7 +192,7 @@ class BidDAO
             return true;
     ***REMOVED***
 
-        $sql = "SELECT course FROM bids WHERE user_id = :userId AND course IN ('" . implode(', ', $selectedCourses) . "') AND ((result = 'submitted' AND round = :round) OR result = '-' OR result = 'in')";
+        $sql = "SELECT course FROM bids WHERE user_id = :userId AND course IN ('" . implode(', ', $selectedCourses) . "') AND  ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in')";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -257,7 +257,7 @@ class BidDAO
     ***REMOVED***
 
         $sql = "SELECT course, day, start, end FROM sections WHERE (course, section) IN (" . $inClauseBuilder . ") ";
-        $sql .= "UNION SELECT course, day, start, end FROM sections WHERE (course, section) IN (SELECT course, section FROM bids WHERE user_id = :userId AND ((result = 'submitted' AND round = :round) OR result = '-' OR result = 'in')) ";
+        $sql .= "UNION SELECT course, day, start, end FROM sections WHERE (course, section) IN (SELECT course, section FROM bids WHERE user_id = :userId AND ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in') ";
         $sql .= "ORDER BY day, start";
 
         // sort by Day, then search
@@ -303,9 +303,8 @@ class BidDAO
             array_push($courses, $courseSections[$i]['course']);
     ***REMOVED***
 
-
         $sql = "SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (\"" . implode("\", \"", $courses) . "\") ";
-        $sql .= "UNION SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (SELECT course FROM bids WHERE user_id = :userId AND ((result = 'submitted' AND round = :round) OR result = '-' OR result = 'in')) ";
+        $sql .= "UNION SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (SELECT course FROM bids WHERE user_id = :userId AND  ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in') ";
         $sql .= "ORDER BY exam_date, exam_start";
 
         // sort by Day, then search
@@ -422,7 +421,7 @@ class BidDAO
 ***REMOVED***
     public function countBids($userId, $round)
     {
-        $sql = "SELECT * FROM bids WHERE user_id = :userId AND (((result = 'submitted' OR result = '-') AND round = :round) OR result = 'in')";
+        $sql = "SELECT * FROM bids WHERE user_id = :userId AND  ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in')";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -495,7 +494,7 @@ class BidDAO
             $db->beginTransaction();
 
             // Note: It's update and not add because our bids/cart info etc is all in one bids table.
-            $sql = "UPDATE bids SET result = 'submitted', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
+            $sql = "UPDATE bids SET result = '-', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
 
             $query = $db->prepare($sql);
             $query->bindParam(':amount', $amount, PDO::PARAM_STR);
@@ -530,7 +529,7 @@ class BidDAO
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
+        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
@@ -541,7 +540,7 @@ class BidDAO
 
         $currentAmount = $query->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'submitted' AND round = :round";
+        $sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = '-' AND round = :round";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -651,7 +650,7 @@ class BidDAO
 
     public function getAllBidsForCalendar($userId)
     {
-        $sql = "SELECT bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND (result = 'submitted' OR result = 'in')";
+        $sql = "SELECT bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND  ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in')";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -676,7 +675,7 @@ class BidDAO
             // We start our transaction.
             $db->beginTransaction();
 
-            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
+            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
             
             $query = $db->prepare($sql);
             $query->setFetchMode(PDO::FETCH_ASSOC);
@@ -695,7 +694,7 @@ class BidDAO
             $query->bindParam(':amount', $result['amount'], PDO::PARAM_STR);
             $query->execute();
 
-            $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
+            $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
             
             $query = $db->prepare($sql);
             $query->setFetchMode(PDO::FETCH_ASSOC);
