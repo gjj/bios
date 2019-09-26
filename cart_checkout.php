@@ -29,11 +29,18 @@
             $sum += $amount;
         }
 
+        
         // Validation: Make sure I sum(amount[]) < my current edollar!!!!
         if ($sum > $user['edollar']) {
             addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
         }
-        else {
+
+        // Validation: Make sure each bid is min. e$10.
+        if (min($_POST['amount']) < 10) {
+            addError("Minimum bid is e$10! You have entered a bid that is less than the minimum bid.");
+        }
+        
+        if (!isset($_SESSION['errors'])) {
             foreach ($bids as $bid) {
                 $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
             }
@@ -92,7 +99,7 @@
                                 ?>
                                 <tr>
                                     <td>
-                                        <input type="number" name="amount[]" class="form-control" step="0.01" required />
+                                        <input type="number" name="amount[]" class="form-control" step="0.01" min="10" required />
                                     </td>
                                     <td><?php echo $cartItems['course'];?></td>
                                     <td><?php echo $cartItems['section'];?></td>
