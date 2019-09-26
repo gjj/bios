@@ -27,7 +27,7 @@
             $amount = $_POST['amount'][$i];
             $bids[$i]['amount'] = $amount;
             print_r($bids);
-            $sum += ($bids[$i]['old_amount'] - $amount); // Sum only the increment or decrement.
+            $sum += ($bids[$i]['amount_current'] - $amount); // Sum only the increment or decrement.
     ***REMOVED***
 
         // Validation: Make sure I sum(current bid - amount[]) < my current edollar!!!!
@@ -36,7 +36,7 @@
     ***REMOVED***
         else {
             foreach ($bids as $bid) {
-                print_r($bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']));
+                //print_r($bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']));
         ***REMOVED***
 
             //header("Location: cart");

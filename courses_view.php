@@ -15,6 +15,8 @@
 	$currentRound = $roundDAO->getCurrentRound();
 	$user = currentUser();
 
+	print_r($user);
+
 	if (!empty($_POST))
 	if (!isEmpty($_POST['course']) and !isEmpty($_POST['section'])) {
 
@@ -294,6 +296,9 @@
 								  	***REMOVED***
 									  	// Put here so that we only run 1x SQL query
 										$courseCompleted = $bidDAO->hasCompletedCourse($user['userid'], $course['course']);
+
+										
+
 										$ownSchoolCourse = $bidDAO->checkOwnSchoolCourse($user['school'], $course['course']);
 										$hasPrerequisites = $bidDAO->hasPrerequisites($course['course']);
 										$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $course['course']);
