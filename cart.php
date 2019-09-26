@@ -63,7 +63,8 @@
             foreach ($_POST['update'] as $rowNumber) {
                 $courseSection = array(
                     'course' => $bids[$rowNumber]['course'],
-                    'section' => $bids[$rowNumber]['section']
+                    'section' => $bids[$rowNumber]['section'],
+                    'amount_current' => $bids[$rowNumber]['amount']
                 );
 
                 array_push($courseSections, $courseSection);
