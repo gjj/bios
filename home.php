@@ -12,7 +12,7 @@
 	include 'includes/views/header.php';
 ?>
 
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 mt-3">
 	<div class="jumbotron">
 		<h2 class="display-4">
 			Hello, <?php echo $user['name']; ?>!

@@ -20,7 +20,7 @@
     if (!isEmpty($_GET['course']) and !isEmpty($_GET['section'])) {
         $code = $_GET['course'];
         $section = $_GET['section'];
-        
+
         if ($bidDAO->refundbidamount($user['userid'], $code, $section)) {
             header("Location: cart?deleted=1");
         }

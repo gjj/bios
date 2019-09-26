@@ -12,12 +12,15 @@ $bidDAO = new BidDAO();
 
 $currentRound = $roundDAO->getCurrentRound();
 $user = currentUser();
-$bids = $bidDAO->retrieveResult($user['userid'], $currentRound['round']);
+$bids = $bidDAO->retrieveResults($user['userid']);
 
 
 include 'includes/views/header.php';
 ?>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Results</h1>
+        </div>
         <div class="row pb-5">
             <div class="col-md-12">
                 <h5>My Results</h5>

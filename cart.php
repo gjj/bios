@@ -19,7 +19,7 @@
     $bids = $bidDAO->retrieveAllBidsByUser($user['userid'], $currentRound['round']);
 
     if ($_POST) {
-        if (isset($_POST['checkoutForm'])) {
+        if (isset($_POST['checkoutForm']) and isset($_POST['checkout'])) {
             $courseSections = array();
 
             foreach ($_POST['checkout'] as $rowNumber) {
@@ -54,26 +54,6 @@
             if (!isset($_SESSION['errors'])) {
                 $_SESSION['courseSections'] = $courseSections;
                 header("Location: cart_checkout");
-            }
-        }
-
-        else if (isset($_POST['updateForm'])) {
-            $courseSections = array();
-            
-            foreach ($_POST['update'] as $rowNumber) {
-                $courseSection = array(
-                    'course' => $bids[$rowNumber]['course'],
-                    'section' => $bids[$rowNumber]['section'],
-                    'amount_current' => $bids[$rowNumber]['amount']
-                );
-
-                array_push($courseSections, $courseSection);
-            }
-            // If no errors, then we redirect to cart_checkout.php.
-            if (!isset($_SESSION['errors'])) {
-                $_SESSION['courseSections'] = $courseSections;
-
-                header("Location: cart_update");
             }
         }
     }
@@ -212,7 +192,6 @@
                         <table class="table">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th scope="col"></th>
                                     <th scope="col">Bid (e$)</th>
                                     <th scope="col">Course Code</th>
                                     <th scope="col">Section</th>
@@ -232,9 +211,6 @@
                                             foreach ($bids as $bid) {
                                     ?>
                                     <tr>
-                                        <td>
-                                            <input type="checkbox" class="input" name="update[]" value="<?php echo $i; ?>" />
-                                        </td>
                                         <td><?php echo $bid['amount'];?></td>
                                         <td><?php echo $bid['course'];?></td>
                                         <td><?php echo $bid['section'];?></td>
@@ -244,7 +220,10 @@
                                         <td><?php echo $bid['instructor'];?></td>
                                         <td><?php echo $bid['venue'];?></td>
                                         <td><?php echo $bid['size'];?></td>
-                                        <td><a href="bid_delete?course=<?php echo $bid['course'];?>&section=<?php echo $bid['section'];?>">Delete</a></td>
+                                        <td>
+                                            <a href="bid_update?course=<?php echo $bid['course'];?>&section=<?php echo $bid['section'];?>">Update</a> | 
+                                            <a href="bid_delete?course=<?php echo $bid['course'];?>&section=<?php echo $bid['section'];?>">Delete</a>
+                                        </td>
                                     </tr>
                                     <?php
                                                 $i++;
@@ -260,9 +239,6 @@
                                     ?>
                             </tbody>
                         </table>
-                        <p>
-                            <input type="submit" name="updateForm" class="btn btn-info"<?php if (!$bids) echo " disabled"; ?> value="Update" />
-                        </p>
                     </form>
                 </section>
             </div>
