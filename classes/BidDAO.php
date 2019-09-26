@@ -192,10 +192,10 @@ class BidDAO
             return true;
     ***REMOVED***
 
-        $sql = "SELECT course FROM bids WHERE user_id = :userId AND course IN ('" . implode(', ', $selectedCourses) . "') AND ((round = :round AND result = '-') OR result = 'in')";
-
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
+
+        $sql = "SELECT course FROM bids WHERE user_id = :userId AND course IN ('" . implode('\', \'', $selectedCourses) . "') AND ((round = :round AND result = '-') OR result = 'in')";
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
@@ -206,7 +206,7 @@ class BidDAO
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         // Meaning it already exists in our bids.
-        if (count($result)) {
+        if ($query->rowCount()) {
             return true;
     ***REMOVED***
 
