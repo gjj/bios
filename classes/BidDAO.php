@@ -1,6 +1,7 @@
 ***REMOVED***
 
-class BidDAO {
+class BidDAO
+{
     /*
        Bid statuses:
        Bid statuses in cart = {cart, submitted}
@@ -14,24 +15,25 @@ class BidDAO {
 ***REMOVED***@params $round The current round.
 ***REMOVED***@return All BIDS that matches the search params.
 ***REMOVED***
-    public function retrieveAllBidsByUser($userId, $round) {
-		$sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = 'submitted'";
+    public function retrieveAllBidsByUser($userId, $round)
+    {
+        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = 'submitted'";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         $result = $this->updateDayOfWeek($result);
-		
-		// Returns my result set on success.
-		return $result;
+
+        // Returns my result set on success.
+        return $result;
 ***REMOVED***
 
 ***REMOVED***
@@ -40,24 +42,25 @@ class BidDAO {
 ***REMOVED***@params $round The current round.
 ***REMOVED***@return All cart items that matches the search params.
 ***REMOVED***
-    public function retrieveAllCartItemsByUser($userId, $round) {
-		$sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = 'cart'";
+    public function retrieveAllCartItemsByUser($userId, $round)
+    {
+        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = 'cart'";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         $result = $this->updateDayOfWeek($result);
-		
-		// Returns my result set on success.
-		return $result;
+
+        // Returns my result set on success.
+        return $result;
 ***REMOVED***
 
 ***REMOVED***
@@ -68,48 +71,50 @@ class BidDAO {
 ***REMOVED***@params $round The current round.
 ***REMOVED***@return All cart items that matches the search params.
 ***REMOVED***
-    public function retrieveCartItemsByCodeAndSection($userId, $courseCode, $section, $round) {
-		$sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = 'cart'";
+    public function retrieveCartItemsByCodeAndSection($userId, $courseCode, $section, $round)
+    {
+        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = 'cart'";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         //$result = $this->updateDayOfWeek($result);
-		
-		// Returns my result set on success.
-		return $result;
+
+        // Returns my result set on success.
+        return $result;
 ***REMOVED***
 
-    public function retrieveBidsByCodeAndSection($userId, $courseCode, $section, $round) {
-		$sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = 'submitted'";
+    public function retrieveBidsByCodeAndSection($userId, $courseCode, $section, $round)
+    {
+        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = 'submitted'";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         //$result = $this->updateDayOfWeek($result);
-		
-		// Returns my result set on success.
-		return $result;
+
+        // Returns my result set on success.
+        return $result;
 ***REMOVED***
 
 ***REMOVED***
@@ -120,27 +125,28 @@ class BidDAO {
 ***REMOVED***@params $round The current round.
 ***REMOVED***@return true if already added to cart, false if not in the cart.
 ***REMOVED***
-    public function checkIfAddedToCart($userId, $courseCode, $section, $round) {
-		$sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND (result = 'cart' OR result = 'submitted')) OR result = 'in')";
+    public function checkIfAddedToCart($userId, $courseCode, $section, $round)
+    {
+        $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND (result = 'cart' OR result = 'submitted')) OR result = 'in')";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if (count($result)) {
             return true;
     ***REMOVED***
 
-		return false;
+        return false;
 ***REMOVED***
 
 ***REMOVED***
@@ -151,23 +157,24 @@ class BidDAO {
 ***REMOVED***@params $round The current round.
 ***REMOVED***@return true if successfully deleted, false if not.
 ***REMOVED***
-    public function deleteCartItemByCodeAndSection($userId, $courseCode, $section, $round) {
-		$sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round AND result = 'cart'";
+    public function deleteCartItemByCodeAndSection($userId, $courseCode, $section, $round)
+    {
+        $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round AND result = 'cart'";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        
-		$isDeleteOK = false;
+
+        $isDeleteOK = false;
 
         if ($query->execute()) {
             $isDeleteOK = true;
@@ -175,28 +182,29 @@ class BidDAO {
 
         return $isDeleteOK;
 ***REMOVED***
-    
-    public function checkDuplicates($userId, $courseSections, $round) {
+
+    public function checkDuplicates($userId, $courseSections, $round)
+    {
         $selectedCourses = array_column($courseSections, 'course');
         $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
 
         if (count($duplicates)) {
             return true;
     ***REMOVED***
-        
+
         $sql = "SELECT course FROM bids WHERE user_id = :userId AND course IN ('" . implode(', ', $selectedCourses) . "') AND ((result = 'submitted' AND round = :round) OR result = '-' OR result = 'in')";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Meaning it already exists in our bids.
         if (count($result)) {
             return true;
@@ -210,19 +218,20 @@ class BidDAO {
 ***REMOVED***"not own school course"	This only happens in round 1 where students are allowed to bid for modules from their own school.
 ***REMOVED***bid.csv validation 1/7
 ***REMOVED***
-    public function checkOwnSchoolCourse($userSchool, $courseCode) {
+    public function checkOwnSchoolCourse($userSchool, $courseCode)
+    {
         $sql = "SELECT course, school FROM courses WHERE course = :courseCode";
-        
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($result['school'] == $userSchool) {
             return true;
     ***REMOVED***
@@ -235,13 +244,14 @@ class BidDAO {
 ***REMOVED***"class timetable clash"	The class timeslot for the section clashes with that of a previously bidded section.
 ***REMOVED***bid.csv validation 2/7
 ***REMOVED***
-    public function checkTimetableConflicts($userId, $courseSections, $round) {
+    public function checkTimetableConflicts($userId, $courseSections, $round)
+    {
         $inClauseBuilder = "";
         // SANITISE INPUTS PLSSSS!! this is vulnerable to SQL injection.
         for ($i = 0; $i < count($courseSections); $i++) {
             $inClauseBuilder .= "('{$courseSections[$i]['course']}', '{$courseSections[$i]['section']}')";
 
-            if ($i != (count($courseSections)-1)) {
+            if ($i != (count($courseSections) - 1)) {
                 $inClauseBuilder .= ", ";
         ***REMOVED***
     ***REMOVED***
@@ -249,19 +259,19 @@ class BidDAO {
         $sql = "SELECT course, day, start, end FROM sections WHERE (course, section) IN (" . $inClauseBuilder . ") ";
         $sql .= "UNION SELECT course, day, start, end FROM sections WHERE (course, section) IN (SELECT course, section FROM bids WHERE user_id = :userId AND ((result = 'submitted' AND round = :round) OR result = '-' OR result = 'in')) ";
         $sql .= "ORDER BY day, start";
-        
-        // sort by Day, then search
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        // sort by Day, then search
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Taking advantage that my result set is sorted by day, start ASC. Only need one passthrough and hence O(n)
         for ($i = 0; $i < count($result); $i++) {
             // Prevent index out of bounds exception.
@@ -278,7 +288,7 @@ class BidDAO {
         ***REMOVED***
     ***REMOVED***
 
-		return false;
+        return false;
 ***REMOVED***
 
     /*
@@ -286,7 +296,8 @@ class BidDAO {
 ***REMOVED***"exam timetable clash"	The exam timeslot for this section clashes with that of a previously bidded section.
 ***REMOVED***bid.csv validation 3/7
 ***REMOVED***
-    public function checkExamConflicts($userId, $courseSections, $round) {
+    public function checkExamConflicts($userId, $courseSections, $round)
+    {
         $courses = array();
         for ($i = 0; $i < count($courseSections); $i++) {
             array_push($courses, $courseSections[$i]['course']);
@@ -298,17 +309,17 @@ class BidDAO {
         $sql .= "ORDER BY exam_date, exam_start";
 
         // sort by Day, then search
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Taking advantage that my result set is sorted by day, start ASC. Only need one passthrough and hence O(n)
         for ($i = 0; $i < count($result); $i++) {
             // Prevent index out of bounds exception.
@@ -325,7 +336,7 @@ class BidDAO {
         ***REMOVED***
     ***REMOVED***
 
-		return false;
+        return false;
 ***REMOVED***
 
     /*
@@ -333,46 +344,48 @@ class BidDAO {
 ***REMOVED***"incomplete prerequisites"	student has not completed the prerequisites for this course.
 ***REMOVED***bid.csv validation 4/7
 ***REMOVED***
-    public function hasPrerequisites($courseCode) {
-		$sql = "SELECT prerequisite FROM prerequisites WHERE course = :courseCode;";
+    public function hasPrerequisites($courseCode)
+    {
+        $sql = "SELECT prerequisite FROM prerequisites WHERE course = :courseCode;";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if (count($result)) {
             return true;
     ***REMOVED***
 
-		return false;
+        return false;
 ***REMOVED***
 
     /* Only use when you know that the course has prerequisites. */
-    public function hasCompletedPrerequisites($userId, $courseCode) {
-		$sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course IN (SELECT prerequisite FROM prerequisites WHERE course = :courseCode)";
+    public function hasCompletedPrerequisites($userId, $courseCode)
+    {
+        $sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course IN (SELECT prerequisite FROM prerequisites WHERE course = :courseCode)";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if (count($result)) {
             return true;
     ***REMOVED***
 
-		return false;
+        return false;
 ***REMOVED***
 
     /*
@@ -380,25 +393,26 @@ class BidDAO {
 ***REMOVED***"course completed"	student has already completed this course.
 ***REMOVED***bid.csv validation 5/7
 ***REMOVED***
-    public function hasCompletedCourse($userId, $courseCode) {
-		$sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course = :courseCode";
+    public function hasCompletedCourse($userId, $courseCode)
+    {
+        $sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course = :courseCode";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if (count($result)) {
             return true;
     ***REMOVED***
 
-		return false;
+        return false;
 ***REMOVED***
 
     /*
@@ -406,22 +420,23 @@ class BidDAO {
 ***REMOVED***"section limit reached"	student has already bidded for 5 sections.
 ***REMOVED***bid.csv validation 6/7
 ***REMOVED***
-    public function countBids($userId, $round) {
-		$sql = "SELECT * FROM bids WHERE user_id = :userId AND (((result = 'submitted' OR result = '-') AND round = :round) OR result = 'in')";
+    public function countBids($userId, $round)
+    {
+        $sql = "SELECT * FROM bids WHERE user_id = :userId AND (((result = 'submitted' OR result = '-') AND round = :round) OR result = 'in')";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-		
-		// Returns my result set on success.
-		return count($result);
+
+        // Returns my result set on success.
+        return count($result);
 ***REMOVED***
 
     /*
@@ -429,36 +444,38 @@ class BidDAO {
 ***REMOVED***"not enough e-dollar"	student has not enough e-dollars to place the bid. If it is an update of a previous bid for the same course, account for the e$ gained back from the cancellation
 ***REMOVED***bid.csv validation 7/7
 ***REMOVED***
-    public function getEDollar($userId) {
-		$sql = "SELECT edollar FROM users WHERE user_id = :userId";
+    public function getEDollar($userId)
+    {
+        $sql = "SELECT edollar FROM users WHERE user_id = :userId";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-		
-		// Returns my result set on success.
-		return $result;
+
+        // Returns my result set on success.
+        return $result;
 ***REMOVED***
 
-    public function addToCart($userId, $courseCode, $section, $round) {
+    public function addToCart($userId, $courseCode, $section, $round)
+    {
         $sql = "INSERT INTO bids (user_id, course, section, result, round) VALUES (:userId, :courseCode, :section, 'cart', :round)";
-        
-        $connMgr = new ConnectionManager();       
+
+        $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
-         
-        $stmt = $conn->prepare($sql); 
+
+        $stmt = $conn->prepare($sql);
 
         $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
         $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $stmt->bindParam(':section', $section, PDO::PARAM_STR);
         $stmt->bindParam(':round', $round, PDO::PARAM_STR);
-        
+
         $isAddOK = false;
 
         if ($stmt->execute()) {
@@ -468,7 +485,8 @@ class BidDAO {
         return $isAddOK;
 ***REMOVED***
 
-    public function addBid($userId, $courseCode, $section, $amount, $round) {
+    public function addBid($userId, $courseCode, $section, $amount, $round)
+    {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
@@ -500,20 +518,20 @@ class BidDAO {
             // We've got this far without an exception, so commit the changes.
             $db->commit();
             return true;
-    ***REMOVED***
-        catch (Exception $e) {
+    ***REMOVED*** catch (Exception $e) {
             $db->rollback();
 
             return false;
-    ***REMOVED***        
+    ***REMOVED***
 ***REMOVED***
 
-    public function updateBid($userId, $courseCode, $section, $amount, $round) {
+    public function updateBid($userId, $courseCode, $section, $amount, $round)
+    {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
         $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
-        
+
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
@@ -523,12 +541,12 @@ class BidDAO {
 
         $currentAmount = $query->fetch(PDO::FETCH_ASSOC);
 
-		$sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'submitted' AND round = :round";
+        $sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'submitted' AND round = :round";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':amount', $amount, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
@@ -547,8 +565,8 @@ class BidDAO {
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':amount', $difference, PDO::PARAM_STR);
         $query->execute();
-		
-		$isUpdateOk = False;
+
+        $isUpdateOk = False;
         if ($query->execute()) {
             $isUpdateOk = True;
     ***REMOVED***
@@ -557,24 +575,26 @@ class BidDAO {
 ***REMOVED***
 
 
-    public function getCompletedCourses($userId) {
-		$sql = "SELECT * FROM course_completed WHERE user_id = :userId";
+    public function getCompletedCourses($userId)
+    {
+        $sql = "SELECT * FROM course_completed WHERE user_id = :userId";
 
-		$connMgr = new ConnectionManager();
-		$db = $connMgr->getConnection();
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
-		$query = $db->prepare($sql);
+        $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
-		
-		// Returns my result set on success.
-		return $result;
+
+        // Returns my result set on success.
+        return $result;
 ***REMOVED***
 
-    public function updateDayOfWeek($query) {
+    public function updateDayOfWeek($query)
+    {
         $dayOfWeek = array(
             1 => "Monday",
             2 => "Tuesday",
@@ -599,57 +619,61 @@ class BidDAO {
         return $query;
 ***REMOVED***
 
-    public function retrieveResults($userId) {
+    public function retrieveResults($userId)
+    {
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
-        
+
         $sql = "SELECT course, result FROM bids WHERE user_id = :userId  AND result = '-' or result = 'in' or result = 'out'";
-		$query = $db->prepare($sql);
-        $query->setFetchMode(PDO::FETCH_ASSOC);
-        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-
-		$query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-		return $result;
-***REMOVED***
-
-    public function removeAll() {
-        $sql = 'TRUNCATE TABLE bids';
-        
-        $connMgr = new ConnectionManager();
-        $conn = $connMgr->getConnection();
-        
-        $stmt = $conn->prepare($sql);
-        
-        $stmt->execute();
-        $count = $stmt->rowCount();
-***REMOVED***
-
-    public function getAllBidsForCalendar($userId) {
-		$sql = "SELECT bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND (result = 'submitted' OR result = 'in')";
-
-        $connMgr = new ConnectionManager();
-        $db = $connMgr->getConnection();
-        
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
 
-		$query->execute();
+        $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-		return $result;
+        return $result;
+***REMOVED***
+
+    public function removeAll()
+    {
+        $sql = 'TRUNCATE TABLE bids';
+
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->execute();
+        $count = $stmt->rowCount();
+***REMOVED***
+
+    public function getAllBidsForCalendar($userId)
+    {
+        $sql = "SELECT bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND (result = 'submitted' OR result = 'in')";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
 ***REMOVED***
 
 
-    public function refundbidamount($userId, $courseCode, $section) {
+    public function refundbidamount($userId, $courseCode, $section)
+    {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
-        
+
         $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
-        
+
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
@@ -668,7 +692,7 @@ class BidDAO {
         $query->execute();
 
         $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = 'submitted'";
-        
+
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
@@ -683,6 +707,19 @@ class BidDAO {
     ***REMOVED***
 
         return $isDeleteOK;
+***REMOVED***
+
+    public function retrieveResult($user_id, $section)
+    {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        $sql = "SELECT * FROM bids WHERE user_id =:user_id  AND result = 'in' or result = 'out'";
+        $query = $db->prepare($sql);
+        $query->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
 ***REMOVED***
 
 }
