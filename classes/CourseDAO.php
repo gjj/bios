@@ -165,7 +165,7 @@ class CourseDAO {
          
         $query = $db->prepare($sql); 
 
-		$query->bindParam(':userId', $userId, PDO::PARAM_STR)
+		$query->bindParam(':userId', $userId, PDO::PARAM_STR);
 
         $isAddOK = False;
         if ($query->execute()) {
@@ -183,7 +183,7 @@ class CourseDAO {
          
         $query = $db->prepare($sql); 
 
-		$query->bindParam(':course', $course, PDO::PARAM_STR)
+		$query->bindParam(':course', $course, PDO::PARAM_STR);
 
         $isAddOK = False;
         if ($query->execute()) {
