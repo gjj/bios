@@ -6,7 +6,7 @@ function doBootstrap() {
 	$errors = array();
 	# need tmp_name -a temporary name create for the file and stored inside apache temporary folder- for proper read address
 	$zip_file = $_FILES["bootstrap-file"]["tmp_name"];
-
+	
 	# Get temp dir on system for uploading
 	$temp_dir = sys_get_temp_dir();
 
@@ -17,13 +17,12 @@ function doBootstrap() {
     $courses_completed_processed=0;
     $prerequisites_processed=0;
     $sections_processed=0;
-
+	var_dump($_FILES["bootstrap-file"]["size"]);
 	# check file size
 	if ($_FILES["bootstrap-file"]["size"] <= 0)
 		$errors[] = "input files not found";
 
 	else {
-		
 		$zip = new ZipArchive;
 		$res = $zip->open($zip_file);
 
@@ -31,7 +30,6 @@ function doBootstrap() {
 			$zip->extractTo($temp_dir);
             $zip->close();
             
-			// Not completed
 			$students_path = "$temp_dir/student.csv";
 			$bids_path = "$temp_dir/bid.csv";
 			$courses_path = "$temp_dir/course.csv";
@@ -46,9 +44,8 @@ function doBootstrap() {
             $prerequisites = @fopen($prerequisites_path, "r");
 			$sections = @fopen($sections_path, "r");
 			
-			if (empty($courses)){
-            // if (empty($bids) || empty($courses) || empty($courses_completed)
-            // || empty($prerequisites)|| empty($sections)){#|| empty($users)|| empty($rounds)){
+            if ((empty($bids) || empty($courses) || empty($courses_completed)
+            || empty($prerequisites)|| empty($sections)) || empty($students)){
 				$errors[] = "input files not found";
 				if (!empty($students)){
 					fclose($students);
@@ -97,18 +94,20 @@ function doBootstrap() {
                 $courseDAO -> removeAllCompletedCourses();
                 $courseDAO -> removeAllPrerequisites();
 
-                // $roundDAO = new RoundDAO();
-                // $roundDAO -> removeAll();
+                $roundDAO = new RoundDAO();
+                $roundDAO -> removeAll();
 
                 $sectionDAO = new SectionDAO();
 				$sectionDAO -> removeAll();
 
+
 				$data = fgetcsv($students);
-				while(($data = fgetcsv($students)) !== false){
-					$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5]);
+				while(($data = fgetcsv($students)) !== false && ($data = fgetcsv($students)) != null ){
+					$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4]);
 					$userDAO->add($studentObj);
 					$students_processed++;
 				}
+				
 
 				$data = fgetcsv($courses);
 				while(($data = fgetcsv($courses)) !== false){
@@ -125,9 +124,8 @@ function doBootstrap() {
 				$data = fgetcsv($courses_completed);
 				while(($data = fgetcsv($courses_completed)) !== false){
 					$userId = $data[0];
-					$completed_course = $data[1];
-					// $courses_completedObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
-					$courseDAO->addCompletedCourses($userId, $completed_course);
+					$code = $data[1];
+					$courseDAO->addCompletedCourses($userId, $code);
 					$courses_completed_processed++;
 				}
 				$data = fgetcsv($prerequisites);
@@ -137,15 +135,24 @@ function doBootstrap() {
 					$courseDAO->addPrerequisites($course,$prerequisite);
 					$prerequisites_processed++;
 				}
+				$data = fgetcsv($bids);
+				while(($data = fgetcsv($bids)) !== false){
+					$userId = $data[0];
+					$amount = $data[1];
+					$code = $data[2];
+					$section = $data[3];
 
+					$BidDAO->add($userId,$amount,$code,$section);
+					$bids_processed++;
+				}
 
                 fclose($courseDAO);
 				@unlink($courses_path);
 				@unlink($courses_completed_path);
 				@unlink($prerequisites_path);
 
-				// fclose($BidDAO);
-                // @unlink($bids_path);
+				fclose($BidDAO);
+                @unlink($bids_path);
                 
                 fclose($sectionDAO);
 				@unlink($sections_path);
