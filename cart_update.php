@@ -91,7 +91,6 @@
                                     for ($i = 0; $i < count($bids); $i++) {
                                         $bid = $bids[$i];
                                         $cartItems = $bidDAO->retrieveBidsByCodeAndSection($user['userid'], $bid['course'], $bid['section'], $currentRound['round']);
-                                        $bids[$i]['old_amount'] = $cartItems['amount'];
                                 ?>
                                 <tr>
                                     <td>
