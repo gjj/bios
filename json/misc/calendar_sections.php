@@ -18,7 +18,7 @@
     $currentRound = $roundDAO->getCurrentRound();
     $user = currentUser();
     
-    $bids = $bidDAO->getAllBidsForCalendar($user['userid']);
+    $bids = $bidDAO->getAllBidsForCalendar($user['userid'], $currentRound['round']);
     
     $result = array();
 
