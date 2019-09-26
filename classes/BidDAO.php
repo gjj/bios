@@ -175,6 +175,35 @@ class BidDAO {
 
         return $isDeleteOK;
 ***REMOVED***
+    
+    public function checkDuplicates($userId, $courseSections, $round) {
+        $selectedCourses = array_column($courseSections, 'course');
+        $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
+
+        if (count($duplicates)) {
+            return true;
+    ***REMOVED***
+        
+        $sql = "SELECT course FROM bids WHERE user_id = :userId AND course IN ('" . implode(', ', $selectedCourses) . "') AND ((result = 'submitted' AND round = :round) OR result = '-' OR result = 'in')";
+
+		$connMgr = new ConnectionManager();
+		$db = $connMgr->getConnection();
+
+		$query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+		$query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Meaning it already exists in our bids.
+        if (count($result)) {
+            return true;
+    ***REMOVED***
+
+        return false;
+***REMOVED***
 
     /*
 ***REMOVED***Check if bidded course is same as user's current school, only used in Round 1.
