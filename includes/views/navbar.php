@@ -13,6 +13,9 @@
 								<a class="nav-link" href="cart">
 									Cart</span>
 								</a>
+                                <a class="nav-link" href="results">
+                                    Results</span>
+                                </a>
 							</li>
 						</ul>
 					</div>
