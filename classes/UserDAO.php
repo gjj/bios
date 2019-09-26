@@ -98,18 +98,18 @@ class UserDAO {
 	} 
 	
 	public function add($user) {
-        $sql = 'INSERT INTO student (userid,password,name,school,edollar) VALUES (:userid, :password, :name, :school, :edollar)';
+        $sql = 'INSERT INTO users (user_id,password,name,school,edollar) VALUES (:user_id, :password, :name, :school, :edollar)' ;
         
         $connMgr = new ConnectionManager();       
         $db = $connMgr->getConnection();
          
         $query = $db->prepare($sql); 
 
-        $query->bindParam(':userid', $userId->userId, PDO::PARAM_STR);
-        $query->bindParam(':password', $userId->password, PDO::PARAM_STR);
-        $query->bindParam(':name', $userId->name, PDO::PARAM_STR);
-        $query->bindParam(':school', $userId->school, PDO::PARAM_STR);
-        $query->bindParam(':edollar', $userId->edollar, PDO::PARAM_STR);
+        $query->bindParam(':user_id', $user->userId, PDO::PARAM_STR);
+        $query->bindParam(':password', $user->password, PDO::PARAM_STR);
+        $query->bindParam(':name', $user->name, PDO::PARAM_STR);
+        $query->bindParam(':school', $user->school, PDO::PARAM_STR);
+        $query->bindParam(':edollar', $user->edollar, PDO::PARAM_STR);
 
 
         $isAddOK = False;
