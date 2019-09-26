@@ -16,42 +16,50 @@
 	$currentRound = $roundDAO->getCurrentRound();
     $user = currentUser();
 
-    if (isset($_SESSION['courseSections'])) {
-        $bids = $_SESSION['courseSections'];
+    // Validation checks. If course and section param is not empty.
+    if (!isEmpty($_GET['course']) and !isEmpty($_GET['section'])) {
+        $course = $_GET['course'];
+        $section = $_GET['section'];
+
+        // Check if user has such a bid.
+        $bid = $bidDAO->retrieveBidsByCodeAndSection($user['userid'], $course, $section, $currentRound['round']);
+
+        // If I cannot find a courseCode/section pair, redirect back to cart page.
+        if (!$bid) {
+            header("Location: cart");
+    ***REMOVED***
+***REMOVED***
+    else {
+        header("Location: cart");
 ***REMOVED***
     
-    if ($_POST) {
-        // Retrieve all my name="amount[]" fields.
-        $sum = 0;
-        for ($i = 0; $i < count($_POST['amount']); $i++) {
-            $amount = $_POST['amount'][$i];
-            $bids[$i]['amount'] = $amount;
-            print_r($bids);
-            $sum += ($bids[$i]['amount_current'] - $amount); // Sum only the increment or decrement.
+    if ($_POST and isset($_POST['amount'])) {
+        $amount = $_POST['amount'];
+
+        $difference = $amount - $bid['amount']; // NEW amount - OLD amount.
+
+        // Validation: Check if I can afford the increment (i.e. increase my bid). If it's a decrement (i.e. lower my bid), confirm can.
+        if ($difference > $user['edollar']) {
+            addError("You do not have enough edollar to place all your bids! You need to topup e\${$difference} vs. what you have: e\${$user['edollar']}.");
     ***REMOVED***
 
-        // Validation: Make sure I sum(current bid - amount[]) < my current edollar!!!!
-        if ($sum > $user['edollar']) {
-            addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
-    ***REMOVED***
-        else {
-            foreach ($bids as $bid) {
-                //print_r($bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']));
-        ***REMOVED***
+        // If there are NO errors from previous checks... then I update my bid.
+        if (!isset($_SESSION['errors'])) {
+            $bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $amount, $currentRound['round']);
 
-            //header("Location: cart");
+            header("Location: cart");
     ***REMOVED***
 ***REMOVED***
     include 'includes/views/header.php';
 ?>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Update Bids</h1>
+            <h1 class="h2">Update Bid</h1>
         </div>
 
         <div class="row pb-5">
 			<div class="col-md-12">
-                <h5>My Selected Sections</h5>
+                <h5>My Selected Section</h5>
                 <h6> You currently have e$***REMOVED*** echo $user['edollar']; ?> </h6>
                             ***REMOVED***
 								if (isset($_SESSION['errors'])) {
@@ -86,28 +94,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ***REMOVED***
-                                    $i = 0;
-                                    for ($i = 0; $i < count($bids); $i++) {
-                                        $bid = $bids[$i];
-                                        $cartItems = $bidDAO->retrieveBidsByCodeAndSection($user['userid'], $bid['course'], $bid['section'], $currentRound['round']);
-                                ?>
                                 <tr>
                                     <td>
-                                        <input type="number" name="amount[]" class="form-control" step="0.01" value="***REMOVED*** echo $cartItems['amount']; ?>" required />
+                                        <input type="number" name="amount" class="form-control" step="0.01" min="10" value="***REMOVED*** echo $bid['amount']; ?>" required />
                                     </td>
-                                    <td>***REMOVED*** echo $cartItems['course'];?></td>
-                                    <td>***REMOVED*** echo $cartItems['section'];?></td>
-                                    <td>***REMOVED*** echo $cartItems['day'];?></td>
-                                    <td>***REMOVED*** echo $cartItems['start'];?></td>
-                                    <td>***REMOVED*** echo $cartItems['end'];?></td>
-                                    <td>***REMOVED*** echo $cartItems['instructor'];?></td>
-                                    <td>***REMOVED*** echo $cartItems['venue'];?></td>
-                                    <td>***REMOVED*** echo $cartItems['size'];?></td>
+                                    <td>***REMOVED*** echo $bid['course'];?></td>
+                                    <td>***REMOVED*** echo $bid['section'];?></td>
+                                    <td>***REMOVED*** echo $bid['day'];?></td>
+                                    <td>***REMOVED*** echo $bid['start'];?></td>
+                                    <td>***REMOVED*** echo $bid['end'];?></td>
+                                    <td>***REMOVED*** echo $bid['instructor'];?></td>
+                                    <td>***REMOVED*** echo $bid['venue'];?></td>
+                                    <td>***REMOVED*** echo $bid['size'];?></td>
                                 </tr>
-                                ***REMOVED***
-                                ***REMOVED***
-                                ?>
                             </tbody>
                         </table>
                         <p>
