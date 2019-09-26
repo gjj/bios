@@ -31,12 +31,8 @@
                 array_push($courseSections, $courseSection);
         ***REMOVED***
             
-            // Check duplicates. Logic validation 1/7.
-            $selectedCourses = array_column($courseSections, 'course');
-            $duplicates = array_unique(array_diff_assoc($selectedCourses, array_unique($selectedCourses)));
-
-            if (count($duplicates)) {
-               addError("You can only bid for one section per course! ");
+            if ($bidDAO->checkDuplicates($user['userid'], $courseSections, $currentRound['round'])) {
+                addError("You can only bid for one section per course! ");
         ***REMOVED***
 
             if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
