@@ -21,7 +21,6 @@
         $code = $_GET['course'];
         $section = $_GET['section'];
 
-        
         if ($bidDAO->deleteCartItemByCodeAndSection($user['userid'], $code, $section, $currentRound['round'])) {
             header("Location: cart");
         }
