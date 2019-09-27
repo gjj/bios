@@ -110,11 +110,10 @@ function doBootstrap() {
 				
 
 				$data = fgetcsv($courses);
-				// var_dump($data);
 				while(($data = fgetcsv($courses)) !== false){
 					$coursesObj = new Course( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6]);
 					$courseDAO->addCourses($coursesObj);
-					$courses_path++;
+					$courses_processed++;
 				}
 				$data = fgetcsv($sections);
 				while(($data = fgetcsv($sections)) !== false){
