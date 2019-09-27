@@ -73,10 +73,7 @@ function doBootstrap() {
                 if (!empty($sections)){
 					fclose($sections);
 					@unlink($sections_path);
-            ***REMOVED*** 
-
-				
-				
+            ***REMOVED*** 	
 			}
 			else {
 				$connMgr = new ConnectionManager();
@@ -102,6 +99,17 @@ function doBootstrap() {
 
 
 				$data = fgetcsv($students);
+
+				// if(hasEmptyField($data) != []){
+				// 	$missing_fields = [];
+				// 	foreach($columnpos_arr as $columnpos){
+				// 		$missing_fields[] = $data[$columnpos];
+				// 	}
+				// 	foreach($missing_fields as $missing_field){
+				// 		$errors[] = "blank $missing_field";
+				// 	}
+				// }
+
 				while(($data = fgetcsv($students)) !== false){
 					$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4]);
 					$userDAO->add($studentObj);
