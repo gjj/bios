@@ -17,7 +17,7 @@ function doBootstrap() {
     $courses_completed_processed=0;
     $prerequisites_processed=0;
     $sections_processed=0;
-	var_dump($_FILES["bootstrap-file"]["size"]);
+
 	# check file size
 	if ($_FILES["bootstrap-file"]["size"] <= 0)
 		$errors[] = "input files not found";
@@ -102,7 +102,7 @@ function doBootstrap() {
 
 
 				$data = fgetcsv($students);
-				while(($data = fgetcsv($students)) !== false && ($data = fgetcsv($students)) != null ){
+				while(($data = fgetcsv($students)) !== false){
 					$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4]);
 					$userDAO->add($studentObj);
 					$students_processed++;
@@ -110,6 +110,7 @@ function doBootstrap() {
 				
 
 				$data = fgetcsv($courses);
+				// var_dump($data);
 				while(($data = fgetcsv($courses)) !== false){
 					$coursesObj = new Course( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6]);
 					$courseDAO->addCourses($coursesObj);
@@ -146,19 +147,21 @@ function doBootstrap() {
 					$bids_processed++;
 				}
 
-                fclose($courseDAO);
+                fclose($courses);
 				@unlink($courses_path);
 				@unlink($courses_completed_path);
 				@unlink($prerequisites_path);
 
-				fclose($BidDAO);
+				fclose($bids);
                 @unlink($bids_path);
                 
-                fclose($sectionDAO);
+                fclose($sections);
 				@unlink($sections_path);
 			    
-                fclose($userDAO);
+                fclose($students);
 				@unlink($students_path);
+				
+
 				
 			}
 		}
