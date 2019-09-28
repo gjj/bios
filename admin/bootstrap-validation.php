@@ -141,7 +141,84 @@ function hasEmptyField($data){
             $error = "invalid description";
             $errors[] = $error;
         }
+        return $errors;   
 
         
+    }
+
+    function sectionValidation($data) {
+        $course = $data[0];
+        $section = $data[1];
+        $day = $data[2];
+        $start = $data[3];
+        $end = $data[4];
+        $instructor = $data[5];
+        $venue = $data[6];
+        $size = $data[7];
+
+        $errors = [];
+
+        
+        function checkCoursecode($course){
+            $courseDAO = new CourseDAO();
+            $result = True;
+            if($courseDAO -> retrieveByCode($course) == null){
+                $result = False;
+            }
+            return $result;
+        }
+
+        if(!checkCoursecode($course)){
+            $error = "invalid course";
+            $errors[] = $error;
+        }
+        else{
+            function checkSectionNum($section){
+                $result = True;
+                $section_num = "";
+                for($i=0;$i<strlen($section);$i++){
+                    if($i != 0){
+                        $section_num .= $section[$i];
+                    }
+                }
+                echo $section_num;
+                $section_num = intval($section_num);
+                if($section_num<=0 || $section_num>99){
+                    $result = False;
+                }
+                return $result;
+            }
+            if($section[0] != "S" || !checkSectionNum($section) ){
+                $error = "invalid section";
+                $errors[] = $error;
+            }
+            if($day<1 || $day>7){
+                $error = "invalid day";
+                $errors[] = $error;
+            }
+            if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $start)!= True){
+                $error = "invalid exam start";
+                $errors[] = $error;
+            }
+            if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $end)!= True
+            || $start > $end){
+                $error = "invalid exam end";
+                $errors[] = $error;
+            }
+            if(strlen($instructor)>100){
+                $error = "invalid instructor";
+                $errors[] = $error; 
+            }
+            if(strlen($venue)>100){
+                $error = "invalid venue";
+                $errors[] = $error; 
+            }
+            if(!is_numeric($size) || $size<1){
+                $error = "invalid size";
+                $errors[] = $error; 
+            }
+            return $errors;   
+
+
     }
 ?>
