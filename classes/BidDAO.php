@@ -367,7 +367,7 @@ class BidDAO
     /* Only use when you know that the course has prerequisites. */
     public function hasCompletedPrerequisites($userId, $courseCode)
     {
-        $sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course IN (SELECT prerequisite FROM prerequisites WHERE course = :courseCode)";
+        $sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course = ALL (SELECT prerequisite FROM prerequisites WHERE course = :courseCode)";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -554,7 +554,7 @@ class BidDAO
 
             $difference = $amount - $currentAmount['amount']; // DIRECTION MATTERS HERE!
 
-            $sql = "UPDATE users SET edollar = edollar + :amount WHERE user_id = :userId"; // Because it will affect this.
+            $sql = "UPDATE users SET edollar = edollar - (:amount) WHERE user_id = :userId"; // Because it will affect this.
 
             $query = $db->prepare($sql);
             $query->setFetchMode(PDO::FETCH_ASSOC);
