@@ -367,20 +367,25 @@ class BidDAO
     /* Only use when you know that the course has prerequisites. */
     public function hasCompletedPrerequisites($userId, $courseCode)
     {
-        $sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course IN (SELECT prerequisite FROM prerequisites WHERE course = :courseCode)";
-
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
+        $sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course IN (SELECT prerequisite FROM prerequisites WHERE course = :courseCode)";
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($result)) {
+        $sql2 = "SELECT prerequisite FROM prerequisites WHERE course = :courseCode";
+        $query2 = $db->prepare($sql2);
+        $query2->setFetchMode(PDO::FETCH_ASSOC);
+        $query2->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query2->execute();
+        $result2 = $query2->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($query->rowCount() == $query2->rowCount()) {
             return true;
     ***REMOVED***
 
@@ -554,7 +559,7 @@ class BidDAO
 
             $difference = $amount - $currentAmount['amount']; // DIRECTION MATTERS HERE!
 
-            $sql = "UPDATE users SET edollar = edollar + :amount WHERE user_id = :userId"; // Because it will affect this.
+            $sql = "UPDATE users SET edollar = edollar - (:amount) WHERE user_id = :userId"; // Because it will affect this.
 
             $query = $db->prepare($sql);
             $query->setFetchMode(PDO::FETCH_ASSOC);
