@@ -93,7 +93,7 @@ function hasEmptyField($data){
         return $errors;   
     }
 
-    // To be completed
+    
     function courseValidation($data){
         $course = $data[0];
         $school = $data[1];
@@ -110,6 +110,38 @@ function hasEmptyField($data){
             $error = "invalid title";
             $errors[] = $error; 
         }
+        $year = "";
+        $month = "";
+        $day = "";
+        for($i=0;$i<strlen($examdate);$i++){
+            if($i>=0 && $i<=3){
+                $year .= $examdate[$i];
+            }
+            elseif($i>3 && $i<=5){
+                $month .= $examdate[$i];
+            }
+            else{
+                $day .= $examdate[$i];
+            }
+        }
+        if(checkdate(intval($month),intval($day),intval($year))!= True){
+            $error = "invalid exam date";
+            $errors[] = $error; 
+        }
+        if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $examstart)!= True){
+            $error = "invalid exam start";
+            $errors[] = $error;
+        }
+        if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $examend)!= True
+        || $examstart > $examend){
+            $error = "invalid exam end";
+            $errors[] = $error;
+        }
+        if(strlen($description)>1000){
+            $error = "invalid description";
+            $errors[] = $error;
+        }
+
         
     }
 ?>
