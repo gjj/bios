@@ -47,36 +47,29 @@ function hasEmptyField($data){
         $errors = [];
         $userDAO = new UserDAO();
 
-        $result = True;
-
         if(strlen($userId)>128){
-            $result = False;
             $error = "invalid userid";
             $errors[] = $error; 
     ***REMOVED***
         if($userDAO -> retrieveById($userId) != null) {
-            $result = False; 
             $error = "duplicate userid";
             $errors[] = $error; 
     ***REMOVED***
         if(is_numeric($edollar) == False || $edollar < 0.0 || $edollar != round($edollar,2) ) {
-            $result = False;
             $error = "invalid e-dollar";
             $errors[] = $error; 
     ***REMOVED***
         if(strlen($password)>128){
-            $result = False;
             $error = "invalid password";
             $errors[] = $error; 
     ***REMOVED***
         if(strlen($name)>100){
-            $result = False;
             $error = "invalid name";
             $errors[] = $error; 
     ***REMOVED***
 
         // if error not null, delete row 
-        if($result == False) {
+        if($errors != []) {
             $sql="DELETE FROM users WHERE user_id = :userId";
 
             $connMgr = new ConnectionManager();
@@ -88,9 +81,11 @@ function hasEmptyField($data){
     
             $query->execute();
             $query->fetch(PDO::FETCH_ASSOC);
+
+            return $errors;  
     ***REMOVED***
 
-        return $errors;   
+         
 ***REMOVED***
 
     
@@ -141,7 +136,24 @@ function hasEmptyField($data){
             $error = "invalid description";
             $errors[] = $error;
     ***REMOVED***
-        return $errors;   
+
+        // if error not null, delete row 
+        if($errors != []) {
+            $sql="DELETE FROM courses WHERE course = :course";
+
+            $connMgr = new ConnectionManager();
+            $db = $connMgr->getConnection();
+
+            $query = $db->prepare($sql);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            $query->bindParam(':course', $course, PDO::PARAM_STR);
+    
+            $query->execute();
+            $query->fetch(PDO::FETCH_ASSOC);
+
+            return $errors; 
+    ***REMOVED***
+  
 
         
 ***REMOVED***
@@ -217,7 +229,23 @@ function hasEmptyField($data){
                 $error = "invalid size";
                 $errors[] = $error; 
         ***REMOVED***
-            return $errors;   
+
+        // if error not null, delete row and return errors
+        if($errors != []) {
+            $sql="DELETE FROM sections WHERE course = :course";
+
+            $connMgr = new ConnectionManager();
+            $db = $connMgr->getConnection();
+
+            $query = $db->prepare($sql);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            $query->bindParam(':course', $course, PDO::PARAM_STR);
+    
+            $query->execute();
+            $query->fetch(PDO::FETCH_ASSOC);
+
+            return $errors; 
+    ***REMOVED*** 
 
 
 ***REMOVED***
