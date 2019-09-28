@@ -5,29 +5,28 @@ require_once '../includes/common.php';
 // incomplete
 function hasEmptyField(array $data)
 {
+    $counter_column = [];
     for ($i = 0; $i <=len($data); $i++) {
         // Make sure that the key exists, isn't null or an empty string
         if (!isset($data[$i]) || $data[$i] === '') {
-            
-            return $i;
+            $counter_column += [$i];
         }
     }
 
-    return false;
+    return $counter_column;
 }
 // incomplete
 function commonValidation($file){
 
     $counter = 0;
-
+    $errors= [];
     while (($data = fgetcsv($file, 1000, ",")) !== FALSE) {        
 
         $counter++;    
-        $errors= [];
-    
-        if (hasEmptyField($data) >= 0) {
+        $column_error = hasEmptyField($data);
+        if ($column_error != []) {
             // It has an empty field. Echo an error and skip to next row
-             $errors+= ["Empty field is in row: $counter"];
+             $errors+= ["Empty field is in row: $counter cells $column_error"];
              continue;
         }
 
@@ -38,3 +37,4 @@ function commonValidation($file){
 
 // commonValidation($courses);
 ?>
+
