@@ -351,11 +351,10 @@ function hasEmptyField($data){
         return $result;
 ***REMOVED***
     function bidValidation($data){
-        $id = $data[0];
-        $userId = $data[1];
-        $amount = $data[2];
-        $course = $data[3];
-        $section = $data[4];
+        $userId = $data[0];
+        $amount = $data[1];
+        $course = $data[2];
+        $section = $data[3];
 
         $errors = [];
 
