@@ -1,6 +1,8 @@
 <?php
 require_once '../includes/common.php';
 require_once 'bootstrap-validation.php';
+header('Content-Type: application/json');
+
 function doBootstrap() {
 
 	$errors = array();
@@ -129,6 +131,10 @@ function doBootstrap() {
 					$student_row ++;
 
 				}
+
+				// Default admin.
+				$adminObj = new User("admin", "password", "Admin", "SMU", 0, 1);
+				$userDAO->add($adminObj);
 				
 
 				$data = fgetcsv($courses);
@@ -212,6 +218,7 @@ function doBootstrap() {
                 fclose($students);
 				@unlink($students_path);
 				
+				$roundDAO->startRound();
 
 				
 			}
@@ -242,7 +249,7 @@ function doBootstrap() {
 			]
 		];
 	}
-	header('Content-Type: application/json');
+	
 	echo json_encode($result, JSON_PRETTY_PRINT);
 
 
