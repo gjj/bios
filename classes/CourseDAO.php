@@ -156,7 +156,6 @@ class CourseDAO {
         return $isAddOK;
 	}
 	
-	// Incomplete
 	public function addCompletedCourses($user_id, $course) {
         $sql = 'INSERT INTO courses_completed (user_id,course) VALUES (:user_id, :course)';
         
