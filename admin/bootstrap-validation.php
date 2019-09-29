@@ -64,7 +64,7 @@ function hasEmptyField($data){
             $errors[] = $error; 
     ***REMOVED***
         if(strlen($name)>100){
-            $error = "invalid name";
+            $error = "invalid name";    
             $errors[] = $error; 
     ***REMOVED***
 
@@ -248,5 +248,180 @@ function hasEmptyField($data){
         return $errors; 
 
 
+        
+}
+
+    function prerequisiteValidation($prerequisite){
+        $course = $data[0];
+        $prerequisite = $data[1];
+        
+        $errors = [];
+
+
+        function checkCoursecode($course){
+            $courseDAO = new CourseDAO();
+            $result = True;
+            if($courseDAO -> retrieveByCode($course) == null){
+                $result = False;
+        ***REMOVED***
+            return $result;
+    ***REMOVED***
+
+        if(!checkCoursecode($course)){
+            $error = "invalid course";
+            $errors[] = $error;
+    ***REMOVED***
+
+        
+        function checkCoursecode($prerequisite){
+            $courseDAO = new CourseDAO();
+            $result = True;
+            if($courseDAO -> retrieveByCode($prerequisite) == null){
+                $result = False;
+        ***REMOVED***
+            return $result;
+    ***REMOVED***
+        if(!checkCoursecode($prerequisite)){
+            $error = "invalid prerequisite";
+            $errors[] = $error;
+    ***REMOVED***
+        # if error not null, delete row and return errors
+        if($errors != []) {
+            $sql="DELETE FROM prerequisites WHERE course = :course";
+
+            $connMgr = new ConnectionManager();
+            $db = $connMgr->getConnection();
+
+            $query = $db->prepare($sql);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            $query->bindParam(':course', $course, PDO::PARAM_STR);
+    
+            $query->execute();
+            $query->fetch(PDO::FETCH_ASSOC);
+
+            return $errors; 
+    ***REMOVED*** 
+
 ***REMOVED***
+
+    function courseCompleted($course){
+        $userId = $data[0];
+        $code = $data[1];
+
+        $errors = [];
+
+        function checkUserId($userId){
+            $userDAO = new UserDAO();
+            $result = True;
+            if($userDAO ->  retrieveById($userId) == null){
+                $result = False;
+        ***REMOVED***
+            return $result;
+    ***REMOVED***
+
+            if(!checkUserId($userId)){
+                $error = "invalid userid";
+                $errors[] = $error;
+        ***REMOVED***
+        
+
+        function checkCoursecode($code){
+            $courseDAO = new CourseDAO();
+            $result = True;
+            if($courseDAO ->  retrieveByCode($code) == null){
+                $result = False;
+        ***REMOVED***
+            return $result;
+    ***REMOVED***
+
+            if(!checkCoursecode($code)){
+                $error = "invalid course";
+                $errors[] = $error;
+        ***REMOVED***
+
+        # if error not null, delete row and return errors
+        if($errors != []) {
+            $sql="DELETE FROM courses_completed WHERE user_id = :userId";
+
+            $connMgr = new ConnectionManager();
+            $db = $connMgr->getConnection();
+
+            $query = $db->prepare($sql);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+    
+            $query->execute();
+            $query->fetch(PDO::FETCH_ASSOC);
+
+            return $errors; 
+
+    ***REMOVED***
+***REMOVED***
+
+    function bidValidation($data){
+        $id = $data[0];
+        $userId = $data[1];
+        $amount = $data[2];
+        $course = $data[3];
+        $section = $data[4];
+        $result = $data[5];
+        $round = $data[6];
+
+        $error = [];
+
+
+        function checkCoursecode($course){
+            $result = True;
+            $courseDAO = new CourseDAO();
+            if($courseDAO -> retrieveByCode($course) == null){
+                $result = False;
+        ***REMOVED***
+            return $result;
+    ***REMOVED***
+
+        if(!checkCoursecode($course)){
+            $error = "invalid course";
+            $errors[] = $error;
+    ***REMOVED***
+        else{
+
+            function checkSection($course, $section){
+                $sectionDAO = new SectionDAO();
+                if ($sectionDAO -> sectionExists($course, $section) == null){
+                    $result = False;
+            ***REMOVED***
+                return $result;
+        ***REMOVED***
+
+            if(!checkSection($section)){
+                $error = "invalid section";
+                $errors[] = $error;
+        ***REMOVED***
+        
+    ***REMOVED***
+
+        function checkUserId($userId){
+            $result = True;
+            $userDAO = new UserDAO();
+            if($userDAO -> retrieveById($userId) == null){
+                $result = False;
+        ***REMOVED***
+            return $result;
+    ***REMOVED***
+        if(!checkUserId($userId)){
+            $error = "invalid userid";
+            $errors[] = $error;
+    ***REMOVED***
+
+        if(is_numeric($amount) == False || $amount < 10.0 || $amount != round($edollar,2)){
+            $error = "invalid amount";
+            $error[] = $error;
+    ***REMOVED***
+
+***REMOVED***
+    
+
+
+
+
 ?>
