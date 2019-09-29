@@ -123,13 +123,13 @@ function hasEmptyField($data){
             $error = "invalid exam date";
             $errors[] = $error; 
         }
-        if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $examstart)!= True){
+        if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $examstart)!= True){
             $error = "invalid exam start";
             $errors[] = $error;
         }
-        if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $examend)!= True
-        || $examstart > $examend){
-            $error = "invalid exam end";
+        if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $examend)!= True) {
+        //|| $examstart > $examend){
+            $error = "invalid exam end" . ($examstart > $examend);
             $errors[] = $error;
         }
         if(strlen($description)>1000){
@@ -206,13 +206,13 @@ function hasEmptyField($data){
                 $error = "invalid day";
                 $errors[] = $error;
             }
-            if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $start)!= True){
-                $error = "invalid exam start";
+            if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $start)!= True){
+                $error = "invalid exam start: {$start}";
                 $errors[] = $error;
             }
-            if(preg_match("#([0-1]{1}[0-9]{1}|[2]{1}[0-3]{1}):[0-5]{1}[0-9]{1}#", $end)!= True
-            || $start > $end){
-                $error = "invalid exam end";
+            if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $end)!= True){
+            //|| $start > $end){
+                $error = "invalid exam end {$end}";
                 $errors[] = $error;
             }
             if(strlen($instructor)>100){
