@@ -180,21 +180,56 @@ function doBootstrap() {
 				}
 
 				$data = fgetcsv($courses_completed);
+				$coursesCompleted_row = 1;
 				while(($data = fgetcsv($courses_completed)) !== false){
+					if(courseCompletedValidation($data) != []){
+						$course_errors = courseCompletedValidation($data);
+						foreach($course_errors as $course_error){
+							$error = "$course_error in row $coursesCompleted_row in course_completed.csv";
+							$errors[] = $error;
+						}
+						
+					}
+					else{
 					$userId = $data[0];
 					$code = $data[1];
 					$courseDAO->addCompletedCourses($userId, $code);
 					$courses_completed_processed++;
+					}
+					$coursesCompleted_row ++;
 				}
+
 				$data = fgetcsv($prerequisites);
+				$prerequisite_row = 1;
 				while(($data = fgetcsv($prerequisites)) !== false){
+					if(prerequisiteValidation($data) != []){
+						$prerequisite_errors = prerequisiteValidation($data);
+						foreach($prerequisite_errors as $prerequisite_error){
+							$error = "$prerequisite_error in row $prerequisite_row in prerequisite.csv";
+							$errors[] = $error;
+						}
+					
+					}
+					else{	
 					$course = $data[0];
 					$prerequisite = $data[1];
 					$courseDAO->addPrerequisites($course,$prerequisite);
 					$prerequisites_processed++;
+					}
+					$prerequisite_row ++;
 				}
+
 				$data = fgetcsv($bids);
+				$bids_row = 1;
 				while(($data = fgetcsv($bids)) !== false){
+					if(bidValidation($data) != []){
+						$bid_errors = bidValidation($data);
+						foreach($bid_errors as $bid_error){
+							$error = "$bid_error in row $bids_row in bid.csv";
+							$errors[] = $error;
+						}
+					}
+					else{
 					$userId = $data[0];
 					$amount = $data[1];
 					$code = $data[2];
@@ -202,7 +237,12 @@ function doBootstrap() {
 
 					$BidDAO->add($userId,$amount,$code,$section);
 					$bids_processed++;
+					}
+					$bids_row ++;
 				}
+		
+
+				
 
                 fclose($courses);
 				@unlink($courses_path);
