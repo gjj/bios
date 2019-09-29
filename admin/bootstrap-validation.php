@@ -82,9 +82,9 @@ function hasEmptyField($data){
             $query->execute();
             $query->fetch(PDO::FETCH_ASSOC);
 
-            return $errors;  
+             
         }
-
+        return $errors; 
          
     }
 
@@ -151,13 +151,36 @@ function hasEmptyField($data){
             $query->execute();
             $query->fetch(PDO::FETCH_ASSOC);
 
-            return $errors; 
+            
         }
-  
+        return $errors; 
 
         
     }
 
+    function checkCoursecode($course){
+        $courseDAO = new CourseDAO();
+        $result = True;
+        if($courseDAO -> retrieveByCode($course) == null){
+            $result = False;
+        }
+        return $result;
+    }
+    function checkSectionNum($section){
+        $result = True;
+        $section_num = "";
+        for($i=0;$i<strlen($section);$i++){
+            if($i != 0){
+                $section_num .= $section[$i];
+            }
+        }
+        echo $section_num;
+        $section_num = intval($section_num);
+        if($section_num<=0 || $section_num>99){
+            $result = False;
+        }
+        return $result;
+    }
     function sectionValidation($data) {
         $course = $data[0];
         $section = $data[1];
@@ -170,36 +193,11 @@ function hasEmptyField($data){
 
         $errors = [];
 
-        
-        function checkCoursecode($course){
-            $courseDAO = new CourseDAO();
-            $result = True;
-            if($courseDAO -> retrieveByCode($course) == null){
-                $result = False;
-            }
-            return $result;
-        }
-
         if(!checkCoursecode($course)){
             $error = "invalid course";
             $errors[] = $error;
         }
         else{
-            function checkSectionNum($section){
-                $result = True;
-                $section_num = "";
-                for($i=0;$i<strlen($section);$i++){
-                    if($i != 0){
-                        $section_num .= $section[$i];
-                    }
-                }
-                echo $section_num;
-                $section_num = intval($section_num);
-                if($section_num<=0 || $section_num>99){
-                    $result = False;
-                }
-                return $result;
-            }
             if($section[0] != "S" || !checkSectionNum($section) ){
                 $error = "invalid section";
                 $errors[] = $error;
@@ -229,6 +227,7 @@ function hasEmptyField($data){
                 $error = "invalid size";
                 $errors[] = $error; 
             }
+        }
 
         // if error not null, delete row and return errors
         if($errors != []) {
@@ -244,8 +243,9 @@ function hasEmptyField($data){
             $query->execute();
             $query->fetch(PDO::FETCH_ASSOC);
 
-            return $errors; 
+            
         } 
+        return $errors; 
 
 
     }
