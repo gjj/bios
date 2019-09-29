@@ -13,17 +13,17 @@ function doBootstrap() {
 	$temp_dir = sys_get_temp_dir();
 
 	# keep track of number of lines successfully processed for each file
-	$students_processed=0;
-	$bids_processed=0;
-	$courses_processed=0;
-    $courses_completed_processed=0;
-    $prerequisites_processed=0;
-    $sections_processed=0;
+	$students_processed = 0;
+	$bids_processed = 0;
+	$courses_processed = 0;
+    $courses_completed_processed = 0;
+    $prerequisites_processed = 0;
+    $sections_processed = 0;
 
 	# check file size
-	if ($_FILES["bootstrap-file"]["size"] <= 0)
+	if ($_FILES["bootstrap-file"]["size"] <= 0) {
 		$errors[] = "input files not found";
-
+	}
 	else {
 		$zip = new ZipArchive;
 		$res = $zip->open($zip_file);
@@ -33,27 +33,29 @@ function doBootstrap() {
             $zip->close();
             
 			$students_path = "$temp_dir/student.csv";
-			$bids_path = "$temp_dir/bid.csv";
 			$courses_path = "$temp_dir/course.csv";
-            $courses_completed_path = "$temp_dir/course_completed.csv";
-            $prerequisites_path = "$temp_dir/prerequisite.csv";
-            $sections_path = "$temp_dir/section.csv";
+			$sections_path = "$temp_dir/section.csv";
+			$prerequisites_path = "$temp_dir/prerequisite.csv";
+			$courses_completed_path = "$temp_dir/course_completed.csv";
+			$bids_path = "$temp_dir/bid.csv";
             
 			$students = @fopen($students_path, "r");
-			$bids = @fopen($bids_path, "r");
 			$courses = @fopen($courses_path, "r");
-            $courses_completed = @fopen($courses_completed_path, "r");
+            $sections = @fopen($sections_path, "r");
             $prerequisites = @fopen($prerequisites_path, "r");
-			$sections = @fopen($sections_path, "r");
+			$courses_completed = @fopen($courses_completed_path, "r");
+			$bids = @fopen($bids_path, "r");
 			
-            if ((empty($bids) || empty($courses) || empty($courses_completed)
-            || empty($prerequisites)|| empty($sections)) || empty($students)){
+            if (empty($students) or empty($courses) or empty($sections)
+			or empty($courses_completed) or empty($prerequisites) or empty($bids)) {
 				$errors[] = "input files not found";
-				if (!empty($students)){
+
+				if (!empty($students)) {
 					fclose($students);
 					@unlink($students_path);
-            ***REMOVED*** 
-				if (!empty($bids)){
+				}
+				
+				if (!empty($bids)) {
 					fclose($bids); 
 					@unlink($bids_path);
 				} 
@@ -66,16 +68,17 @@ function doBootstrap() {
 				if (!empty($courses_completed)) {
 					fclose($courses_completed);
 					@unlink($courses_completed_path);
-            ***REMOVED***
-                if (!empty($prerequisites)){
+				}
+				
+                if (!empty($prerequisites)) {
 					fclose($prerequisites);
 					@unlink($prerequisites_path);
 				} 
 				
-                if (!empty($sections)){
+                if (!empty($sections)) {
 					fclose($sections);
 					@unlink($sections_path);
-            ***REMOVED*** 	
+            ***REMOVED***
 			}
 			else {
 				$connMgr = new ConnectionManager();
@@ -83,23 +86,24 @@ function doBootstrap() {
 
 				// Truncate all tables 
 				$userDAO = new UserDAO();
-				$userDAO -> removeAll();
+				$userDAO->removeAll();
 
 				$BidDAO = new BidDAO();
-				$BidDAO -> removeAll();
+				$BidDAO->removeAll();
 
 				$courseDAO = new CourseDAO();
-                $courseDAO -> removeAllCourses();
-                $courseDAO -> removeAllCompletedCourses();
-                $courseDAO -> removeAllPrerequisites();
+                $courseDAO->removeAllCourses();
+                $courseDAO->removeAllCompletedCourses();
+                $courseDAO->removeAllPrerequisites();
 
                 $roundDAO = new RoundDAO();
-                $roundDAO -> removeAll();
+                $roundDAO->removeAll();
 
                 $sectionDAO = new SectionDAO();
-				$sectionDAO -> removeAll();
+				$sectionDAO->removeAll();
 
-
+				// Begin importing student.csv.
+				
 				$data = fgetcsv($students);
 
 				// if(hasEmptyField($data) != []){
@@ -112,8 +116,8 @@ function doBootstrap() {
 				// 	}
 				// }
 				$student_row = 1;
-				while(($data = fgetcsv($students)) !== false){
-					if(studentValidation($data) != []){
+				while (($data = fgetcsv($students)) !== false) {
+					if (studentValidation($data) != []) {
 						$student_errors = studentValidation($data);
 						foreach($student_errors as $student_error){
 							$error = "$student_error in row $student_row in student.csv";
@@ -123,24 +127,25 @@ function doBootstrap() {
 						// $errors[] = $error; 
 						
 					}
-					else{
-						$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4]);
+					else {
+						$studentObj = new User($data[0], $data[1], $data[2],$data[3], $data[4]);
 						$userDAO->add($studentObj);
 						$students_processed++;
 					}
-					$student_row ++;
 
+					$student_row++;
 				}
 
 				// Default admin.
 				$adminObj = new User("admin", "password", "Admin", "SMU", 0, 1);
 				$userDAO->add($adminObj);
-				
 
+
+				// Begin importing course.csv.
 				$data = fgetcsv($courses);
 				$course_row = 1;
-				while(($data = fgetcsv($courses)) !== false){
-					if(courseValidation($data) != []){
+				while (($data = fgetcsv($courses)) !== false) {
+					if (courseValidation($data) != []) {
 						$course_errors = courseValidation($data);
 						foreach($course_errors as $course_error){
 							$error = "$course_error in row $course_row in course.csv";
@@ -150,12 +155,12 @@ function doBootstrap() {
 						// $errors[] = $error; 
 						
 					}
-					else{
+					else {
 						$coursesObj = new Course( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6]);
 						$courseDAO->addCourses($coursesObj);
 						$courses_processed++;
 					}
-					$course_row ++;
+					$course_row++;
 				}
 
 

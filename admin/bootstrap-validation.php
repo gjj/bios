@@ -37,7 +37,7 @@ function hasEmptyField($data){
 
 // }
 
-    function studentValidation($data){
+    function studentValidation($data) {
         $userId = $data[0];
         $password = $data[1];
         $name = $data[2];
@@ -47,29 +47,29 @@ function hasEmptyField($data){
         $errors = [];
         $userDAO = new UserDAO();
 
-        if(strlen($userId)>128){
+        if (strlen($userId) > 128) {
             $error = "invalid userid";
             $errors[] = $error; 
     ***REMOVED***
-        if($userDAO -> retrieveById($userId) != null) {
+        if ($userDAO->retrieveById($userId) != null) {
             $error = "duplicate userid";
             $errors[] = $error; 
     ***REMOVED***
-        if(is_numeric($edollar) == False || $edollar < 0.0 || $edollar != round($edollar,2) ) {
+        if (is_numeric($edollar) == False || $edollar < 0.0 || $edollar != round($edollar, 2)) {
             $error = "invalid e-dollar";
             $errors[] = $error; 
     ***REMOVED***
-        if(strlen($password)>128){
+        if(strlen($password) > 128){
             $error = "invalid password";
             $errors[] = $error; 
     ***REMOVED***
-        if(strlen($name)>100){
+        if(strlen($name) > 100){
             $error = "invalid name";    
             $errors[] = $error; 
     ***REMOVED***
 
         // if error not null, delete row 
-        if($errors != []) {
+        /*if($errors != []) {
             $sql="DELETE FROM users WHERE user_id = :userId";
 
             $connMgr = new ConnectionManager();
@@ -83,13 +83,13 @@ function hasEmptyField($data){
             $query->fetch(PDO::FETCH_ASSOC);
 
              
-    ***REMOVED***
+    ***REMOVED****/
         return $errors; 
          
 ***REMOVED***
 
     
-    function courseValidation($data){
+    function courseValidation($data) {
         $course = $data[0];
         $school = $data[1];
         $title = $data[2];
@@ -99,46 +99,55 @@ function hasEmptyField($data){
         $examend = $data[6];
 
         $errors = [];
+
         $result = True; 
-        if(strlen($title)>100){
+
+        if(strlen($title) > 100){
             $result = False;
             $error = "invalid title";
             $errors[] = $error; 
     ***REMOVED***
-        $year = "";
+
+        /*$year = "";
         $month = "";
         $day = "";
-        for($i=0;$i<strlen($examdate);$i++){
-            if($i>=0 && $i<=3){
+        for ($i = 0; $i < strlen($examdate); $i++) {
+            if ($i >= 0 && $i <= 3){
                 $year .= $examdate[$i];
         ***REMOVED***
-            elseif($i>3 && $i<=5){
+            else if ($i > 3 && $i <= 5){
                 $month .= $examdate[$i];
         ***REMOVED***
             else{
                 $day .= $examdate[$i];
         ***REMOVED***
     ***REMOVED***
-        if(checkdate(intval($month),intval($day),intval($year))!= True){
+        if (checkdate(intval($month), intval($day), intval($year)) != True) {
+            $error = "invalid exam date";
+            $errors[] = $error; 
+    ***REMOVED****/
+
+        // Better way.
+        if ($examdate != date("Ymd", strtotime($examdate))) {
             $error = "invalid exam date";
             $errors[] = $error; 
     ***REMOVED***
-        if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $examstart)!= True){
+        if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $examstart) != True){
             $error = "invalid exam start";
             $errors[] = $error;
     ***REMOVED***
-        if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $examend)!= True) {
-        //|| $examstart > $examend){
-            $error = "invalid exam end" . ($examstart > $examend);
+        if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $examend) != True
+        || strtotime($examstart) > strtotime($examend)) {
+            $error = "invalid exam end";
             $errors[] = $error;
     ***REMOVED***
-        if(strlen($description)>1000){
+        if (strlen($description) > 1000) {
             $error = "invalid description";
             $errors[] = $error;
     ***REMOVED***
 
         // if error not null, delete row 
-        if($errors != []) {
+        /*if ($errors != []) {
             $sql="DELETE FROM courses WHERE course = :course";
 
             $connMgr = new ConnectionManager();
@@ -152,7 +161,7 @@ function hasEmptyField($data){
             $query->fetch(PDO::FETCH_ASSOC);
 
             
-    ***REMOVED***
+    ***REMOVED****/
         return $errors; 
 
         
@@ -193,37 +202,37 @@ function hasEmptyField($data){
 
         $errors = [];
 
-        if(!checkCoursecode($course)){
+        if (!checkCoursecode($course)) {
             $error = "invalid course";
             $errors[] = $error;
     ***REMOVED***
-        else{
-            if($section[0] != "S" || !checkSectionNum($section) ){
+        else {
+            if ($section[0] != "S" || !checkSectionNum($section)) {
                 $error = "invalid section";
                 $errors[] = $error;
         ***REMOVED***
-            if($day<1 || $day>7){
+            if ($day<1 || $day>7) {
                 $error = "invalid day";
                 $errors[] = $error;
         ***REMOVED***
-            if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $start)!= True){
-                $error = "invalid exam start: {$start}";
+            if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $start) != True) {
+                $error = "invalid exam start";
                 $errors[] = $error;
         ***REMOVED***
-            if(preg_match("/([0-9]{1,2}:[0-9]{2})/", $end)!= True){
-            //|| $start > $end){
-                $error = "invalid exam end {$end}";
+            if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $end) != True
+            || strtotime($examstart) > strtotime($examend)) {
+                $error = "invalid exam end";
                 $errors[] = $error;
         ***REMOVED***
-            if(strlen($instructor)>100){
+            if (strlen($instructor) > 100) {
                 $error = "invalid instructor";
                 $errors[] = $error; 
         ***REMOVED***
-            if(strlen($venue)>100){
+            if (strlen($venue) > 100) {
                 $error = "invalid venue";
                 $errors[] = $error; 
         ***REMOVED***
-            if(!is_numeric($size) || $size<1){
+            if (!is_numeric($size) || $size < 1) {
                 $error = "invalid size";
                 $errors[] = $error; 
         ***REMOVED***
