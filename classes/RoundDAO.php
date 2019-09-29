@@ -17,6 +17,25 @@ class RoundDAO {
 		return $result;
 	}
 
+	public function startRound() {
+		$sql = "INSERT INTO rounds (round, status) VALUES (1, 'started');";
+
+		$connMgr = new ConnectionManager();
+		$db = $connMgr->getConnection();
+
+		$query = $db->prepare($sql);
+		$query->setFetchMode(PDO::FETCH_ASSOC);
+		$query->execute();
+		
+		// Returns my result set on success.
+		if ($query->rowCount()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	public function removeAll() {
         $sql = 'TRUNCATE TABLE rounds';
         
