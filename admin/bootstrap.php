@@ -1,6 +1,6 @@
 <?php
 require_once '../includes/common.php';
-
+require_once 'bootstrap-validation.php';
 function doBootstrap() {
 
 	$errors = array();
@@ -109,26 +109,70 @@ function doBootstrap() {
 				// 		$errors[] = "blank $missing_field";
 				// 	}
 				// }
-
+				$student_row = 1;
 				while(($data = fgetcsv($students)) !== false){
-					$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4]);
-					$userDAO->add($studentObj);
-					$students_processed++;
+					if(studentValidation($data) != []){
+						$student_errors = studentValidation($data);
+						foreach($student_errors as $student_error){
+							$error = "$student_error in row $student_row in student.csv";
+							$errors[] = $error; 
+						}
+						// $error = "$student_errors in row $student_row in student.csv";
+						// $errors[] = $error; 
+						
+					}
+					else{
+						$studentObj = new User( $data[0], $data[1], $data[2],$data[3], $data[4]);
+						$userDAO->add($studentObj);
+						$students_processed++;
+					}
+					$student_row ++;
+
 				}
 				
 
 				$data = fgetcsv($courses);
+				$course_row = 1;
 				while(($data = fgetcsv($courses)) !== false){
-					$coursesObj = new Course( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6]);
-					$courseDAO->addCourses($coursesObj);
-					$courses_processed++;
+					if(courseValidation($data) != []){
+						$course_errors = courseValidation($data);
+						foreach($course_errors as $course_error){
+							$error = "$course_error in row $course_row in course.csv";
+							$errors[] = $error; 
+						}
+						// $error = "$course_errors in row $course_row in course.csv";
+						// $errors[] = $error; 
+						
+					}
+					else{
+						$coursesObj = new Course( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6]);
+						$courseDAO->addCourses($coursesObj);
+						$courses_processed++;
+					}
+					$course_row ++;
 				}
+
+
 				$data = fgetcsv($sections);
+				$section_row = 1;
 				while(($data = fgetcsv($sections)) !== false){
-					$sectionsObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
-					$sectionDAO->add($sectionsObj);
-					$sections_processed++;
+					if(sectionValidation($data) != []){
+						$section_errors = sectionValidation($data);
+						foreach($section_errors as $section_error){
+							$error = "$section_error in row $section_row in section.csv";
+							$errors[] = $error;
+						}
+						// $error = "$section_errors in row $section_row in section.csv";
+						// $errors[] = $error;
+					}
+					else{
+						$sectionsObj = new Section( $data[0], $data[1], $data[2],$data[3], $data[4], $data[5],$data[6], $data[7]);
+						$sectionDAO->add($sectionsObj);
+						$sections_processed++;
+					}
+					$section_row ++;
 				}
+
 				$data = fgetcsv($courses_completed);
 				while(($data = fgetcsv($courses_completed)) !== false){
 					$userId = $data[0];

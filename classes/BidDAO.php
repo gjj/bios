@@ -626,7 +626,7 @@ class BidDAO
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT * FROM bids WHERE user_id = :userId  AND result = '-' or result = 'in' or result = 'out'";
+        $sql = "SELECT * FROM bids WHERE user_id = :userId AND (result = '-' OR result = 'in' OR result = 'out')";
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
@@ -706,19 +706,6 @@ class BidDAO
         else {
             return false;
         }
-    }
-
-    public function retrieveResult($user_id, $section)
-    {
-        $connMgr = new ConnectionManager();
-        $db = $connMgr->getConnection();
-        $sql = "SELECT * FROM bids WHERE user_id =:user_id  AND result = 'in' or result = 'out'";
-        $query = $db->prepare($sql);
-        $query->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-        $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        return $result;
     }
 
 	public function add($userId,$amount,$code,$section) {
