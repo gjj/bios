@@ -709,8 +709,8 @@ class BidDAO
     }
 
 	public function add($userId,$amount,$code,$section) {
-        $sql = 'INSERT INTO bids (user_id,amount,course,section) VALUES (:user_id, :amount, :course, :section)';
-        
+        $sql = 'CALL insertBids(:user_id, :amount, :course, :section)';
+
         $connMgr = new ConnectionManager();       
         $db = $connMgr->getConnection();
          
