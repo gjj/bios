@@ -220,7 +220,7 @@ function hasEmptyField($data){
                 $errors[] = $error;
         ***REMOVED***
             if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $end) != True
-            || strtotime($examstart) > strtotime($examend)) {
+            || strtotime($start) > strtotime($end)) {
                 $error = "invalid exam end";
                 $errors[] = $error;
         ***REMOVED***
