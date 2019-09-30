@@ -359,11 +359,15 @@ function hasEmptyField($data){
         }
         return $result;
     }
+
+    
     function bidValidation($data){
         $userId = $data[0];
         $amount = $data[1];
         $course = $data[2];
         $section = $data[3];
+        $bidDAO = new BidDAO;
+        
 
         $errors = [];
 
@@ -385,7 +389,32 @@ function hasEmptyField($data){
                 $errors[] = $error;
             }   
         }
+
+        // if (!hasCompletedCourse($userId, $course)){
+        //     $error = "course completed";
+        //     $errors[] = $error;
+
+        // }
+
+
+
+
         return $errors;
+
+        if($errors != []) {
+            $sql="DELETE FROM bids WHERE user_id = :userId";
+
+            $connMgr = new ConnectionManager();
+            $db = $connMgr->getConnection();
+
+            $query = $db->prepare($sql);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+    
+            $query->execute();
+            $query->fetch(PDO::FETCH_ASSOC);
+        }
+
     }
     
 
