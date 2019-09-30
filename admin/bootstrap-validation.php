@@ -398,9 +398,6 @@ function hasEmptyField($data){
 
 
 
-
-        return $errors;
-
         if($errors != []) {
             $sql="DELETE FROM bids WHERE user_id = :userId";
 
@@ -413,7 +410,11 @@ function hasEmptyField($data){
     
             $query->execute();
             $query->fetch(PDO::FETCH_ASSOC);
+
         }
+
+        return $errors;
+
 
     }
     
