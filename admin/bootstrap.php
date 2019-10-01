@@ -125,12 +125,7 @@ function doBootstrap()
 
                     $student_row++;
             ***REMOVED***
-
-                // Default admin.
-                $adminObj = new User("admin", "password", "Admin", "SMU", 0, 1);
-                $userDAO->add($adminObj);
-
-
+                
                 // Begin importing course.csv.
                 $data = fgetcsv($courses);
                 $course_row = 1;
