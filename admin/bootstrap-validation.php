@@ -353,25 +353,12 @@ function hasEmptyField($data){
 
             $hasPrerequisites = $bidDAO -> hasPrerequisites($course_completed);
             // if completed_course has prerequisites, check if prerequisites were completed 
-            if($hasPrerequisites != null){
+            if($hasPrerequisites){
                 $completedPrerequisites = $bidDAO -> hasCompletedPrerequisites($userId, $course_completed);
                 // if student hasn't completed prerequisites, error out
                 if($completedPrerequisites == False){
                     $error = "invalid course completed";
                     $errors[] = $error; 
-            ***REMOVED***
-                else{
-                    $sql="DELETE FROM courses_completed WHERE user_id = :userId";
-
-                    $connMgr = new ConnectionManager();
-                    $db = $connMgr->getConnection();
-
-                    $query = $db->prepare($sql);
-                    $query->setFetchMode(PDO::FETCH_ASSOC);
-                    $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-            
-                    $query->execute();
-                    $query->fetch(PDO::FETCH_ASSOC);
             ***REMOVED***
         ***REMOVED***
             
