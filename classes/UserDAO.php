@@ -130,8 +130,28 @@ class UserDAO
         // prepare for execution of the stored procedure
         $query = $db->prepare($sql);
         $query->execute();
+
         $query->closeCursor();
 
+***REMOVED***
+
+    // Retrieve Student School by ID
+
+    public function getSchoolbyID($user_id)
+    {
+        // Calling SQL Statment
+        $sql = 'SELECT school from users WHERE user_id = :user_id';
+
+        //Establishing Connection to Database
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        //Prepare SQL for execution
+        $query = $db->prepare($sql);
+        $query->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        return $result[0];
 ***REMOVED***
 
 }
