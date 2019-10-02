@@ -1,4 +1,6 @@
 <?php
+	define("BIOS_STUDENT", true);
+	
 	require_once 'includes/common.php';
 
 	if (!isset($_SESSION['userid'])) {

@@ -38,7 +38,7 @@
 
                 $result = [
                     "status" => "success",
-                    "messages" => $token
+                    "token" => $token
                 ];
             }
             else {
