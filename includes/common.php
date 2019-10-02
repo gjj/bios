@@ -19,6 +19,12 @@
 		}
 	}
 
+	if (defined('BIOS_STUDENT')) {
+		if (isLoggedIn() and currentUserRole() == 1) {
+			header("Location: admin/home");
+		}
+	}
+
 	function isLoggedIn() {
 		if (isset($_SESSION['userid'])) {
 			return true;
