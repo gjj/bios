@@ -378,13 +378,15 @@ function hasEmptyField($data){
 
     
     function bidValidation($data){
-        $userId = $data[0];
-        $amount = $data[1];
-        $course = $data[2];
-        $section = $data[3];
-        $bidDAO = new BidDAO;
-        
+        $id = $data[0];
+        $userId = $data[1];
+        $amount = $data[2];
+        $course = $data[3];
+        $section = $data[4];
+        $round = $data[6];
 
+        $bidDAO = new BidDAO;
+        $userDAO = new UserDAO;
         $errors = [];
 
         if(!checkUserId($userId)){
@@ -405,15 +407,7 @@ function hasEmptyField($data){
                 $errors[] = $error;
             }   
         }
-
-        // if (!hasCompletedCourse($userId, $course)){
-        //     $error = "course completed";
-        //     $errors[] = $error;
-
-        // }
-
-
-
+        // if got errors from basic validation, remove the row
         if($errors != []) {
             $sql="DELETE FROM bids WHERE user_id = :userId";
 
@@ -426,6 +420,49 @@ function hasEmptyField($data){
     
             $query->execute();
             $query->fetch(PDO::FETCH_ASSOC);
+
+        }
+        // else, do logic validation
+        else{
+            $userSchool = $userDAO -> getSchoolbyID($userId);
+            $checkOwnSchoolCourse = $bidDAO -> checkOwnSchoolCourse($userSchool, $course);
+            // $checkTimetableConflicts = $bidDAO -> checkTimetableConflicts($userId, $courseSections, $round);
+            // $checkExamConflicts = $bidDAO -> checkExamConflicts($userId, $courseSections, $round);
+            $hasPrerequisites = $bidDAO -> hasPrerequisites($course);
+            $hasCompletedCourse = $bidDAO ->hasCompletedCourse($userId, $course);
+            $countBids = $bidDAO -> countBids($userId, $round);
+            // $getEDollar = $bidDAO -> getEDollar($userId);
+
+            if(!$checkOwnSchoolCourse){
+                $error = "not own school course";
+                $errors[] = $error;
+            }
+            // if(!$checkTimetableConflicts){
+            //     $error = "class timetable clash";
+            //     $errors[] = $error;
+            // }
+            // if(!$checkExamConflicts){
+            //     $error = "exam timetable clash";
+            //     $errors[] = $error;
+            // }
+            // if course has prerequisites, check if prerequisites were completed 
+            if($hasPrerequisites){
+                $completedPrerequisites = $bidDAO -> hasCompletedPrerequisites($userId, $course);
+                // if student hasn't completed prerequisites, error out
+                if($completedPrerequisites == False){
+                    $error = "invalid course completed";
+                    $errors[] = $error; 
+                }
+            }
+            if($hasCompletedCourse){
+                $error = "course completed";
+                $errors[] = $error;
+            }
+            if($countBids > 5){
+                $error = "section limit reached";
+                $errors[] = $error;
+            }
+            // if($getEDollar)
 
         }
 
