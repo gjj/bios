@@ -36,6 +36,8 @@ class BidDAO
         return $result;
 ***REMOVED***
 
+    
+
 ***REMOVED***
 ***REMOVED***This methods returns all cart items by user of a given round
 ***REMOVED***@params $userId The user ID to search for.
