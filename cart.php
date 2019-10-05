@@ -188,6 +188,9 @@
             <div class="col-md-12">
                 <h5>My Bids</h5>
                 <section>
+                <p class="lead">
+			    You currently have <code>e$***REMOVED*** echo $user['edollar']; ?></code>.
+                </p>
                     <form action="" method="post">
                         <table class="table">
                             <thead class="thead-dark">
