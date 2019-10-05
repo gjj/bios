@@ -97,11 +97,12 @@
         <div class="justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">Cart</h1>
         </div>
-
+        <p class="lead">
+			    You currently have <code>e$<?php echo $user['edollar']; ?></code>.
+        </p>
         <div class="row pb-5">
 			<div class="col-md-12">
                 <h5>My Cart</h5>
-
                             <?php
 								if (isset($_SESSION['errors'])) {
 							?>
@@ -188,9 +189,6 @@
             <div class="col-md-12">
                 <h5>My Bids</h5>
                 <section>
-                <p class="lead">
-			    You currently have <code>e$<?php echo $user['edollar']; ?></code>.
-                </p>
                     <form action="" method="post">
                         <table class="table">
                             <thead class="thead-dark">
