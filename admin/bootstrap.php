@@ -309,12 +309,12 @@ function doBootstrap()
         $result = [
             "status" => "error",
             "num-record-loaded" => [
-                "bid.csv" => $bids_processed,
-                "course.csv" => $courses_processed,
-                "course_completed.csv" => $courses_completed_processed,
-                "prerequisite.csv" => $prerequisites_processed,
-                "section.csv" => $sections_processed,
-                "student.csv" => $students_processed
+                ["bid.csv" => $bids_processed],
+                ["course.csv" => $courses_processed],
+                ["course_completed.csv" => $courses_completed_processed],
+                ["prerequisite.csv" => $prerequisites_processed],
+                ["section.csv" => $sections_processed],
+                ["student.csv" => $students_processed]
             ],
             "error" => $errors
         ];
@@ -323,12 +323,12 @@ function doBootstrap()
         $result = [
             "status" => "success",
             "num-record-loaded" => [
-                "bid.csv" => $bids_processed,
-                "course.csv" => $courses_processed,
-                "course_completed.csv" => $courses_completed_processed,
-                "prerequisite.csv" => $prerequisites_processed,
-                "section.csv" => $sections_processed,
-                "student.csv" => $students_processed
+                ["bid.csv" => $bids_processed],
+                ["course.csv" => $courses_processed],
+                ["course_completed.csv" => $courses_completed_processed],
+                ["prerequisite.csv" => $prerequisites_processed],
+                ["section.csv" => $sections_processed],
+                ["student.csv" => $students_processed]
             ]
         ];
 ***REMOVED***
