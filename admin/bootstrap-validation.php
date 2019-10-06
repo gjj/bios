@@ -1,43 +1,52 @@
 <?php
 
-require_once '../includes/common.php';
+    require_once '../includes/common.php';
 
-// $data is an array of each row values
-function hasEmptyField($data){
-    $columnpos_arr = [];
-    for ($i = 0; $i <=count($data); $i++) {
-        // Make sure that the key exists, isn't null or an empty string
-        if (!isset($data[$i]) || $data[$i] == '') {
-            $columnpos_arr[] = $i;
+    // $data is an array of each row values
+    function hasEmptyFields($data) {
+        $result = [];
+
+        for ($i = 0; $i <= count($data); $i++) {
+            // Make sure that the key exists, isn't null or an empty string
+            if (!isset($data[$i]) or $data[$i] == "") {
+                $result[] = $i;
+            }
         }
+
+        return $result; // position of columns with missing values 
     }
+    // incomplete
+    // function commonValidation($file){
 
-    return $columnpos_arr; // position of columns with missing values 
-}
-// incomplete
-// function commonValidation($file){
+    //     $counter = 0;
+    //     $errors= [];
+    //     while (($data = fgetcsv($file, 1000, ",")) !== FALSE) {        
+    //         $counter++;    
+    //         $columnpos_arr = hasEmptyField($data);
+    //         if (!empty($columnpos_arr)) {
+    //             foreach($columnpos as $columnpos_arr){
 
-//     $counter = 0;
-//     $errors= [];
-//     while (($data = fgetcsv($file, 1000, ",")) !== FALSE) {        
-//         $counter++;    
-//         $columnpos_arr = hasEmptyField($data);
-//         if (!empty($columnpos_arr)) {
-//             foreach($columnpos as $columnpos_arr){
-
-//             }
-//              $errors[] = "Empty field is in row: $counter cell $column_error";
-//         }
+    //             }
+    //              $errors[] = "Empty field is in row: $counter cell $column_error";
+    //         }
 
 
-//     }
+    //     }
 
-    // echo $errors;
+        // echo $errors;
 
 
-// }
+    // }
+    $dataStudents = [];
+    $dataCourses = [];
+    $dataSections = [];
+    $dataPrerequisites = [];
+    $dataCourseCompleted = [];
+    $dataBids = [];
 
-    function studentValidation($data) {
+    function validateStudent($data) {
+        global $dataStudents;
+
         $userId = $data[0];
         $password = $data[1];
         $name = $data[2];
@@ -45,51 +54,38 @@ function hasEmptyField($data){
         $edollar = $data[4];
 
         $errors = [];
-        $userDAO = new UserDAO();
 
         if (strlen($userId) > 128) {
-            $error = "invalid userid";
-            $errors[] = $error; 
+            $errors[] = "invalid userid"; 
         }
-        if ($userDAO->retrieveById($userId) != null) {
-            $error = "duplicate userid";
-            $errors[] = $error; 
+        if (array_key_exists($userId, $dataStudents)) {
+            $errors[] = "duplicate userid";
         }
-        if (is_numeric($edollar) == False || $edollar < 0.0 || $edollar != round($edollar, 2)) {
-            $error = "invalid e-dollar";
-            $errors[] = $error; 
+        if (is_numeric($edollar) == false or $edollar < 0.0 or $edollar != round($edollar, 2)) {
+            $errors[] = "invalid e-dollar";
         }
-        if(strlen($password) > 128){
-            $error = "invalid password";
-            $errors[] = $error; 
+        if (strlen($password) > 128) {
+            $errors[] = "invalid password";
         }
-        if(strlen($name) > 100){
-            $error = "invalid name";    
-            $errors[] = $error; 
+        if (strlen($name) > 100) {
+            $errors[] = "invalid name";
         }
 
-        // if error not null, delete row 
-        /*if($errors != []) {
-            $sql="DELETE FROM users WHERE user_id = :userId";
-
-            $connMgr = new ConnectionManager();
-            $db = $connMgr->getConnection();
-
-            $query = $db->prepare($sql);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-    
-            $query->execute();
-            $query->fetch(PDO::FETCH_ASSOC);
-
-             
-        }*/
-        return $errors; 
-         
+        // Store in array for checking.
+        if (!$errors) {
+            $dataStudents[$userId] = [
+                'school' => $school,
+                'edollar' => $edollar
+            ];
+        }
+        
+        return $errors;
     }
 
     
-    function courseValidation($data) {
+    function validateCourse($data) {
+        global $dataCourses;
+
         $course = $data[0];
         $school = $data[1];
         $title = $data[2];
@@ -99,98 +95,55 @@ function hasEmptyField($data){
         $examend = $data[6];
 
         $errors = [];
-
-        $result = True; 
-
-        if(strlen($title) > 100){
-            $result = False;
-            $error = "invalid title";
-            $errors[] = $error; 
-        }
-
-        /*$year = "";
-        $month = "";
-        $day = "";
-        for ($i = 0; $i < strlen($examdate); $i++) {
-            if ($i >= 0 && $i <= 3){
-                $year .= $examdate[$i];
-            }
-            else if ($i > 3 && $i <= 5){
-                $month .= $examdate[$i];
-            }
-            else{
-                $day .= $examdate[$i];
-            }
-        }
-        if (checkdate(intval($month), intval($day), intval($year)) != True) {
-            $error = "invalid exam date";
-            $errors[] = $error; 
-        }*/
-
-        // Better way.
+        
         if ($examdate != date("Ymd", strtotime($examdate))) {
-            $error = "invalid exam date";
-            $errors[] = $error; 
+            $errors[] = "invalid exam date";
         }
-        if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $examstart) != True){
-            $error = "invalid exam start";
-            $errors[] = $error;
+        if ($examstart != date("G:i", strtotime($examstart))) {
+            $errors[] = "invalid exam start";
         }
-        if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $examend) != True
-        || strtotime($examstart) > strtotime($examend)) {
-            $error = "invalid exam end";
-            $errors[] = $error;
+        if ($examend != date("G:i", strtotime($examend)) or strtotime($examstart) > strtotime($examend)) {
+            $errors[] = "invalid exam end";
+        }
+        if (strlen($title) > 100) {
+            $errors[] = "invalid title";
         }
         if (strlen($description) > 1000) {
-            $error = "invalid description";
-            $errors[] = $error;
+            $errors[] = "invalid description";
         }
 
-        // if error not null, delete row 
-        /*if ($errors != []) {
-            $sql="DELETE FROM courses WHERE course = :course";
+        // Store in array for checking.        
+        if (!$errors) {
+            $dataCourses[$course] = [
+                'school' => $school,
+                'exam date' => $examdate,
+                'exam start' => $examstart,
+                'exam end' => $examend
+            ];
+        }
 
-            $connMgr = new ConnectionManager();
-            $db = $connMgr->getConnection();
-
-            $query = $db->prepare($sql);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            $query->bindParam(':course', $course, PDO::PARAM_STR);
+        return $errors;
+    }
     
-            $query->execute();
-            $query->fetch(PDO::FETCH_ASSOC);
-
-            
-        }*/
-        return $errors; 
-
-        
-    }
-
-    function checkCoursecode($course){
-        $courseDAO = new CourseDAO();
-        $result = True;
-        if($courseDAO -> retrieveByCode($course) == null){
-            $result = False;
-        }
-        return $result;
-    }
-    function checkSectionNum($section){
-        $result = True;
+    function checkSectionFormat($section) {
         $section_num = "";
-        for($i=0;$i<strlen($section);$i++){
-            if($i != 0){
+        for ($i = 0; $i < strlen($section); $i++) {
+            // Skip the first character.
+            if ($i != 0) {
                 $section_num .= $section[$i];
             }
         }
-        echo $section_num;
+        
         $section_num = intval($section_num);
-        if($section_num<=0 || $section_num>99){
-            $result = False;
+        if ($section_num < 1 or $section_num > 99) {
+            return false;
         }
-        return $result;
+
+        return true;
     }
-    function sectionValidation($data) {
+    function validateSection($data) {
+        global $dataCourses, $dataSections;
+
         $course = $data[0];
         $section = $data[1];
         $day = $data[2];
@@ -202,236 +155,257 @@ function hasEmptyField($data){
 
         $errors = [];
 
-        if (!checkCoursecode($course)) {
-            $error = "invalid course";
-            $errors[] = $error;
+        if (!array_key_exists($course, $dataCourses)) {
+            $errors[] = "invalid course";
         }
         else {
-            if ($section[0] != "S" || !checkSectionNum($section)) {
-                $error = "invalid section";
-                $errors[] = $error;
+            if ($section[0] != "S" or !checkSectionFormat($section)) {
+                $errors[] = "invalid section";
             }
-            if ($day<1 || $day>7) {
-                $error = "invalid day";
-                $errors[] = $error;
+            if ($day < 1 or $day > 7) {
+                $errors[] = "invalid day";
             }
-            if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $start) != True) {
-                $error = "invalid exam start";
-                $errors[] = $error;
+            if ($start != date("G:i", strtotime($start))) {
+                $errors[] = "invalid start";
             }
-            if (preg_match("/([0-9]{1,2}:[0-9]{2})/", $end) != True
-            || strtotime($start) > strtotime($end)) {
-                $error = "invalid exam end";
-                $errors[] = $error;
+            if ($end != date("G:i", strtotime($end)) or strtotime($start) > strtotime($end)) {
+                $errors[] = "invalid end";
             }
             if (strlen($instructor) > 100) {
-                $error = "invalid instructor";
-                $errors[] = $error; 
+                $errors[] = "invalid instructor";
             }
             if (strlen($venue) > 100) {
-                $error = "invalid venue";
-                $errors[] = $error; 
+                $errors[] = "invalid venue";
             }
-            if (!is_numeric($size) || $size < 1) {
-                $error = "invalid size";
-                $errors[] = $error; 
+            if (!is_numeric($size) or $size < 1) {
+                $errors[] = "invalid size";
             }
         }
-
-        // if error not null, delete row and return errors
-        if($errors != []) {
-            $sql="DELETE FROM sections WHERE course = :course";
-
-            $connMgr = new ConnectionManager();
-            $db = $connMgr->getConnection();
-
-            $query = $db->prepare($sql);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            $query->bindParam(':course', $course, PDO::PARAM_STR);
-    
-            $query->execute();
-            $query->fetch(PDO::FETCH_ASSOC);
-
-            
-        } 
-        return $errors; 
-
-
         
-}
+        // Push to array for checks later.
+        if (!$errors) {
+            $dataSections[$course][$section] = [
+                'day' => $day,
+                'start' => $start,
+                'end' => $end
+            ];
+            /*if (!array_key_exists($course, $dataSections)) {
+                // If doesn't exist as a key yet...
+                 // Create new key and array. Must be array, same reason as above.            }
+            }
+            else {
+                $dataSections[$course][$section] = [
+                    'day' => $day,
+                    'start' => $start,
+                    'end' => $end
+                ]; // Push to existing array as each course can have multiple sections.
+            }*/
+        }
 
-    function prerequisiteValidation($data){
+
+        return $errors;
+    }
+
+    function validatePrerequisite($data) {
+        global $dataCourses, $dataPrerequisites;
+
         $course = $data[0];
         $prerequisite = $data[1];
         
         $errors = [];
 
-        if(!checkCoursecode($course)){
-            $error = "invalid course";
-            $errors[] = $error;
+        if (!array_key_exists($course, $dataCourses)) {
+            $errors[] = "invalid course";
         }
 
-        if(!checkCoursecode($prerequisite)){
-            $error = "invalid prerequisite";
-            $errors[] = $error;
+        if (!array_key_exists($prerequisite, $dataCourses)) {
+            $errors[] = "invalid prerequisite";
+        }
+        
+        // Push to array for checks later.
+        if (!$errors) {
+            if (!array_key_exists($course, $dataPrerequisites)) {
+                // If doesn't exist as a key yet...
+                $dataPrerequisites[$course] = [$prerequisite]; // Create new key and array. Must be array, same reason as above.
+            }
+            else {
+                $dataPrerequisites[$course][] = $prerequisite; // Push to existing array as each course can have multiple prerequisites.
+            }
         }
 
-        # if error not null, delete row and return errors
-        if($errors != []) {
-            $sql="DELETE FROM prerequisites WHERE course = :course";
-
-            $connMgr = new ConnectionManager();
-            $db = $connMgr->getConnection();
-
-            $query = $db->prepare($sql);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            $query->bindParam(':course', $course, PDO::PARAM_STR);
-    
-            $query->execute();
-            $query->fetch(PDO::FETCH_ASSOC);
-
-            
-        } 
         return $errors; 
 
     }
-
-    function checkUserId($userId){
-        $userDAO = new UserDAO();
-        $result = True;
-        if($userDAO ->  retrieveById($userId) == null){
-            $result = False;
-        }
-        return $result;
-    }
-
-    // Haven't completed yet
-    // function checkPrerequisites($course_completed){
-    //     $courseDAO = new CourseDAO();
+    
+    function validateCourseCompletion($data) {
+        global $dataStudents, $dataCourses, $dataPrerequisites, $dataCourseCompleted;
         
-    //     if($courseDAO -> searchPrerequisites($course_completed) != null){
-
-    //     }
-    // }
-    function courseCompletedValidation($data){
         $userId = $data[0];
         $course_completed = $data[1];
 
         $errors = [];
 
-        if(!checkUserId($userId)){
-            $error = "invalid userid";
-            $errors[] = $error;
+        if (!array_key_exists($userId, $dataStudents)) {
+            $errors[] = "invalid userid";
         }
 
-        if(!checkCoursecode($course_completed)){
-            $error = "invalid course";
-            $errors[] = $error;
+        if (!array_key_exists($course_completed, $dataCourses)) {
+            $errors[] = "invalid course";
         }
         
-        # if error not null, delete row and return errors
-        if($errors != []) {
-            $sql="DELETE FROM courses_completed WHERE user_id = :userId";
+        // If pass all basic validations...
+        if (!$errors) {
+            // Check if course even has prerequisites
+            if (array_key_exists($course_completed, $dataPrerequisites)) {
+                // Get my list of prerequisites for this course.
+                $prerequisites = $dataPrerequisites[$course_completed]; // [IS102, IS103]
+                
+                // Check if I can find a current course completed list with the user ID. If empty or count() = 0 means user has not completed any course yet.
+                if (isset($dataCourseCompleted[$userId]) and count($dataCourseCompleted[$userId])) {
+                    $userCompletedCourses = $dataCourseCompleted[$userId];
 
-            $connMgr = new ConnectionManager();
-            $db = $connMgr->getConnection();
+                    $intersect = array_intersect($prerequisites, $userCompletedCourses);
 
-            $query = $db->prepare($sql);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-    
-            $query->execute();
-            $query->fetch(PDO::FETCH_ASSOC);
-        }
-        // if pass all basic validations, 
-        else{
-            /* check if course_completed even has prereq
-            if have, go on with logic validation
-            else, end validation 
-            */
-            $bidDAO = new BidDAO();
-
-            $hasPrerequisites = $bidDAO -> hasPrerequisites($course_completed);
-            // if completed_course has prerequisites, check if prerequisites were completed 
-            if($hasPrerequisites){
-                $completedPrerequisites = $bidDAO -> hasCompletedPrerequisites($userId, $course_completed);
-                // if student hasn't completed prerequisites, error out
-                if($completedPrerequisites == False){
-                    $error = "invalid course completed";
-                    $errors[] = $error; 
+                    if ($intersect == $prerequisites) {
+                        $dataCourseCompleted[$userId][] = $course_completed; // Push to existing array as each user can complete multiple courses.
+                    }
+                    else {
+                        $errors[] = "invalid course completed";
+                    }
+                }
+                else {
+                    $errors[] = "invalid course completed";
                 }
             }
-            
+            else {
+                // Course has no prerequisites!
+                
+                if (!array_key_exists($userId, $dataCourseCompleted)) {
+                    // If doesn't exist as a key yet...
+                    $dataCourseCompleted[$userId] = [$course_completed]; // Create new key and array. Must be array, same reason as above.
+
+                }
+                else {
+                    $dataCourseCompleted[$userId][] = $course_completed; // Push to existing array as each user can complete multiple courses.
+                }
+            }
         }
+
         return $errors; 
     }
-
-    // Bid Validations 
-    function checkSection($course, $section){
-        $sectionDAO = new SectionDAO();
-        $result = True; 
-        if ($sectionDAO -> sectionExists($course, $section) == null){
-            $result = False;
-        }
-        return $result;
-    }
-
     
-    function bidValidation($data){
-        $id = $data[0];
-        $userId = $data[1];
-        $amount = $data[2];
-        $course = $data[3];
-        $section = $data[4];
-        $round = $data[6];
+    function validateBid($data) {
+        global $dataStudents, $dataCourses, $dataSections, $dataPrerequisites, $dataCourseCompleted, $dataBids;
+        
+        $userId = $data[0];
+        $amount = $data[1];
+        $course = $data[2];
+        $section = $data[3];
 
         $bidDAO = new BidDAO;
         $userDAO = new UserDAO;
         $errors = [];
 
-        if(!checkUserId($userId)){
-            $error = "invalid userid";
-            $errors[] = $error;
+        if (!array_key_exists($userId, $dataStudents)) {
+            $errors[] = "invalid userid";
         }
-        if(is_numeric($amount) == False || $amount < 10 || $amount != round($amount,2)){
-            $error = "invalid amount";
-            $errors[] = $error;
+        if (!is_numeric($amount) or $amount < 10 or $amount != round($amount, 2)) {
+            $errors[] = "invalid amount";
         }
-        if(!checkCoursecode($course)){
-            $error = "invalid course";
-            $errors[] = $error;
+        if (!array_key_exists($course, $dataCourses)) {
+            $errors[] = "invalid course";
         }
-        else{
-            if(!checkSection($course, $section)){
-                $error = "invalid section";
-                $errors[] = $error;
-            }   
+        else {
+            $sections = $dataSections[$course];
+            if (!array_key_exists($section, $sections)) {
+                $errors[] = "invalid section";
+            }
         }
-        // if got errors from basic validation, remove the row
-        if($errors != []) {
-            $sql="DELETE FROM bids WHERE user_id = :userId";
 
-            $connMgr = new ConnectionManager();
-            $db = $connMgr->getConnection();
+        // If no errors so far, then we proceed for our second round of validation checks...
+        if (!$errors) {
+            // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
+            if ($dataStudents[$userId]['school'] !== $dataCourses[$course]['school']) {
+                $errors[] = "not own school course";
+            }
 
-            $query = $db->prepare($sql);
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-    
-            $query->execute();
-            $query->fetch(PDO::FETCH_ASSOC);
+            // Validation 2/7 class timetable clash: The class timeslot for the section clashes with that of a previously bidded section.
+            if ($bidDAO->checkTimetableConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
+                $errors[] = "class timetable clash";
+            }
+            
+            // Validation 3/7 exam timetable clash: The exam timeslot for this section clashes with that of a previously bidded section.
+            if ($bidDAO->checkExamConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
+                $errors[] = "exam timetable clash";
+            }
 
+            // Validation 4/7 incomplete prerequisites:	student has not completed the prerequisites for this course.
+            if (array_key_exists($course, $dataPrerequisites)) {
+                // Get my list of prerequisites for this course.
+                $prerequisites = $dataPrerequisites[$course];
+                
+                // Check if I can find a current course completed list with the user ID. If empty or count() = 0 means user has not completed any course yet.
+                if (isset($dataCourseCompleted[$userId]) and count($dataCourseCompleted[$userId])) {
+                    $userCompletedCourses = $dataCourseCompleted[$userId];
+
+                    $intersect = array_intersect($prerequisites, $userCompletedCourses);
+
+                    if ($intersect != $prerequisites) {
+                        $errors[] = "incomplete prerequisites";
+                    }
+                }
+                else {
+                    $errors[] = "incomplete prerequisites";
+                }
+            }
+
+            // Validation 5/7 course completed: student has already completed this course.
+            if (array_key_exists($userId, $dataCourseCompleted)) {
+                if (in_array($course, $dataCourseCompleted[$userId])) {
+                    $errors[] = "course completed";
+                }
+            }
+
+            // Validation 6/7 section limit reached: student has already bidded for 5 sections.
+            if ($bidDAO->countBids($userId, 1) >= 5) {
+                $errors[] = "section limit reached";
+            }
+
+            // Validation 7/7 "not enough e-dollar" student has not enough e-dollars to place the bid.
+            // If it is an update of a previous bid for the same course, account for the e$ gained back
+            // from the cancellation
+            $existingBid = $bidDAO->getAmountIfBidExists($userId, $course, $section);
+
+            $amountToDebit = $amount;
+
+            if ($existingBid) {
+                $previousAmount = $existingBid['amount'];
+                $amountToDebit = $amount - $previousAmount;
+            }
+            $userEDollar = $bidDAO->getEDollar($userId)['edollar'];
+            
+            if ($amountToDebit > $userEDollar) {
+                $errors[] = "not enough e-dollar";
+            }
+
+            // If no errors, means this bid passed all our checks.
+            if (!$errors) {
+                $dataBids[$userId] = [
+                    'course' => $course,
+                    'section' => $section,
+                    'amount' => $amount
+                ];
+            }
         }
-        // else, do logic validation
-        else{
-            $userSchool = $userDAO -> getSchoolbyID($userId);
-            $checkOwnSchoolCourse = $bidDAO -> checkOwnSchoolCourse($userSchool, $course);
-            // $checkTimetableConflicts = $bidDAO -> checkTimetableConflicts($userId, $courseSections, $round);
-            // $checkExamConflicts = $bidDAO -> checkExamConflicts($userId, $courseSections, $round);
-            $hasPrerequisites = $bidDAO -> hasPrerequisites($course);
-            $hasCompletedCourse = $bidDAO ->hasCompletedCourse($userId, $course);
-            $countBids = $bidDAO -> countBids($userId, $round);
-            // $getEDollar = $bidDAO -> getEDollar($userId);
+        
+        /*$userSchool = $userDAO -> getSchoolbyID($userId);
+        $checkOwnSchoolCourse = $bidDAO -> checkOwnSchoolCourse($userSchool, $course);
+        // $checkTimetableConflicts = $bidDAO -> checkTimetableConflicts($userId, $courseSections, $round);
+        // $checkExamConflicts = $bidDAO -> checkExamConflicts($userId, $courseSections, $round);
+        $hasPrerequisites = $bidDAO -> hasPrerequisites($course);
+        $hasCompletedCourse = $bidDAO ->hasCompletedCourse($userId, $course);
+        $countBids = $bidDAO -> countBids($userId, $round);
+        // $getEDollar = $bidDAO -> getEDollar($userId);
 
             if(!$checkOwnSchoolCourse){
                 $error = "not own school course";
@@ -462,9 +436,7 @@ function hasEmptyField($data){
                 $error = "section limit reached";
                 $errors[] = $error;
             }
-            // if($getEDollar)
-
-        }
+            // if($getEDollar)*/
 
         return $errors;
 
