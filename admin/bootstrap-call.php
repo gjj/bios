@@ -3,7 +3,7 @@ require_once '../includes/common.php';
 
 ?>
 
-<form id='bootstrap-form' action="bootstrap-process.php" method="post" enctype="multipart/form-data">
+<form id='bootstrap-form' action="bootstrap-process" method="post" enctype="multipart/form-data">
 
 	Bootstrap file: 
 	<input id='bootstrap-file' type="file" name="bootstrap-file"></br>
