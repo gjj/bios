@@ -1,6 +1,7 @@
 ***REMOVED***
 require_once '../includes/common.php';
 require_once 'bootstrap-validation.php';
+
 header('Content-Type: application/json');
 
 function doBootstrap()
@@ -24,7 +25,8 @@ function doBootstrap()
     # check file size
     if ($_FILES["bootstrap-file"]["size"] <= 0) {
         $errors[] = "input files not found";
-***REMOVED*** else {
+***REMOVED***
+    else {
         $zip = new ZipArchive;
         $res = $zip->open($zip_file);
 
@@ -46,8 +48,7 @@ function doBootstrap()
             $courses_completed = @fopen($courses_completed_path, "r");
             $bids = @fopen($bids_path, "r");
 
-            if (empty($students) or empty($courses) or empty($sections)
-                or empty($courses_completed) or empty($prerequisites) or empty($bids)) {
+            if (empty($students) or empty($courses) or empty($sections) or empty($courses_completed) or empty($prerequisites) or empty($bids)) {
                 $errors[] = "input files not found";
 
                 if (!empty($students)) {
@@ -79,13 +80,14 @@ function doBootstrap()
                     fclose($sections);
                     @unlink($sections_path);
             ***REMOVED***
-        ***REMOVED*** else {
+        ***REMOVED***
+            else {
                 $connMgr = new ConnectionManager();
                 $conn = $connMgr->getConnection();
 
                 //Create DAO Objects
                 $userDAO = new UserDAO();
-                $BidDAO = new BidDAO();
+                $bidDAO = new bidDAO();
                 $courseDAO = new CourseDAO();
                 $roundDAO = new RoundDAO();
                 $sectionDAO = new SectionDAO();
@@ -94,30 +96,22 @@ function doBootstrap()
                 $userDAO->truncateAllTable();
 
                 // Begin importing student.csv.
-
-                $data = fgetcsv($students);
-
-                // if(hasEmptyField($data) != []){
-                // 	$missing_fields = [];
-                // 	foreach($columnpos_arr as $columnpos){
-                // 		$missing_fields[] = $data[$columnpos];
-                // 	}
-                // 	foreach($missing_fields as $missing_field){
-                // 		$errors[] = "blank $missing_field";
-                // 	}
-                // }
-                $student_row = 1;
+                $data = fgetcsv($students); // Skip first row.
+                $student_row = 2;
                 while (($data = fgetcsv($students)) !== false) {
-                    if (studentValidation($data) != []) {
-                        $student_errors = studentValidation($data);
-                        foreach ($student_errors as $student_error) {
-                            $error = "$student_error in row $student_row in student.csv";
-                            $errors[] = $error;
-                    ***REMOVED***
-                        // $error = "$student_errors in row $student_row in student.csv";
-                        // $errors[] = $error;
+                    $data = array_map('trim', $data);
 
-                ***REMOVED*** else {
+                    $validationErrors = validateStudent($data);
+
+                    if ($validationErrors) {
+                        // If there are validation errors.
+                        $errors[] = [
+                            'file' => 'student.csv',
+                            'line' => $student_row,
+                            'message' => $validationErrors
+                        ];
+                ***REMOVED***
+                    else {
                         $studentObj = new User($data[0], $data[1], $data[2], $data[3], $data[4]);
                         $userDAO->add($studentObj);
                         $students_processed++;
@@ -127,100 +121,153 @@ function doBootstrap()
             ***REMOVED***
                 
                 // Begin importing course.csv.
-                $data = fgetcsv($courses);
-                $course_row = 1;
+                $data = fgetcsv($courses); // Skip first row.
+                $course_row = 2;
                 while (($data = fgetcsv($courses)) !== false) {
-                    if (courseValidation($data) != []) {
-                        $course_errors = courseValidation($data);
-                        foreach ($course_errors as $course_error) {
-                            $error = "$course_error in row $course_row in course.csv";
-                            $errors[] = $error;
-                    ***REMOVED***
-                        // $error = "$course_errors in row $course_row in course.csv";
-                        // $errors[] = $error;
+                    $data = array_map('trim', $data);
 
-                ***REMOVED*** else {
+                    $validationErrors = validateCourse($data);
+
+                    if ($validationErrors) {
+                        // If errors exist.
+                        $errors[] = [
+                            'file' => 'course.csv',
+                            'line' => $course_row,
+                            'message' => $validationErrors
+                        ];
+                ***REMOVED***
+                    else {
                         $coursesObj = new Course($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6]);
                         $courseDAO->addCourses($coursesObj);
                         $courses_processed++;
                 ***REMOVED***
+
                     $course_row++;
             ***REMOVED***
 
-
-                $data = fgetcsv($sections);
-                $section_row = 1;
+                // Begin importing section.csv.
+                $data = fgetcsv($sections); // Skip first row.
+                $section_row = 2;
                 while (($data = fgetcsv($sections)) !== false) {
-                    if (sectionValidation($data) != []) {
-                        $section_errors = sectionValidation($data);
-                        foreach ($section_errors as $section_error) {
-                            $error = "$section_error in row $section_row in section.csv";
-                            $errors[] = $error;
-                    ***REMOVED***
-                        // $error = "$section_errors in row $section_row in section.csv";
-                        // $errors[] = $error;
-                ***REMOVED*** else {
+                    $data = array_map('trim', $data);
+
+                    $validationErrors = validateSection($data);
+
+                    if ($validationErrors) {
+                        // If errors exist.
+                        $errors[] = [
+                            'file' => 'section.csv',
+                            'line' => $section_row,
+                            'message' => $validationErrors
+                        ];
+                ***REMOVED***
+                    else {
                         $sectionsObj = new Section($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7]);
                         $sectionDAO->add($sectionsObj);
                         $sections_processed++;
                 ***REMOVED***
+
                     $section_row++;
             ***REMOVED***
 
-                $data = fgetcsv($courses_completed);
-                $coursesCompleted_row = 1;
-                while (($data = fgetcsv($courses_completed)) !== false) {
-                    if (courseCompletedValidation($data) != []) {
-                        $course_errors = courseCompletedValidation($data);
-                        foreach ($course_errors as $course_error) {
-                            $error = "$course_error in row $coursesCompleted_row in course_completed.csv";
-                            $errors[] = $error;
-                    ***REMOVED***
-
-                ***REMOVED*** else {
-                        $userId = $data[0];
-                        $code = $data[1];
-                        $courseDAO->addCompletedCourses($userId, $code);
-                        $courses_completed_processed++;
-                ***REMOVED***
-                    $coursesCompleted_row++;
-            ***REMOVED***
-
-                $data = fgetcsv($prerequisites);
-                $prerequisite_row = 1;
+                // Begin importing prerequisite.csv.
+                $data = fgetcsv($prerequisites); // Skip first row.
+                $prerequisite_row = 2;
                 while (($data = fgetcsv($prerequisites)) !== false) {
-                    if (prerequisiteValidation($data) != []) {
-                        $prerequisite_errors = prerequisiteValidation($data);
-                        foreach ($prerequisite_errors as $prerequisite_error) {
-                            $error = "$prerequisite_error in row $prerequisite_row in prerequisite.csv";
-                            $errors[] = $error;
-                    ***REMOVED***
+                    $data = array_map('trim', $data);
 
-                ***REMOVED*** else {
+                    $validationErrors = validatePrerequisite($data);
+
+                    if ($validationErrors) {
+                        // If errors exist.
+                        $errors[] = [
+                            'file' => 'prerequisite.csv',
+                            'line' => $prerequisite_row,
+                            'message' => $validationErrors
+                        ];
+                ***REMOVED***
+                    else {
                         $course = $data[0];
                         $prerequisite = $data[1];
                         $courseDAO->addPrerequisites($course, $prerequisite);
                         $prerequisites_processed++;
                 ***REMOVED***
+
                     $prerequisite_row++;
             ***REMOVED***
 
-                $data = fgetcsv($bids);
-                $bids_row = 1;
+                // Begin importing course_completed.csv.
+                $data = fgetcsv($courses_completed); // Skip first row.
+                $courses_completed_row = 2;
+                while (($data = fgetcsv($courses_completed)) !== false) {
+                    $data = array_map('trim', $data);
+
+                    $validationErrors = validateCourseCompletion($data);
+
+                    if ($validationErrors) {
+                        // If errors exist.
+                        $errors[] = [
+                            'file' => 'course_completed.csv',
+                            'line' => $courses_completed_row,
+                            'message' => $validationErrors
+                        ];
+                ***REMOVED***
+                    else {
+                        $userId = $data[0];
+                        $code = $data[1];
+                        $courseDAO->addCompletedCourses($userId, $code);
+                        $courses_completed_processed++;
+                ***REMOVED***
+
+                    $courses_completed_row++;
+            ***REMOVED***
+
+                // Before we import bid.csv, we sort our $dataSections array to increase code performance.
+                /*global $dataSections;
+
+                foreach ($dataSections as $keyCourse => $course) {
+                    foreach ($course as $keySection => $section) {
+                        $dataSectionsCompressed[] = [
+                            'course' => $keyCourse,
+                            'section' => $keySection,
+                            'day' => $section['day'],
+                            'start' => $section['start'],
+                            'end' => $section['end']
+                        ];
+                ***REMOVED***
+            ***REMOVED***
+
+                array_multisort(
+                    array_column($dataSectionsCompressed, 'day'), SORT_ASC,
+                    array_map('strtotime', array_column($dataSectionsCompressed, 'start')), SORT_ASC,
+                    $dataSectionsCompressed
+                );
+                
+                print_r($dataSectionsCompressed);*/
+
+                // Begin importing bid.csv.
+                $data = fgetcsv($bids); // Skip first row.
+                $bids_row = 2;
                 while (($data = fgetcsv($bids)) !== false) {
-                    if (bidValidation($data) != []) {
-                        $bid_errors = bidValidation($data);
-                        foreach ($bid_errors as $bid_error) {
-                            $error = "$bid_error in row $bids_row in bid.csv";
-                            $errors[] = $error;
-                    ***REMOVED***
-                ***REMOVED*** else {
+                    $data = array_map('trim', $data);
+
+                    $validationErrors = validateBid($data);
+
+                    if ($validationErrors) {
+                        // If errors exist.
+                        $errors[] = [
+                            'file' => 'bid.csv',
+                            'line' => $bids_row,
+                            'message' => $validationErrors
+                        ];
+                ***REMOVED***
+                    else {
                         $userId = $data[0];
                         $amount = $data[1];
-                        $code = $data[2];
+                        $course = $data[2];
                         $section = $data[3];
 
-                        $BidDAO->add($userId, $amount, $code, $section);
+                        $bidDAO->addBidBootstrap($userId, $course, $section, $amount);
                         $bids_processed++;
                 ***REMOVED***
                     $bids_row++;
@@ -229,7 +276,11 @@ function doBootstrap()
 
                 fclose($courses);
                 @unlink($courses_path);
+
+                fclose($courses_completed);
                 @unlink($courses_completed_path);
+
+                fclose($prerequisites);
                 @unlink($prerequisites_path);
 
                 fclose($bids);
@@ -248,23 +299,36 @@ function doBootstrap()
     ***REMOVED***
 ***REMOVED***
 
-    if (!isEmpty($errors)) {
-        $sortclass = new Sort();
-        $errors = $sortclass->sort_it($errors, "bootstrap");
+    if ($errors) {
+        array_multisort(
+            array_column($errors, 'file'), SORT_ASC,
+            array_column($errors, 'line'), SORT_ASC,
+            $errors
+        );
+
         $result = [
             "status" => "error",
-            "messages" => $errors
-        ];
-***REMOVED*** else {
-        $result = [
-            "status" => "success",
             "num-record-loaded" => [
-                "student.csv" => $students_processed,
                 "bid.csv" => $bids_processed,
                 "course.csv" => $courses_processed,
                 "course_completed.csv" => $courses_completed_processed,
                 "prerequisite.csv" => $prerequisites_processed,
-                "section.csv" => $sections_processed
+                "section.csv" => $sections_processed,
+                "student.csv" => $students_processed
+            ],
+            "error" => $errors
+        ];
+***REMOVED***
+    else {
+        $result = [
+            "status" => "success",
+            "num-record-loaded" => [
+                "bid.csv" => $bids_processed,
+                "course.csv" => $courses_processed,
+                "course_completed.csv" => $courses_completed_processed,
+                "prerequisite.csv" => $prerequisites_processed,
+                "section.csv" => $sections_processed,
+                "student.csv" => $students_processed
             ]
         ];
 ***REMOVED***

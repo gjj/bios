@@ -710,26 +710,54 @@ class BidDAO
     ***REMOVED***
 ***REMOVED***
 
-	public function add($userId,$amount,$code,$section) {
-        $sql = 'CALL insertBids(:user_id, :amount, :course, :section)';
-
-        $connMgr = new ConnectionManager();       
+    public function getAmountIfBidExists($userId, $courseCode, $section) {
+        $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
-         
-        $query = $db->prepare($sql); 
 
-        $query->bindParam(':user_id', $userId , PDO::PARAM_STR);
-        $query->bindParam(':amount', $amount, PDO::PARAM_STR);
-        $query->bindParam(':course', $code, PDO::PARAM_STR);
+        $sql = "SELECT user_id, course, section, amount FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section";
+        $query = $db->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
 
+        return $result;
+***REMOVED***
 
-        $isAddOK = False;
-        if ($query->execute()) {
-            $isAddOK = True;
+	public function addBidBootstrap($userId, $courseCode, $section, $amount) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $existingBid = $this->getAmountIfBidExists($userId, $courseCode, $section);
+
+        $sql = "INSERT INTO bids (user_id, course, section, amount) VALUES (:userId, :courseCode, :section, :amount) ON DUPLICATE KEY UPDATE amount = :amount2";
+        $query = $db->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':amount', $amount, PDO::PARAM_STR);
+        $query->bindParam(':amount2', $amount, PDO::PARAM_STR);
+
+        $query->execute();
+        
+        $amountToDebit = $amount;
+
+        // If there's an existing bid, we find out the bid amount difference.
+        if ($existingBid) {
+            $previousAmount = $existingBid['amount'];
+            $amountToDebit = $amount - $previousAmount;
     ***REMOVED***
+        
+        $sql = "UPDATE users SET edollar = edollar - (:amount) WHERE user_id = :userId";
 
-        return $isAddOK;
+        $query = $db->prepare($sql);
+        $query->bindParam(':amount', $amountToDebit, PDO::PARAM_STR);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+
+        $query->execute();
+
+        return true;
 	}
 
 }
