@@ -87,7 +87,7 @@ function doBootstrap()
 
                 //Create DAO Objects
                 $userDAO = new UserDAO();
-                $bidDAO = new bidDAO();
+                $bidDAO = new BidDAO();
                 $courseDAO = new CourseDAO();
                 $roundDAO = new RoundDAO();
                 $sectionDAO = new SectionDAO();
@@ -96,12 +96,19 @@ function doBootstrap()
                 $userDAO->truncateAllTable();
 
                 // Begin importing student.csv.
-                $data = fgetcsv($students); // Skip first row.
+                $header = fgetcsv($students); // Skip first row.
                 $student_row = 2;
                 while (($data = fgetcsv($students)) !== false) {
                     $data = array_map('trim', $data);
 
-                    $validationErrors = validateStudent($data);
+                    $validationErrors = [];
+
+                    $validationErrors = commonValidation($data, $header);
+
+                    // If common validation fails, we don't even proceed with file-specific validation
+                    if (!$validationErrors) {
+                        $validationErrors = validateStudent($data);
+                ***REMOVED***
 
                     if ($validationErrors) {
                         // If there are validation errors.
@@ -126,7 +133,14 @@ function doBootstrap()
                 while (($data = fgetcsv($courses)) !== false) {
                     $data = array_map('trim', $data);
 
-                    $validationErrors = validateCourse($data);
+                    $validationErrors = [];
+
+                    $validationErrors = commonValidation($data, $header);
+
+                    // If common validation fails, we don't even proceed with file-specific validation
+                    if (!$validationErrors) {
+                        $validationErrors = validateCourse($data);
+                ***REMOVED***
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -146,12 +160,19 @@ function doBootstrap()
             ***REMOVED***
 
                 // Begin importing section.csv.
-                $data = fgetcsv($sections); // Skip first row.
+                $header = fgetcsv($sections); // Skip first row.
                 $section_row = 2;
                 while (($data = fgetcsv($sections)) !== false) {
                     $data = array_map('trim', $data);
 
-                    $validationErrors = validateSection($data);
+                    $validationErrors = [];
+                    
+                    $validationErrors = commonValidation($data, $header);
+
+                    // If common validation fails, we don't even proceed with file-specific validation
+                    if (!$validationErrors) {
+                        $validationErrors = validateSection($data);
+                ***REMOVED***
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -171,12 +192,19 @@ function doBootstrap()
             ***REMOVED***
 
                 // Begin importing prerequisite.csv.
-                $data = fgetcsv($prerequisites); // Skip first row.
+                $header = fgetcsv($prerequisites); // Skip first row.
                 $prerequisite_row = 2;
                 while (($data = fgetcsv($prerequisites)) !== false) {
                     $data = array_map('trim', $data);
 
-                    $validationErrors = validatePrerequisite($data);
+                    $validationErrors = [];
+                    
+                    $validationErrors = commonValidation($data, $header);
+
+                    // If common validation fails, we don't even proceed with file-specific validation
+                    if (!$validationErrors) {
+                        $validationErrors = validatePrerequisite($data);
+                ***REMOVED***
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -197,12 +225,19 @@ function doBootstrap()
             ***REMOVED***
 
                 // Begin importing course_completed.csv.
-                $data = fgetcsv($courses_completed); // Skip first row.
+                $header = fgetcsv($courses_completed); // Skip first row.
                 $courses_completed_row = 2;
                 while (($data = fgetcsv($courses_completed)) !== false) {
                     $data = array_map('trim', $data);
 
-                    $validationErrors = validateCourseCompletion($data);
+                    $validationErrors = [];
+                    
+                    $validationErrors = commonValidation($data, $header);
+
+                    // If common validation fails, we don't even proceed with file-specific validation
+                    if (!$validationErrors) {
+                        $validationErrors = validateCourseCompletion($data);
+                ***REMOVED***
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -246,12 +281,17 @@ function doBootstrap()
                 print_r($dataSectionsCompressed);*/
 
                 // Begin importing bid.csv.
-                $data = fgetcsv($bids); // Skip first row.
+                $header = fgetcsv($bids); // Skip first row.
                 $bids_row = 2;
                 while (($data = fgetcsv($bids)) !== false) {
                     $data = array_map('trim', $data);
+                    
+                    $validationErrors = commonValidation($data, $header);
 
-                    $validationErrors = validateBid($data);
+                    // If common validation fails, we don't even proceed with file-specific validation
+                    if (!$validationErrors) {
+                        $validationErrors = validateBid($data);
+                ***REMOVED***
 
                     if ($validationErrors) {
                         // If errors exist.
