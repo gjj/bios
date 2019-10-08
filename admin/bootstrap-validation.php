@@ -15,6 +15,19 @@
 
         return $result; // position of columns with missing values 
     }
+
+    function commonValidation($data, $header) {
+        $validationErrors = [];
+
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i] == "") {
+                $validationErrors[] = "blank $header[$i]";
+            }
+        }
+        
+        return $validationErrors;
+    }
+    
     // incomplete
     // function commonValidation($file){
 
@@ -316,8 +329,13 @@
             $errors[] = "invalid course";
         }
         else {
-            $sections = $dataSections[$course];
-            if (!array_key_exists($section, $sections)) {
+            if (array_key_exists($course, $dataSections)) {
+                $sections = $dataSections[$course];
+                if (!array_key_exists($section, $sections)) {
+                    $errors[] = "invalid section";
+                }
+            }
+            else {
                 $errors[] = "invalid section";
             }
         }
