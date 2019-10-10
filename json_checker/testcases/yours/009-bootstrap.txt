@@ -1,23 +1,109 @@
 {
-    "status": "success",
+    "status": "error",
     "num-record-loaded": [
         {
-            "bid.csv": 1
+            "bid.csv": 11
     ***REMOVED***,
         {
-            "course.csv": 6
+            "course.csv": 24
     ***REMOVED***,
         {
-            "course_completed.csv": 0
+            "course_completed.csv": 4
     ***REMOVED***,
         {
-            "prerequisite.csv": 0
+            "prerequisite.csv": 8
     ***REMOVED***,
         {
-            "section.csv": 6
+            "section.csv": 35
     ***REMOVED***,
         {
-            "student.csv": 3
+            "student.csv": 26
+    ***REMOVED***
+    ],
+    "error": [
+        {
+            "file": "bid.csv",
+            "line": 7,
+            "message": [
+                "course completed"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 14,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 15,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 16,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 17,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 18,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 19,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 20,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 21,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 22,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 23,
+            "message": [
+                "not own school course"
+            ]
+    ***REMOVED***,
+        {
+            "file": "bid.csv",
+            "line": 24,
+            "message": [
+                "not own school course"
+            ]
     ***REMOVED***
     ]
 }
