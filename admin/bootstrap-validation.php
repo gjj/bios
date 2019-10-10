@@ -342,77 +342,68 @@
 
         // If no errors so far, then we proceed for our second round of validation checks...
         if (!$errors) {
-            // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
-            if ($dataStudents[$userId]['school'] !== $dataCourses[$course]['school']) {
-                $errors[] = "not own school course";
-        ***REMOVED***
+            if (!$bidDAO->hasBiddedFor($userId, $course)) {
+                // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
+                if ($dataStudents[$userId]['school'] !== $dataCourses[$course]['school']) {
+                    $errors[] = "not own school course";
+            ***REMOVED***
 
-            // Validation 2/7 class timetable clash: The class timeslot for the section clashes with that of a previously bidded section.
-            if ($bidDAO->checkTimetableConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
+                // Validation 2/7 class timetable clash: The class timeslot for the section clashes with that of a previously bidded section.
+                if ($bidDAO->checkTimetableConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
                 $errors[] = "class timetable clash";
-        ***REMOVED***
-            
-            // Validation 3/7 exam timetable clash: The exam timeslot for this section clashes with that of a previously bidded section.
-            if ($bidDAO->checkExamConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
-                $errors[] = "exam timetable clash";
-        ***REMOVED***
-
-            // Validation 4/7 incomplete prerequisites:	student has not completed the prerequisites for this course.
-            if (array_key_exists($course, $dataPrerequisites)) {
-                // Get my list of prerequisites for this course.
-                $prerequisites = $dataPrerequisites[$course];
+            ***REMOVED***
                 
-                // Check if I can find a current course completed list with the user ID. If empty or count() = 0 means user has not completed any course yet.
-                if (isset($dataCourseCompleted[$userId]) and count($dataCourseCompleted[$userId])) {
-                    $userCompletedCourses = $dataCourseCompleted[$userId];
+                // Validation 3/7 exam timetable clash: The exam timeslot for this section clashes with that of a previously bidded section.
+                if ($bidDAO->checkExamConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
+                    $errors[] = "exam timetable clash";
+            ***REMOVED***
 
-                    $intersect = array_intersect($prerequisites, $userCompletedCourses);
+                // Validation 4/7 incomplete prerequisites:	student has not completed the prerequisites for this course.
+                if (array_key_exists($course, $dataPrerequisites)) {
+                    // Get my list of prerequisites for this course.
+                    $prerequisites = $dataPrerequisites[$course];
+                    
+                    // Check if I can find a current course completed list with the user ID. If empty or count() = 0 means user has not completed any course yet.
+                    if (isset($dataCourseCompleted[$userId]) and count($dataCourseCompleted[$userId])) {
+                        $userCompletedCourses = $dataCourseCompleted[$userId];
 
-                    if ($intersect != $prerequisites) {
+                        $intersect = array_intersect($prerequisites, $userCompletedCourses);
+
+                        if ($intersect != $prerequisites) {
+                            $errors[] = "incomplete prerequisites";
+                    ***REMOVED***
+                ***REMOVED***
+                    else {
                         $errors[] = "incomplete prerequisites";
                 ***REMOVED***
             ***REMOVED***
-                else {
-                    $errors[] = "incomplete prerequisites";
+
+                // Validation 5/7 course completed: student has already completed this course.
+                if (array_key_exists($userId, $dataCourseCompleted)) {
+                    if (in_array($course, $dataCourseCompleted[$userId])) {
+                        $errors[] = "course completed";
+                ***REMOVED***
+            ***REMOVED***
+                
+                // Validation 6/7 section limit reached: student has already bidded for 5 sections.
+                if ($bidDAO->countBids($userId, 1) >= 5) {
+                    $errors[] = "section limit reached";
             ***REMOVED***
         ***REMOVED***
-
-            // Validation 5/7 course completed: student has already completed this course.
-            if (array_key_exists($userId, $dataCourseCompleted)) {
-                if (in_array($course, $dataCourseCompleted[$userId])) {
-                    $errors[] = "course completed";
-            ***REMOVED***
-        ***REMOVED***
-
-            // Validation 6/7 section limit reached: student has already bidded for 5 sections.
-            if ($bidDAO->countBids($userId, 1) >= 5) {
-                $errors[] = "section limit reached";
-        ***REMOVED***
-
+            
             // Validation 7/7 "not enough e-dollar" student has not enough e-dollars to place the bid.
             // If it is an update of a previous bid for the same course, account for the e$ gained back
             // from the cancellation
-            $existingBid = $bidDAO->getAmountIfBidExists($userId, $course, $section);
-
-            $amountToDebit = $amount;
-
-            if ($existingBid) {
-                $previousAmount = $existingBid['amount'];
-                $amountToDebit = $amount - $previousAmount;
-        ***REMOVED***
-            $userEDollar = $bidDAO->getEDollar($userId)['edollar'];
+            $existingBid = $bidDAO->getAmountIfBidExists($userId, $course);
             
-            if ($amountToDebit > $userEDollar) {
-                $errors[] = "not enough e-dollar";
+            if ($existingBid) {
+                //$previousAmount = $existingBid['amount'];
+                $bidDAO->refundbidamount($userId, $course);
         ***REMOVED***
 
-            // If no errors, means this bid passed all our checks.
-            if (!$errors) {
-                $dataBids[$userId] = [
-                    'course' => $course,
-                    'section' => $section,
-                    'amount' => $amount
-                ];
+            $userEDollar = $bidDAO->getEDollar($userId)['edollar'];
+            if ($amount > $userEDollar) {
+                $errors[] = "not enough e-dollar";
         ***REMOVED***
     ***REMOVED***
         
