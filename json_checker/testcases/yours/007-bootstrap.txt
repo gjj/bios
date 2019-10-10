@@ -5,7 +5,7 @@
             "bid.csv": 1
         },
         {
-            "course.csv": 6
+            "course.csv": 2
         },
         {
             "course_completed.csv": 0
@@ -14,10 +14,10 @@
             "prerequisite.csv": 0
         },
         {
-            "section.csv": 6
+            "section.csv": 5
         },
         {
-            "student.csv": 3
+            "student.csv": 1
         }
     ],
     "error": [
@@ -25,35 +25,7 @@
             "file": "bid.csv",
             "line": 3,
             "message": [
-                "not enough e-dollar"
-            ]
-        },
-        {
-            "file": "bid.csv",
-            "line": 4,
-            "message": [
-                "not enough e-dollar"
-            ]
-        },
-        {
-            "file": "bid.csv",
-            "line": 5,
-            "message": [
-                "not enough e-dollar"
-            ]
-        },
-        {
-            "file": "bid.csv",
-            "line": 6,
-            "message": [
-                "not enough e-dollar"
-            ]
-        },
-        {
-            "file": "bid.csv",
-            "line": 7,
-            "message": [
-                "not enough e-dollar"
+                "exam timetable clash"
             ]
         }
     ]

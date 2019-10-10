@@ -2,7 +2,7 @@
     "status": "error",
     "num-record-loaded": [
         {
-            "bid.csv": 0
+            "bid.csv": 1
         },
         {
             "course.csv": 2
@@ -18,15 +18,6 @@
         },
         {
             "student.csv": 1
-        }
-    ],
-    "error": [
-        {
-            "file": "bid.csv",
-            "line": 2,
-            "message": [
-                "invalid amount"
-            ]
         }
     ]
 }
