@@ -25,22 +25,22 @@
 		$section = $_POST['section'];
 
 		if ($currentRound['round'] == 1) {
-			if ($bidDAO->checkOwnSchoolCourse($user['school'], $courseCode)) {
+			if (!$bidDAO->checkOwnSchoolCourse($user['school'], $courseCode)) {
 				addError("You cannot bid for courses not offered by your school in Round 1.");
 			}
 		}
 
-		if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
-			addError("You've already completed the course. Why do you want to take again?");
-		}
-
-		$hasPrerequisites = $bidDAO->hasPrerequisites($course['course']);
-		$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $course['course']);
+		$hasPrerequisites = $bidDAO->hasPrerequisites($courseCode);
+		$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $courseCode);
 
 		if ($hasPrerequisites) {
 			if (!$hasCompletedPrerequisites) {
 				addError("You have not completed the prerequisites.");
 			}
+		}
+
+		if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
+			addError("You've already completed the course. Why do you want to take again?");
 		}
 
 		// If no errors until now... means passed all my previous validations!!
