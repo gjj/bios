@@ -23,9 +23,16 @@
     "error": [
         {
             "file": "bid.csv",
+            "line": 2,
+            "message": [
+                "not enough e-dollar"
+            ]
+        },
+        {
+            "file": "bid.csv",
             "line": 3,
             "message": [
-                "exam timetable clash"
+                "invalid amount"
             ]
         }
     ]
