@@ -41,8 +41,13 @@
 					<div class="sidebar-sticky">
 						<ul class="nav flex-column">
 							<li class="nav-item">
-								<a class="nav-link" href="home">
+								<a class="nav-link" href="admin/home">
 									Home</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="admin/bootstrap">
+									Bootstrap</span>
 								</a>
 							</li>
 						</ul>
