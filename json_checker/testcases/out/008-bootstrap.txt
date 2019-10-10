@@ -1,11 +1,11 @@
 {
-    "status": "success",
+    "status": "error",
     "num-record-loaded": [
         {
-            "bid.csv": 5
+            "bid.csv": 1
     ***REMOVED***,
         {
-            "course.csv": 6
+            "course.csv": 2
     ***REMOVED***,
         {
             "course_completed.csv": 0
@@ -14,10 +14,10 @@
             "prerequisite.csv": 0
     ***REMOVED***,
         {
-            "section.csv": 6
+            "section.csv": 5
     ***REMOVED***,
         {
-            "student.csv": 6
+            "student.csv": 1
     ***REMOVED***
     ]
 }
