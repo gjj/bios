@@ -24,20 +24,39 @@
 		$courseCode = $_POST['course'];
 		$section = $_POST['section'];
 
+		if ($currentRound['round'] == 1) {
+			if ($bidDAO->checkOwnSchoolCourse($user['school'], $courseCode)) {
+				addError("You cannot bid for courses not offered by your school in Round 1.");
+			}
+		}
+
 		if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
 			addError("You've already completed the course. Why do you want to take again?");
 		}
-		elseif ($sectionDAO->sectionExists($courseCode, $section)) {
-			// Do further validation. Make sure POST-ed course and section code exists
-			if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
-				$bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
-			}
-			else {
-				addError("Already added to cart!");
+
+		$hasPrerequisites = $bidDAO->hasPrerequisites($course['course']);
+		$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $course['course']);
+
+		if ($hasPrerequisites) {
+			if (!$hasCompletedPrerequisites) {
+				addError("You have not completed the prerequisites.");
 			}
 		}
-		else {
-			addError("Course and section code pair does not exist. Nice try!");
+
+		// If no errors until now... means passed all my previous validations!!
+		if (empty($_SESSION['errors'])) {
+			if ($sectionDAO->sectionExists($courseCode, $section)) {
+				// Do further validation. Make sure POST-ed course and section code exists
+				if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
+					$bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
+				}
+				else {
+					addError("Already added to cart!");
+				}
+			}
+			else {
+				addError("Course and section code pair does not exist. Nice try!");
+			}
 		}
 	}
 
