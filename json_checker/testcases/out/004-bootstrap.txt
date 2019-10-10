@@ -1,5 +1,5 @@
 {
-    "status": "error",
+    "status": "success",
     "num-record-loaded": [
         {
             "bid.csv": 0
@@ -14,19 +14,10 @@
             "prerequisite.csv": 0
         },
         {
-            "section.csv": 4
+            "section.csv": 5
         },
         {
             "student.csv": 1
-        }
-    ],
-    "error": [
-        {
-            "file": "section.csv",
-            "line": 2,
-            "message": [
-                "invalid size"
-            ]
         }
     ]
 }

@@ -2,7 +2,7 @@
     "status": "error",
     "num-record-loaded": [
         {
-            "bid.csv": 1
+            "bid.csv": 0
         },
         {
             "course.csv": 2
@@ -24,13 +24,6 @@
         {
             "file": "bid.csv",
             "line": 2,
-            "message": [
-                "not enough e-dollar"
-            ]
-        },
-        {
-            "file": "bid.csv",
-            "line": 3,
             "message": [
                 "invalid amount"
             ]
