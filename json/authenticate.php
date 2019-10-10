@@ -4,7 +4,7 @@
     header("Content-Type: application/json");
 
     $errors = [
-        isMissingOrEmpty('userId'), 
+        isMissingOrEmpty('username'), 
         isMissingOrEmpty('password')
     ];
 
@@ -17,7 +17,7 @@
         ];
 ***REMOVED***
     else {
-        $userId = $_POST['userId'];
+        $userId = $_POST['username'];
         $password = $_POST['password'];
 
         // Instantiate my User Data Access Object.

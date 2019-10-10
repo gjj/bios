@@ -19,5 +19,14 @@
         {
             "student.csv": 1
     ***REMOVED***
+    ],
+    "error": [
+        {
+            "file": "bid.csv",
+            "line": 3,
+            "message": [
+                "exam timetable clash"
+            ]
+    ***REMOVED***
     ]
 }
