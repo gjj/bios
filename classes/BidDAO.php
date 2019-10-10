@@ -671,18 +671,27 @@ class BidDAO
     }
 
 
-    public function refundbidamount($userId, $courseCode, $section)
+    public function refundbidamount($userId, $courseCode, $section = null)
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
+        if ($section) {
+            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
+        }
+        else {
+            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND user_id = :userId AND result = '-'";
+        }
             
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-        $query->bindParam(':section', $section, PDO::PARAM_STR);
+
+        if ($section) {
+            $query->bindParam(':section', $section, PDO::PARAM_STR);
+        }
+
         $query->execute();
 
         $result = $query->fetch(PDO::FETCH_ASSOC);
@@ -695,12 +704,18 @@ class BidDAO
             $query->bindParam(':amount', $result['amount'], PDO::PARAM_STR);
             $query->execute();
 
-            $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
+            if ($section) {
+                $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
+            }
+            else {
+                $sql = "DELETE FROM bids WHERE course = :courseCode AND user_id = :userId AND result = '-'";
+            }
+
                 
             $query = $db->prepare($sql);
             $query->bindParam(':userId', $userId, PDO::PARAM_STR);
             $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-            $query->bindParam(':section', $section, PDO::PARAM_STR);
+            if ($section) $query->bindParam(':section', $section, PDO::PARAM_STR);
             $query->execute();
                 
             return true;
@@ -710,15 +725,22 @@ class BidDAO
         }
     }
 
-    public function getAmountIfBidExists($userId, $courseCode, $section) {
+    public function getAmountIfBidExists($userId, $courseCode, $section = null, $round = 1) {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT user_id, course, section, amount FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section";
+        if ($section) {
+            $sql = "SELECT user_id, course, section, amount FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND result = '-') OR result = 'in')";
+        }
+        else {
+            $sql = "SELECT user_id, course, section, amount FROM bids WHERE user_id = :userId AND course = :courseCode AND ((round = :round AND result = '-') OR result = 'in')";
+        }
+
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        if ($section) $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
@@ -760,4 +782,38 @@ class BidDAO
         return true;
 	}
 
+    public function hasBiddedFor($userId, $courseCode, $round = 1) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $sql = "SELECT section FROM bids WHERE user_id = :userId AND course = :courseCode AND ((round = :round AND result = '-') OR result = 'in')";
+        $query = $db->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        if ($query->rowCount()) {
+            return true;            
+        }
+
+        return false;
+    }
+
+    public function getCourseByCode($userId, $courseCode, $round = 1) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $sql = "SELECT user_id, course, section, amount FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND result = '-') OR result = 'in')";
+        $query = $db->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
 }
