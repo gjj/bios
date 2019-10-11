@@ -2,7 +2,7 @@
 require_once '../includes/common.php';
 require_once 'bootstrap-validation.php';
 
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
 
 function doBootstrap()
 {
@@ -373,7 +373,7 @@ function doBootstrap()
         ];
     }
 
-    echo json_encode($result, JSON_PRETTY_PRINT);
+    return json_encode($result, JSON_PRETTY_PRINT);
 
 
 }
