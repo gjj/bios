@@ -185,6 +185,83 @@ class BidDAO
         return $isDeleteOK;
 ***REMOVED***
 
+    // For /app/json/dump
+    public function retrieveAllPrerequisites()
+    {
+        $sql = "SELECT course, prerequisite FROM prerequisites ";
+        $sql .= "ORDER BY course, prerequisite";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+***REMOVED***
+
+    // For /app/json/dump
+    public function retrieveAllBids($round = 1, $retrieveAll = false)
+    {
+        if ($retrieveAll) {
+            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = :round ";            
+    ***REMOVED***
+        else {
+            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = :round AND result = '-' ";            
+    ***REMOVED***
+        $sql .= "ORDER BY course, section, amount DESC, userid";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+        $query->execute();
+        
+        $result = [];
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $row['amount'] = (float)$row['amount'];
+            $result[] = $row;
+    ***REMOVED***
+
+        return $result;
+***REMOVED***
+
+    // For /app/json/dump
+    public function retrieveAllSuccessfulBids($round = 0)
+    {
+        if ($round) {
+            $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = :round ";            
+    ***REMOVED***
+        else {
+            $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' ";            
+    ***REMOVED***
+        $sql .= "ORDER BY course, userid";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+        $query->execute();
+        $result = [];
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $row['amount'] = (float)$row['amount'];
+            $result[] = $row;
+    ***REMOVED***
+
+        return $result;
+***REMOVED***
+
     public function checkDuplicates($userId, $courseSections, $round)
     {
         $selectedCourses = array_column($courseSections, 'course');
@@ -283,7 +360,7 @@ class BidDAO
 
                 // Only makes sense for me to check if both timeslot's day is the same. In other words, Monday 3pm lesson and Tuesday 3pm lesson = no clash!
                 if ($timeslot1['day'] == $timeslot2['day']) {
-                    if ($timeslot1['end'] >= $timeslot2['start']) {
+                    if ($timeslot1['end'] > $timeslot2['start']) {
                         return true;
                 ***REMOVED***
             ***REMOVED***
@@ -330,7 +407,7 @@ class BidDAO
 
                 // Only makes sense for me to check if both timeslot's day is the same. In other words, Monday 3pm lesson and Tuesday 3pm lesson = no clash!
                 if ($timeslot1['exam_date'] == $timeslot2['exam_date']) {
-                    if ($timeslot1['exam_end'] >= $timeslot2['exam_start']) {
+                    if ($timeslot1['exam_end'] > $timeslot2['exam_start']) {
                         return true;
                 ***REMOVED***
             ***REMOVED***
