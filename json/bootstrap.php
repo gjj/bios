@@ -1,4 +1,6 @@
 ***REMOVED***
+    header('Content-Type: application/json');
+    
     require_once '../includes/common.php';
     require_once '../admin/bootstrap.php';
     
@@ -15,6 +17,6 @@
         ];
 ***REMOVED***
     else {
-        doBootstrap();        
+        echo doBootstrap();        
 ***REMOVED***
 ?>
