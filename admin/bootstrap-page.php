@@ -55,9 +55,20 @@
 				</nav>
 
 				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                    <form id='bootstrap-form' action="admin/bootstrap-process" method="post" enctype="multipart/form-data">
 					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-						<h1 class="h2">Home</h1>
+						<h1 class="h2">Bootstrap</h1>
 					</div>
+					<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                            <h4>Bootstrap file:</h4>
+                    </div>
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                            <h5><input id='bootstrap-file' type="file" name="bootstrap-file"><h5>
+                    </div>
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                            <input type="submit"  name="submit" class="btn btn-dark" value="Import"></button>
+                    </div>    
+                    </form>
 				</main>
 			</div>
 		</div>
