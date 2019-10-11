@@ -1,21 +1,7 @@
 ***REMOVED***
 
 class RoundClearingDAO {
-    public function stop() {
-        $connMgr = new ConnectionManager();
-        $db = $connMgr->getConnection();
-
-        $sql = "SELECT * FROM rounds";
-
-        $query = $db->prepare($sql);
-        $query->setFetchMode(PDO::FETCH_ASSOC);
-
-        $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-***REMOVED***
-
     public function roundClearing($round) {
-        if ($round == 1) {
             $result = array();
 
             $connMgr = new ConnectionManager();
@@ -168,6 +154,5 @@ class RoundClearingDAO {
         ***REMOVED***
 
             return $result;
-    ***REMOVED***
 ***REMOVED***
 }

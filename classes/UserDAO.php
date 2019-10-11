@@ -76,7 +76,8 @@ class UserDAO
 
     public function retrieveAllStudents()
     {
-        $sql = "SELECT user_id AS userid, password, name, school, FORMAT(edollar, 1) AS edollar FROM users WHERE role = 0";
+        $sql = "SELECT user_id AS userid, password, name, school, FORMAT(edollar, 1) AS edollar FROM users WHERE role = 0 ";
+        $sql .= "ORDER BY userid";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -85,7 +86,13 @@ class UserDAO
         $query->setFetchMode(PDO::FETCH_ASSOC);
 
         $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        $result = [];
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $row['edollar'] = (float)$row['edollar'];
+            $result[] = $row;
+    ***REMOVED***
 
         // Returns my result set on success.
         return $result;

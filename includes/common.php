@@ -69,25 +69,26 @@
 
 	function isMissingOrEmpty($name) {
 		if (!isset($_REQUEST[$name])) {
-			return "$name cannot be empty";
+			return "missing $name";
 		}
 	
 		// client did send the value over
 		$value = $_REQUEST[$name];
 		if (empty($value)) {
-			return "$name cannot be empty";
+			return "blank $name";
 		}
 	}
 
 	// Added new helper function for JSON.
 	function isMissingOrEmptyJson($name, $json) {
 		if (!array_key_exists($name, $json)) {
-			return "$name parameter not found";
+			return "missing $name";
 		}
 		
+		// Client did send the value over, but is blank (and this is different from a missing field).
 		$value = $json->$name;
 		if (empty($value)) {
-			return "$name cannot be empty";
+			return "blank $name";
 		}
 	}
 	
