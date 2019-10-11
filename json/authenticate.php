@@ -10,50 +10,53 @@
 
     $errors = array_filter($errors);
 
-    if (!isEmpty($errors)) {
-        $result = [
-            "status" => "error",
-            "messages" => array_values($errors)
-        ];
-    }
-    else {
+    if (!$errors) {
         $userId = $_POST['username'];
         $password = $_POST['password'];
 
         // Instantiate my User Data Access Object.
 		$userDAO = new UserDAO();
 
+        // UPDATE to match new messages: https://wiki.smu.edu.sg/is212/Project#Authenticate
 		// Since we know that login(userId, pw) returns the record on success, or nothing on failure, we assign a variable to hold the results.
-        $login = $userDAO->login($userId, $password);
-        
-        // If can find a userId and password pair, means $login would have at least a value.
-        if ($login) {
-            $username = $login['userid'];
-			$password = $login['password'];
-            $role = $login['role'];
-            
-            if ($role == 1) {
-                // If admin, then I issue JWT token.
-                $token = generate_token($username);
 
-                $result = [
-                    "status" => "success",
-                    "token" => $token
-                ];
+        if ($userDAO->retrieveById($userId)) {
+            $login = $userDAO->login($userId, $password);
+
+            // If can find a userId and password pair, means $login would have at least a value.
+            if ($login) {
+                $username = $login['userid'];
+                $password = $login['password'];
+                $role = $login['role'];
+                
+                if ($role == 1) {
+                    // If admin, then I issue JWT token.
+                    $token = generate_token($username);
+                }
+                else {
+                    $errors[] = "invalid username";
+                }
             }
             else {
-                $result = [
-                    "status" => "error",
-                    "messages" => "Invalid user ID or password, not telling you which!" // Even though I can tell you that you do not have access, but I shouldn't.
-                ];
+                $errors[] = "invalid password";
             }
         }
         else {
-            $result = [
-                "status" => "error",
-                "messages" => "Invalid user ID or password, not telling you which!"
-            ];
+            $errors[] = "invalid username";
         }
+    }
+
+    if (!$errors) {
+        $result = [
+            "status" => "success",
+            "token" => $token
+        ];
+    }
+    else {
+        $result = [
+            "status" => "error",
+            "messages" => $errors
+        ];
     }
 
     echo json_encode($result, JSON_PRETTY_PRINT);
