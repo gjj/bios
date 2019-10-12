@@ -235,14 +235,19 @@ class BidDAO
 ***REMOVED***
 
     // For /app/json/dump
-    public function retrieveAllSuccessfulBids($round = 0)
+    public function retrieveAllSuccessfulBids($round = 0, $course = null, $section = null)
     {
+        // See https://wiki.smu.edu.sg/is212/Project#Dump_.28Section.29
+        $text = " course, section, ";
+        if ($course and $section) $text = "";
         if ($round) {
-            $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = :round ";            
+            $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' AND round = :round ";            
     ***REMOVED***
         else {
-            $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' ";            
+            $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' ";            
     ***REMOVED***
+        if ($course) $sql .= " AND course = :course ";
+        if ($section) $sql .= " AND section = :section ";
         $sql .= "ORDER BY course, userid";
 
         $connMgr = new ConnectionManager();
@@ -250,7 +255,9 @@ class BidDAO
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
+        if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
+        if ($course) $query->bindParam(':course', $course, PDO::PARAM_STR);
+        if ($section) $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->execute();
         $result = [];
 
