@@ -26,17 +26,16 @@
 		<p>
 			<?php
 				$roundDAO = new RoundDAO();
-				$round = $roundDAO->getCurrentRound();
+				$round = $roundDAO->getCurrentRound()['round'];
 
-				if ($round['round'] == 1) {
-					echo "Course Bidding Round 1 is currently ongoing.";
-				}
-				elseif ($round['round'] == 2) {
-					echo "Course Bidding Round 2 is currently ongoing.";
+				if ($roundDAO->roundIsActive()) {
+					$status = "Course Bidding Round " . $round . " is currently ongoing";
 				}
 				else {
-					echo "There are no active rounds currently.";
+					$status = "There are no active rounds currently.";
 				}
+
+				echo $status;
 			?>
 		</p>
 		<p class="lead">
