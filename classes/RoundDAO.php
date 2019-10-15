@@ -36,7 +36,7 @@ class RoundDAO {
 			return false;
 		}
 	}
-
+	
 	public function startRound($round = 1) {
 		if ($round == 1) {
 			$sql = "INSERT INTO rounds (round, status) VALUES (:round, 'started');";			
