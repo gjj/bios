@@ -2,7 +2,7 @@
 	define("BIOS_ADMIN", true);
 
     require_once '../includes/common.php';
-    require_once 'bootstrap.php';
+    require_once '../includes/bootstrap.php';
 
 	if (!isset($_SESSION['userid'])) {
 		header("Location: .");
