@@ -1,6 +1,6 @@
 ***REMOVED***
 
-    require_once '../includes/common.php';
+    require_once 'common.php';
 
     // $data is an array of each row values
     function hasEmptyFields($data) {
