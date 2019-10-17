@@ -26,7 +26,7 @@
 	}
 
 	function isLoggedIn() {
-		if (isset($_SESSION['userid'])) {
+		if (isset($_SESSION['userid']) and !empty($_SESSION['userid'])) {
 			return true;
 		}
 		else {
@@ -52,19 +52,20 @@
 	
 	function printErrors() {
 		if (isset($_SESSION['errors'])) {
-			echo $_SESSION['errors'];
+			//echo $_SESSION['errors'];
 			
-			/*foreach ($_SESSION['errors'] as $value) {
+			echo "<ul>";
+			foreach ($_SESSION['errors'] as $value) {
 				echo "<li>" . $value . "</li>";
 			}
+			echo "</ul>";
 			
-			echo "</ul>";*/
 			unset($_SESSION['errors']);
 		}    
 	}
 
 	function addError($message) {
-		$_SESSION['errors'] = $message;
+		$_SESSION['errors'][] = $message;
 	}
 
 	function isMissingOrEmpty($name) {

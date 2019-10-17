@@ -5,7 +5,6 @@ if (!isLoggedIn()) {
     header("Location: .");
 }
 
-
 $courseDAO = new CourseDAO();
 $roundDAO = new RoundDAO();
 $sectionDAO = new SectionDAO();
@@ -15,14 +14,10 @@ $bidDAO = new BidDAO();
 $currentRound = $roundDAO->getCurrentRound();
 $user = currentUser();
 
-print_r($user);
-
 if (!empty($_POST))
     if (!isEmpty($_POST['course']) and !isEmpty($_POST['section'])) {
-
-
         $courseCode = $_POST['course'];
-        $section = $_POST['section'];
+		$section = $_POST['section'];
 
 		if ($roundDAO->roundIsActive()) {
 			if ($currentRound['round'] == 1) {
@@ -33,6 +28,12 @@ if (!empty($_POST))
 
 			if ($currentRound['round'] == 2) {
 				// round 2 must check vacancy left
+			}
+			
+			$hasSuccessfulBid = $bidDAO->getSuccessfulBid($user['userid'], $courseCode);
+
+			if ($hasSuccessfulBid) {
+				addError("You're already enrolled in the course $courseCode.");
 			}
 	
 			$hasPrerequisites = $bidDAO->hasPrerequisites($courseCode);
@@ -188,7 +189,7 @@ if (isset($_GET['course'])) {
 				<span class="course-code">***REMOVED*** echo $course['course']; ?></span>
 				***REMOVED*** echo $course['title']; ?>
 			</h1>
-			<p class="pt-2">***REMOVED*** echo $course['school']; ?> • 1 Credit Unit</p>
+			<p class="pt-2">***REMOVED*** echo $course['school']; ?></p>
 		</div>
 
 		<div class="row">
@@ -329,6 +330,7 @@ if (isset($_GET['course'])) {
 										$ownSchoolCourse = $bidDAO->checkOwnSchoolCourse($user['school'], $course['course']);
 										$hasPrerequisites = $bidDAO->hasPrerequisites($course['course']);
 										$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $course['course']);
+										$hasSuccessfulBid = $bidDAO->getSuccessfulBid($user['userid'], $course['course']);
 
 										foreach ($sections as $section) {
 									?>
@@ -369,28 +371,33 @@ if (isset($_GET['course'])) {
 														$error = "Not in round";
 													}
 													else {
-														if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
-															$error = 'Added to cart';
+														if ($hasSuccessfulBid) {
+															$error = "Already enrolled";
 														}
-	
-														if ($courseCompleted) {
-															$error = 'Course completed';
-														}
-														
-														if ($hasPrerequisites) {
-															if (!$hasCompletedPrerequisites) {
-																$error = 'Prerequisite incomplete';
+														else {
+															if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
+																$error = 'Added to cart';
 															}
-														}
-														
-														if ($currentRound['round'] == 1) {
-															if (!$ownSchoolCourse) {
-																$error = 'Not own school course';
+		
+															if ($courseCompleted) {
+																$error = 'Course completed';
 															}
-														}
-	
-														if ($currentRound['round'] == 2) {
-															// round 2 must check vacancy left
+															
+															if ($hasPrerequisites) {
+																if (!$hasCompletedPrerequisites) {
+																	$error = 'Prerequisite incomplete';
+																}
+															}
+															
+															if ($currentRound['round'] == 1) {
+																if (!$ownSchoolCourse) {
+																	$error = 'Not own school course';
+																}
+															}
+		
+															if ($currentRound['round'] == 2) {
+																// round 2 must check vacancy left
+															}
 														}
 													}
 

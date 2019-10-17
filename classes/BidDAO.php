@@ -232,6 +232,23 @@ class BidDAO
         return $result;
 ***REMOVED***
 
+    public function getSuccessfulBid($userId, $course)
+    {
+        $sql = "SELECT * FROM bids WHERE result = 'in' AND course = :course AND user_id = :userId;";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':course', $course, PDO::PARAM_STR);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+***REMOVED***
+
     // For /app/json/dump
     public function retrieveAllSuccessfulBids($round = 0, $course = null, $section = null)
     {
