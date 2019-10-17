@@ -27,7 +27,7 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     $_SESSION['result'] = $result;
     //Refresh Page*/
 
-    $result = json_decode(doStop(), true);
+    $result = doStop();
     $_SESSION['result'] = $result;
 } elseif (isset($_GET['value']) and $_GET['value'] == 'Start') {
     /*// create a new cURL resource
@@ -41,7 +41,7 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     $result = json_decode($result, true);
     $_SESSION['result'] = $result;*/
 
-    $result = json_decode(doStart(), true);
+    $result = doStart();
     $_SESSION['result'] = $result;
 }
 

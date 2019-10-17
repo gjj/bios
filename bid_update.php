@@ -36,11 +36,20 @@
     if ($_POST and isset($_POST['amount'])) {
         $amount = $_POST['amount'];
 
-        $difference = $amount - $bid['amount']; // NEW amount - OLD amount.
+        if (!$roundDAO->roundIsActive()) {
+            addError("Round is not active.");
+    ***REMOVED***
 
-        // Validation: Check if I can afford the increment (i.e. increase my bid). If it's a decrement (i.e. lower my bid), confirm can.
-        if ($difference > $user['edollar']) {
-            addError("You do not have enough edollar to place all your bids! You need to topup e\${$difference} vs. what you have: e\${$user['edollar']}.");
+        if ($amount < 10 or !is_numeric($amount) or $amount != round($amount, 2)) {
+            addError("Invalid amount. Minimum bid is e$10, and up to 2 decimal places only. [error: invalid amount]");
+    ***REMOVED***
+        else {
+            $difference = $amount - $bid['amount']; // NEW amount - OLD amount.
+
+            // Validation: Check if I can afford the increment (i.e. increase my bid). If it's a decrement (i.e. lower my bid), confirm can.
+            if ($difference > $user['edollar']) {
+                addError("You do not have enough edollar to place all your bids! You need to topup e\${$difference} vs. what you have: e\${$user['edollar']}.");
+        ***REMOVED***
     ***REMOVED***
 
         // If there are NO errors from previous checks... then I update my bid.
