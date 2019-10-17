@@ -29,7 +29,7 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     // create a new cURL resource
     $ch = curl_init();
     // set URL and other appropriate options
-    curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1/bios/json/stop.php");
+    curl_setopt($ch, CURLOPT_URL, "http://18.136.126.161/app/json/stop");
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     // grab URL and pass it to the browser
@@ -44,7 +44,7 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     // create a new cURL resource
     $ch = curl_init();
     // set URL and other appropriate options
-    curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1/bios/json/start.php");
+    curl_setopt($ch, CURLOPT_URL, "http://18.136.126.161/app/json/start");
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     // grab URL and pass it to the browser
@@ -116,14 +116,16 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
                     <b>***REMOVED***
                         if (isset($_SESSION['result'])) {
                             $result = $_SESSION['result'];
-                            ?>
+                        ?>
                             <b>Status:</b> ***REMOVED*** echo $result['status']; ?><br/>
                             ***REMOVED*** if ($result['status'] == "error") { ?>
                                 <b>Error Message : </b>***REMOVED*** echo $result['messages']; ?><br/>
-                            ***REMOVED*** } ?>
+                            ***REMOVED***
+                                    unset($_SESSION['result']);
                             ***REMOVED***
                     ***REMOVED***
-                        ?></b>
+                        ?>
+                    </b>
                 </div>
             </div>
             <form id='form_submit' action="***REMOVED*** echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get"
