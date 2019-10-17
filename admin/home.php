@@ -30,21 +30,29 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     $ch = curl_init();
     // set URL and other appropriate options
     curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1/bios/json/stop.php");
-    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     // grab URL and pass it to the browser
     $result = curl_exec($ch);
-
-// close cURL resource, and free up system resources
+    $result = json_decode($result, true);
+    // close cURL resource, and free up system resources
     curl_close($ch);
-}elseif (isset($_GET['value']) and $_GET['value'] == 'Start'){
+    $_SESSION['result'] = $result;
+    //Refresh Page
+    header('Location: ' . $_SERVER['PHP_SELF']);
+} elseif (isset($_GET['value']) and $_GET['value'] == 'Start') {
     // create a new cURL resource
     $ch = curl_init();
     // set URL and other appropriate options
     curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1/bios/json/start.php");
-    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     // grab URL and pass it to the browser
     $result = curl_exec($ch);
-
+    $result = json_decode($result, true);
+    $_SESSION['result'] = $result;
+    //Refresh Page
+    header('Location: ' . $_SERVER['PHP_SELF']);
 }
 
 
@@ -102,20 +110,22 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
             <p class="lead">
                 Current Active Round <code><?php echo $currentActive; ?></code>.
             </p>
-            <?php
-            if (isset($result)) {
 
-                ?>
-                <div class="row">
-                    <div class="col-md-12">
-                        <b>Status : <?php
-                            $result['status']; ?></b>
-                        <b>Messages : <?php $result['messages']; ?></b>
-                    </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <b><?php
+                        if (isset($_SESSION['result'])) {
+                            $result = $_SESSION['result'];
+                            ?>
+                            <b>Status:</b> <?php echo $result['status']; ?><br/>
+                            <?php if ($result['status'] == "error") { ?>
+                                <b>Error Message : </b><?php echo $result['messages']; ?><br/>
+                            <?php } ?>
+                            <?php
+                        }
+                        ?></b>
                 </div>
-                <?php
-            }
-            ?>
+            </div>
             <form id='form_submit' action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get"
                   enctype="multipart/form-data">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
