@@ -2,6 +2,7 @@
 define("BIOS_ADMIN", true);
 
 require_once '../includes/common.php';
+require_once '../includes/round.php'; // includes function for doStart() and doStop()
 
 
 if (!isset($_SESSION['userid'])) {
@@ -26,7 +27,7 @@ if ($currentRound['status'] != "stopped") {
 
 // Check if isset
 if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
-    // create a new cURL resource
+    /*// create a new cURL resource
     $ch = curl_init();
     // set URL and other appropriate options
     curl_setopt($ch, CURLOPT_URL, "http://18.136.126.161/app/json/stop");
@@ -38,10 +39,13 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     // close cURL resource, and free up system resources
     curl_close($ch);
     $_SESSION['result'] = $result;
-    //Refresh Page
+    //Refresh Page*/
+
+    $_SESSION['result'] = doStop();
+
     header('Location: ' . $_SERVER['PHP_SELF']);
 } elseif (isset($_GET['value']) and $_GET['value'] == 'Start') {
-    // create a new cURL resource
+    /*// create a new cURL resource
     $ch = curl_init();
     // set URL and other appropriate options
     curl_setopt($ch, CURLOPT_URL, "http://18.136.126.161/app/json/start");
@@ -50,7 +54,9 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     // grab URL and pass it to the browser
     $result = curl_exec($ch);
     $result = json_decode($result, true);
-    $_SESSION['result'] = $result;
+    $_SESSION['result'] = $result;*/
+
+    $_SESSION['result'] = doStart();
     //Refresh Page
     header('Location: ' . $_SERVER['PHP_SELF']);
 }

@@ -49,7 +49,7 @@ if (!empty($_POST))
 			}
 		}
 		else {
-			addError("No active rounds currently");
+			addError("No active rounds currently.");
 		}
 
         // If no errors until now... means passed all my previous validations!!
@@ -365,28 +365,33 @@ if (isset($_GET['course'])) {
 
 													$error = null;
 
-													if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
-														$error = 'Added to cart';
+													if (!$roundDAO->roundIsActive()) {
+														$error = "Not in round";
 													}
-
-													if ($courseCompleted) {
-														$error = 'Course completed';
-													}
-													
-													if ($hasPrerequisites) {
-														if (!$hasCompletedPrerequisites) {
-															$error = 'Prerequisite incomplete';
+													else {
+														if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
+															$error = 'Added to cart';
 														}
-													}
-													
-													if ($currentRound['round'] == 1) {
-														if (!$ownSchoolCourse) {
-															$error = 'Not own school course';
+	
+														if ($courseCompleted) {
+															$error = 'Course completed';
 														}
-													}
-
-													if ($currentRound['round'] == 2) {
-														// round 2 must check vacancy left
+														
+														if ($hasPrerequisites) {
+															if (!$hasCompletedPrerequisites) {
+																$error = 'Prerequisite incomplete';
+															}
+														}
+														
+														if ($currentRound['round'] == 1) {
+															if (!$ownSchoolCourse) {
+																$error = 'Not own school course';
+															}
+														}
+	
+														if ($currentRound['round'] == 2) {
+															// round 2 must check vacancy left
+														}
 													}
 
 													if ($error) {
