@@ -15,7 +15,7 @@ $roundDAO = new RoundDAO();
 $currentRound = $roundDAO->getCurrentRound();
 
 //Set necessary Stuff
-if ($currentRound['status'] != "stopped") {
+if ($roundDAO->roundIsActive()) {
     $currentActive = $currentRound['round'];
     $setStatus = "Stop";
     // $setLink = "home.php";
@@ -41,9 +41,8 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     $_SESSION['result'] = $result;
     //Refresh Page*/
 
-    $_SESSION['result'] = doStop();
-
-    header('Location: ' . $_SERVER['PHP_SELF']);
+    $result = json_decode(doStop(), true);
+    $_SESSION['result'] = $result;
 } elseif (isset($_GET['value']) and $_GET['value'] == 'Start') {
     /*// create a new cURL resource
     $ch = curl_init();
@@ -56,14 +55,10 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     $result = json_decode($result, true);
     $_SESSION['result'] = $result;*/
 
-    $_SESSION['result'] = doStart();
-    //Refresh Page
-    header('Location: ' . $_SERVER['PHP_SELF']);
+    $result = json_decode(doStart(), true);
+    $_SESSION['result'] = $result;
 }
-
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -122,13 +117,15 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
                     <b>***REMOVED***
                         if (isset($_SESSION['result'])) {
                             $result = $_SESSION['result'];
+                            
                         ?>
                             <b>Status:</b> ***REMOVED*** echo $result['status']; ?><br/>
                             ***REMOVED*** if ($result['status'] == "error") { ?>
-                                <b>Error Message : </b>***REMOVED*** echo $result['messages']; ?><br/>
+                                <b>Error Message(s): </b>***REMOVED*** echo implode(", ", $result['messages']); ?><br/>
                             ***REMOVED***
-                                    unset($_SESSION['result']);
+                                    
                             ***REMOVED***
+                                unset($_SESSION['result']);
                     ***REMOVED***
                         ?>
                     </b>
