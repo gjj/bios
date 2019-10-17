@@ -24,23 +24,32 @@
 		$courseCode = $_POST['course'];
 		$section = $_POST['section'];
 
-		if ($currentRound['round'] == 1) {
-			if (!$bidDAO->checkOwnSchoolCourse($user['school'], $courseCode)) {
-				addError("You cannot bid for courses not offered by your school in Round 1.");
+		if ($roundDAO->roundIsActive()) {
+			if ($currentRound['round'] == 1) {
+				if (!$bidDAO->checkOwnSchoolCourse($user['school'], $courseCode)) {
+					addError("You cannot bid for courses not offered by your school in Round 1. [error: not own school course]");
+				}
+			}
+
+			if ($currentRound['round'] == 2) {
+				// round 2 must check vacancy left
+			}
+	
+			$hasPrerequisites = $bidDAO->hasPrerequisites($courseCode);
+			$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $courseCode);
+	
+			if ($hasPrerequisites) {
+				if (!$hasCompletedPrerequisites) {
+					addError("You have not completed the prerequisites. [error: incomplete prerequisites]");
+				}
+			}
+	
+			if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
+				addError("You've already completed the course. Why do you want to take again? [error: course completed]");
 			}
 		}
-
-		$hasPrerequisites = $bidDAO->hasPrerequisites($courseCode);
-		$hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $courseCode);
-
-		if ($hasPrerequisites) {
-			if (!$hasCompletedPrerequisites) {
-				addError("You have not completed the prerequisites.");
-			}
-		}
-
-		if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
-			addError("You've already completed the course. Why do you want to take again?");
+		else {
+			addError("No active rounds currently");
 		}
 
 		// If no errors until now... means passed all my previous validations!!
@@ -62,8 +71,6 @@
 
 	if (isset($_GET['course'])) {
 		$courseCode = $_GET['course'];
-
-
 
 		$course = $courseDAO->retrieveByCode($courseCode);
 	
@@ -187,7 +194,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-12">
 				<div class="row pb-5">
 					<div class="col-md-12">
 						<p class="pt-2">
@@ -337,27 +344,35 @@
 												<input type="hidden" name="course" value="<?php echo $course['course']; ?>" />
 												<input type="hidden" name="section" value="<?php echo $section['section']; ?>" />
 												<?php
+
+													$error = null;
+
 													if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
-														echo '<button class="btn btn-info" type="submit" disabled>Added to cart</button>';
+														$error = 'Added to cart';
 													}
-													else if ($courseCompleted) {
-														echo '<button class="btn btn-info" type="submit" disabled>Course completed</button>';
+
+													if ($courseCompleted) {
+														$error = 'Course completed';
 													}
-													else if ($hasPrerequisites) {
-														if ($hasCompletedPrerequisites) {
-															echo '<button class="btn btn-info" type="submit">Add to cart</button>';
+													
+													if ($hasPrerequisites) {
+														if (!$hasCompletedPrerequisites) {
+															$error = 'Prerequisite incomplete';
 														}
-														else {
-															echo '<button class="btn btn-info" type="submit" disabled>Prerequisite uncompleted</button>';															
-														}
 													}
-													else if ($currentRound['round'] == 1) {
+													
+													if ($currentRound['round'] == 1) {
 														if (!$ownSchoolCourse) {
-															echo '<button class="btn btn-info" type="submit" disabled>Not own school course</button>';
+															$error = 'Not own school course';
 														}
-														else {
-															echo '<button class="btn btn-info" type="submit">Add to cart</button>';
-														}
+													}
+
+													if ($currentRound['round'] == 2) {
+														// round 2 must check vacancy left
+													}
+
+													if ($error) {
+														echo '<button class="btn btn-info" type="submit" disabled>' . $error . '</button>';
 													}
 													else {
 														echo '<button class="btn btn-info" type="submit">Add to cart</button>';
