@@ -19,42 +19,47 @@
     $bids = $bidDAO->retrieveAllBidsByUser($user['userid'], $currentRound['round']);
 
     if ($_POST) {
-        if (isset($_POST['checkoutForm']) and isset($_POST['checkout'])) {
-            $courseSections = array();
-
-            foreach ($_POST['checkout'] as $rowNumber) {
-                $courseSection = array(
-                    'course' => $cartItems[$rowNumber]['course'],
-                    'section' => $cartItems[$rowNumber]['section']
-                );
-
-                array_push($courseSections, $courseSection);
+        if ($roundDAO->roundIsActive()) {
+            if (isset($_POST['checkoutForm']) and isset($_POST['checkout'])) {
+                $courseSections = array();
+    
+                foreach ($_POST['checkout'] as $rowNumber) {
+                    $courseSection = array(
+                        'course' => $cartItems[$rowNumber]['course'],
+                        'section' => $cartItems[$rowNumber]['section']
+                    );
+    
+                    array_push($courseSections, $courseSection);
+                }
+                
+                if ($bidDAO->checkDuplicates($user['userid'], $courseSections, $currentRound['round'])) {
+                    addError("You can only bid for one section per course!");
+                }
+    
+                if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
+                    addError("Timetable conflict with either your bidded courses or your confirmed courses! [error: class timetable clash]");
+                }
+               
+                if ($bidDAO->checkExamConflicts($user['userid'], $courseSections, $currentRound['round'])) {
+                    addError("Exam conflict with either your bidded courses or your confirmed courses! [error: exam timetable clash]");
+                }
+    
+                $count = count($_POST['checkout']);
+                $countBiddedMods = $bidDAO->countBids($user['userid'], $currentRound['round']);
+                
+                if (($count + $countBiddedMods) > 5) {
+                    addError("You can only bid for up to 5 sections! You currently have {$countBiddedMods} bidded/confirmed courses, and you're bidding for {$count} more. [error: section limit reached]");
+                }
+    
+                // If no errors, then we redirect to cart_checkout.php.
+                if (!isset($_SESSION['errors'])) {
+                    $_SESSION['courseSections'] = $courseSections;
+                    header("Location: cart_checkout");
+                }
             }
-            
-            if ($bidDAO->checkDuplicates($user['userid'], $courseSections, $currentRound['round'])) {
-                addError("You can only bid for one section per course! ");
-            }
-
-            if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
-                addError("Timetable conflict with either your bidded courses or your confirmed courses!");
-            }
-           
-            if ($bidDAO->checkExamConflicts($user['userid'], $courseSections, $currentRound['round'])) {
-                addError("Exam conflict with either your bidded courses or your confirmed courses!");
-            }
-
-            $count = count($_POST['checkout']);
-            $countBiddedMods = $bidDAO->countBids($user['userid'], $currentRound['round']);
-            
-            if (($count + $countBiddedMods) > 5) {
-                addError("You can only bid for up to 5 sections! You currently have {$countBiddedMods} bidded/confirmed courses, and you're bidding for {$count} more.");
-            }
-
-            // If no errors, then we redirect to cart_checkout.php.
-            if (!isset($_SESSION['errors'])) {
-                $_SESSION['courseSections'] = $courseSections;
-                header("Location: cart_checkout");
-            }
+        }
+        else {
+            addError("Round is not active.");
         }
     }
 
@@ -142,8 +147,9 @@
                                     
                                     $i = 0;
 
-                                    if ($cartItems) {
-                                        foreach ($cartItems as $cartItem) {
+                                    if ($roundDAO->roundIsActive()) {
+                                        if ($cartItems) {
+                                            foreach ($cartItems as $cartItem) {
                                         
                                 ?>
                                 <tr>
@@ -162,10 +168,10 @@
                                     <td><a href="cart_delete?course=<?php echo $cartItem['course'];?>&section=<?php echo $cartItem['section'];?>">Delete</a></td>
                                 </tr>
                                 <?php
-                                            $i++;
+                                                $i++;
+                                            }
                                         }
-                                    }
-                                    else {
+                                        else {
                                 ?>
 
                                 <tr>
@@ -173,12 +179,20 @@
                                 </tr>
 
                                 <?php
+                                        }
+                                    }
+                                    else {
+                                ?>
+                                <tr>
+                                    <td colspan="10">Round is not active.</td>
+                                </tr>
+                                <?php
                                     }
                                 ?>
                             </tbody>
                         </table>
                         <p>
-                            <input type="submit" name="checkoutForm" class="btn btn-info"<?php if (!$cartItems) echo " disabled"; ?> value="Checkout" />
+                            <input type="submit" name="checkoutForm" class="btn btn-info"<?php if (!$cartItems or !$roundDAO->roundIsActive()) echo " disabled"; ?> value="Checkout" />
                         </p>
                     </form>
 				</section>
@@ -207,9 +221,11 @@
                             </thead>
                             <tbody>
                                     <?php        
-                                        $i = 0;                                
-                                        if ($bids) {
-                                            foreach ($bids as $bid) {
+                                        $i = 0; 
+                                        
+                                        if ($roundDAO->roundIsActive()) {
+                                            if ($bids) {
+                                                foreach ($bids as $bid) {
                                     ?>
                                     <tr>
                                         <td><?php echo $bid['amount'];?></td>
@@ -227,13 +243,21 @@
                                         </td>
                                     </tr>
                                     <?php
-                                                $i++;
+                                                    $i++;
+                                                }
+                                            }
+                                            else {
+                                    ?>
+                                    <tr>
+                                        <td colspan="10">No bids currently.</td>
+                                    </tr>
+                                    <?php
                                             }
                                         }
                                         else {
                                     ?>
                                     <tr>
-                                        <td colspan="10">No bids currently.</td>
+                                        <td colspan="10">Round is not active.</td>
                                     </tr>
                                     <?php
                                         }
