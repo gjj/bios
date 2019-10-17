@@ -154,6 +154,14 @@ class RoundClearingDAO {
                 array_push($result, $resultCourseSection);
             }
 
+
+            // Clear all cart items.
+            $sql = "DELETE FROM bids WHERE round = :round AND result = 'cart'";
+            $query = $db->prepare($sql);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            $query->bindParam(':round', $round, PDO::PARAM_STR);
+            $query->execute();
+
             return $result;
         /*}
         else {

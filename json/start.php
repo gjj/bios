@@ -3,9 +3,34 @@
     require_once '../includes/round.php';
 
     header("Content-Type: application/json");
-
     
     // Remember to add token validation here...
 
-    $result = doStart();
-    echo $result;
+    $errors = [
+        isMissingOrEmpty('token'),
+    ];
+
+    $errors = array_filter($errors);
+
+    if (!$errors) {
+        $token = $_GET['token'];
+
+        if (verify_token($token)) {
+            $json = doStart();
+        }
+        else {
+            $errors[] = "invalid token";
+        }
+    }
+
+    if (!$errors) {
+        $result = $json;
+    }
+    else {
+        $result = [
+            "status" => "error",
+            "messages" => array_values($errors)
+        ];
+    }
+
+    echo json_encode($result, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
