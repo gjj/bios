@@ -2,7 +2,7 @@
 
 class RoundClearingDAO {
     public function roundClearing($round) {
-        if ($round == 1) {
+        //if ($round == 1) {
             $result = array();
 
             $connMgr = new ConnectionManager();
@@ -154,16 +154,10 @@ class RoundClearingDAO {
                 array_push($result, $resultCourseSection);
         ***REMOVED***
 
-            $query6 = "DELETE FROM bids WHERE (status = 'cart' OR status = '-') AND round = :round";
-            $query6 = $db->prepare($sql3);
-            $query6->setFetchMode(PDO::FETCH_ASSOC);
-            $query6->bindParam(':round', $round, PDO::PARAM_STR);
-            $query6->execute();
-
             return $result;
-    ***REMOVED***
+        /*}
         else {
             // round 2
-    ***REMOVED***
+    ***REMOVED****/
 ***REMOVED***
 }
