@@ -1,28 +1,28 @@
 ***REMOVED***
-	require_once 'includes/common.php';
+require_once 'includes/common.php';
 
-	if (!isLoggedIn()) {
-		header("Location: .");
-	}
-
-
-	$courseDAO = new CourseDAO();
-	$roundDAO = new RoundDAO();
-	$sectionDAO = new SectionDAO();
-	$roundDAO = new RoundDAO();
-	$bidDAO = new BidDAO();
-
-	$currentRound = $roundDAO->getCurrentRound();
-	$user = currentUser();
-
-	print_r($user);
-
-	if (!empty($_POST))
-	if (!isEmpty($_POST['course']) and !isEmpty($_POST['section'])) {
+if (!isLoggedIn()) {
+    header("Location: .");
+}
 
 
-		$courseCode = $_POST['course'];
-		$section = $_POST['section'];
+$courseDAO = new CourseDAO();
+$roundDAO = new RoundDAO();
+$sectionDAO = new SectionDAO();
+$roundDAO = new RoundDAO();
+$bidDAO = new BidDAO();
+
+$currentRound = $roundDAO->getCurrentRound();
+$user = currentUser();
+
+print_r($user);
+
+if (!empty($_POST))
+    if (!isEmpty($_POST['course']) and !isEmpty($_POST['section'])) {
+
+
+        $courseCode = $_POST['course'];
+        $section = $_POST['section'];
 
 		if ($roundDAO->roundIsActive()) {
 			if ($currentRound['round'] == 1) {
@@ -52,25 +52,23 @@
 			addError("No active rounds currently");
 		}
 
-		// If no errors until now... means passed all my previous validations!!
-		if (empty($_SESSION['errors'])) {
-			if ($sectionDAO->sectionExists($courseCode, $section)) {
-				// Do further validation. Make sure POST-ed course and section code exists
-				if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
-					$bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
-				}
-				else {
-					addError("Already added to cart!");
-				}
-			}
-			else {
-				addError("Course and section code pair does not exist. Nice try!");
-			}
-		}
-	}
+        // If no errors until now... means passed all my previous validations!!
+        if (empty($_SESSION['errors'])) {
+            if ($sectionDAO->sectionExists($courseCode, $section)) {
+                // Do further validation. Make sure POST-ed course and section code exists
+                if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
+                    $bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
+            ***REMOVED*** else {
+                    addError("Already added to cart!");
+            ***REMOVED***
+        ***REMOVED*** else {
+                addError("Course and section code pair does not exist. Nice try!");
+        ***REMOVED***
+    ***REMOVED***
+***REMOVED***
 
-	if (isset($_GET['course'])) {
-		$courseCode = $_GET['course'];
+if (isset($_GET['course'])) {
+    $courseCode = $_GET['course'];
 
 		$course = $courseDAO->retrieveByCode($courseCode);
 	
@@ -314,7 +312,10 @@
 							      		<th scope="col">End</th>
 							      		<th scope="col">Instructor</th>
 							      		<th scope="col">Venue</th>
-							      		<th scope="col">Size</th>
+										<th scope="col">Vacancies</th>
+										***REMOVED*** if ($currentRound['round'] == 2) { ?>
+                                    	<th scope="col">Min Bid</th>
+                                        ***REMOVED*** } ?>
 										<th scope="col"></th>
 							    	</tr>
 								</thead>
@@ -338,7 +339,24 @@
 							     		<td>***REMOVED*** echo $section['end']; ?></td>
 							     		<td>***REMOVED*** echo $section['instructor']; ?></td>
 							     		<td>***REMOVED*** echo $section['venue']; ?></td>
-							     		<td>***REMOVED*** echo $section['size']; ?></td>
+							     		<td>***REMOVED***
+                                                if ($currentRound['round'] == 1) {
+                                                    echo $section['size'];
+                                            ***REMOVED*** elseif ($currentRound['round'] == 2) {
+                                                    $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section']);
+                                                    if ($row > 0) {
+                                                        $row = (int)$section['size'] - (int)$row;
+                                                        echo $row;
+                                                ***REMOVED*** else {
+                                                        echo $section['size'];
+                                                ***REMOVED***
+                                            ***REMOVED***
+										?></td>
+										***REMOVED***
+												if($currentRound['round'] == 2) {
+													echo "<td>Sample MinBid</td>";
+												}
+										?>
 							     		<td>
 											<form action="" method="post">
 												<input type="hidden" name="course" value="***REMOVED*** echo $course['course']; ?>" />
