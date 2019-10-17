@@ -11,9 +11,6 @@ if (!isset($_SESSION['userid'])) {
 // Create RoundDAO
 $roundDAO = new RoundDAO();
 
-//Retrieve Current Active Round
-$currentRound = $roundDAO->getCurrentRound();
-
 // Check if isset
 if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     /*// create a new cURL resource
@@ -47,6 +44,9 @@ if (isset($_GET['value']) and $_GET['value'] == 'Stop') {
     $result = json_decode(doStart(), true);
     $_SESSION['result'] = $result;
 }
+
+//Retrieve Current Active Round
+$currentRound = $roundDAO->getCurrentRound();
 
 //Set necessary Stuff
 if ($roundDAO->roundIsActive()) {
