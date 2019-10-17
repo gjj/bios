@@ -6,5 +6,31 @@
     
     // Remember to add token validation here...
 
-    $result = doStop();
-    echo $result;
+    $errors = [
+        isMissingOrEmpty('token'),
+    ];
+
+    $errors = array_filter($errors);
+
+    if (!$errors) {
+        $token = $_GET['token'];
+
+        if (verify_token($token)) {
+            $json = doStop();
+        }
+        else {
+            $errors[] = "invalid token";
+        }
+    }
+
+    if (!$errors) {
+        $result = $json;
+    }
+    else {
+        $result = [
+            "status" => "error",
+            "messages" => array_values($errors)
+        ];
+    }
+
+    echo json_encode($result, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
