@@ -1,5 +1,5 @@
 ***REMOVED***
-require_once '../includes/common.php';
+require_once 'common.php';
 require_once 'bootstrap-validation.php';
 
 //header('Content-Type: application/json');

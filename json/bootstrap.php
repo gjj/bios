@@ -2,7 +2,7 @@
     header('Content-Type: application/json');
     
     require_once '../includes/common.php';
-    require_once '../admin/bootstrap.php';
+    require_once '../includes/bootstrap.php';
     
     $errors = [
         isMissingOrEmpty('token')
