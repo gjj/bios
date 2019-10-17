@@ -34,7 +34,7 @@
             ];
         }
 
-        return json_encode($result, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+        return $result; //json_encode($result, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
     }
 
     function doStop() {
