@@ -915,7 +915,7 @@ class BidDAO
         return $result;
     }
 
-    //Retrieve Successful bids of all user of a particular course code
+    //Retrieve number of Successful bids of all user of a particular course code
     public function getSuccessfulByCourseCode($courseCode, $section)
     {
         $sql = "SELECT * FROM bids AS bd INNER JOIN sections as sc ON bd.course = sc.course AND bd.section = sc.section  WHERE result = 'in' and bd.course = :courseCode and bd.section = :sectionRQ";
@@ -928,5 +928,23 @@ class BidDAO
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
         return $query->rowCount();
+    }
+
+    public function insertMinBidforAllCourses($courseCode, $minbid){
+        $sql = "INSERT INTO minbid (course, bidamount) VALUES (:courseCode, :minbid)";
+
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $stmt->bindParam(':minbid', $minbid, PDO::PARAM_STR);
+
+        $result = false;
+
+        if($stmt ->execute()) {
+            $result = True;
+        }
+        return $result; 
     }
 }
