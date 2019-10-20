@@ -820,28 +820,6 @@ class BidDAO
         }
     }
 
-    public function getAmountIfBidExists($userId, $courseCode, $section = null, $round = 1)
-    {
-        $connMgr = new ConnectionManager();
-        $db = $connMgr->getConnection();
-
-        if ($section) {
-            $sql = "SELECT user_id, course, section, amount FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND result = '-') OR result = 'in')";
-        } else {
-            $sql = "SELECT user_id, course, section, amount FROM bids WHERE user_id = :userId AND course = :courseCode AND ((round = :round AND result = '-') OR result = 'in')";
-        }
-
-        $query = $db->prepare($sql);
-        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-        if ($section) $query->bindParam(':section', $section, PDO::PARAM_STR);
-        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-
-        return $result;
-    }
-
     public function addBidBootstrap($userId, $courseCode, $section, $amount)
     {
         $connMgr = new ConnectionManager();

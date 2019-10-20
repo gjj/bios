@@ -345,8 +345,6 @@
         // If no errors so far, then we proceed for our second round of validation checks...
         if (!$errors) {
             $existingBid = $bidDAO->findExistingBid($userId, $course);
-
-            print_r($existingBid);
             
             if (!$existingBid) {
                 // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
