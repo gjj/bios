@@ -3,9 +3,9 @@
 class ConnectionManager {
 
 	public function getConnection() {
-		$host = "pixely.southeastasia.cloudapp.azure.com";
-		$username = "sup";
-		$password = "Letsgetit@spm$1";
+		$host = "18.136.126.161";
+		$username = "root";
+		$password = "worzr3v50e8Z";
 		$databaseName = "bios";
 		$port = 3306;
 
