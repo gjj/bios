@@ -2,10 +2,10 @@
     "status": "error",
     "num-record-loaded": [
         {
-            "bid.csv": 3
+            "bid.csv": 0
     ***REMOVED***,
         {
-            "course.csv": 6
+            "course.csv": 1
     ***REMOVED***,
         {
             "course_completed.csv": 0
@@ -14,25 +14,18 @@
             "prerequisite.csv": 0
     ***REMOVED***,
         {
-            "section.csv": 4
+            "section.csv": 1
     ***REMOVED***,
         {
-            "student.csv": 3
+            "student.csv": 1
     ***REMOVED***
     ],
     "error": [
         {
-            "file": "section.csv",
-            "line": 5,
+            "file": "bid.csv",
+            "line": 2,
             "message": [
-                "invalid start"
-            ]
-    ***REMOVED***,
-        {
-            "file": "section.csv",
-            "line": 6,
-            "message": [
-                "invalid start"
+                "invalid course"
             ]
     ***REMOVED***
     ]

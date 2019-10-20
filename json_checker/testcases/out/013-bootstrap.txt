@@ -1,0 +1,33 @@
+{
+    "status": "error",
+    "num-record-loaded": [
+        {
+            "bid.csv": 0
+    ***REMOVED***,
+        {
+            "course.csv": 9
+    ***REMOVED***,
+        {
+            "course_completed.csv": 1
+    ***REMOVED***,
+        {
+            "prerequisite.csv": 1
+    ***REMOVED***,
+        {
+            "section.csv": 3
+    ***REMOVED***,
+        {
+            "student.csv": 7
+    ***REMOVED***
+    ],
+    "error": [
+        {
+            "file": "bid.csv",
+            "line": 2,
+            "message": [
+                "invalid userid",
+                "invalid course"
+            ]
+    ***REMOVED***
+    ]
+}
