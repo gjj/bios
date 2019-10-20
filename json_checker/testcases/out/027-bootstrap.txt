@@ -1,0 +1,33 @@
+{
+    "status": "error",
+    "num-record-loaded": [
+        {
+            "bid.csv": 6
+        },
+        {
+            "course.csv": 7
+        },
+        {
+            "course_completed.csv": 0
+        },
+        {
+            "prerequisite.csv": 0
+        },
+        {
+            "section.csv": 10
+        },
+        {
+            "student.csv": 1
+        }
+    ],
+    "error": [
+        {
+            "file": "bid.csv",
+            "line": 7,
+            "message": [
+                "section limit reached",
+                "not enough e-dollar"
+            ]
+        }
+    ]
+}
