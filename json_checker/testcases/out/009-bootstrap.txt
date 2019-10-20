@@ -1,8 +1,8 @@
 {
-    "status": "success",
+    "status": "error",
     "num-record-loaded": [
         {
-            "bid.csv": 2
+            "bid.csv": 1
     ***REMOVED***,
         {
             "course.csv": 2
