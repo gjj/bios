@@ -55,7 +55,7 @@
     else {
         $result = [
             "status" => "error",
-            "messages" => $errors
+            "message" => $errors
         ];
     }
 
