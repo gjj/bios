@@ -5,7 +5,7 @@
 
     $errors = [
         isMissingOrEmpty('r'),
-        isMissingOrEmpty('token'),
+        isMissingOrEmpty('token'), // Check which layer token validation is at!!
     ];
 
     $errors = array_filter($errors);
@@ -15,7 +15,6 @@
         $token = $_GET['token'];
 
         $json = json_decode($request, true);
-        $jsonError = json_last_error();
         
         $errors = [
             isMissingOrEmptyJson('course', $json),
