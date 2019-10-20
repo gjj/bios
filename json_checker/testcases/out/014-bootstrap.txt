@@ -2,10 +2,10 @@
     "status": "error",
     "num-record-loaded": [
         {
-            "bid.csv": 1
+            "bid.csv": 0
         },
         {
-            "course.csv": 2
+            "course.csv": 0
         },
         {
             "course_completed.csv": 0
@@ -14,10 +14,19 @@
             "prerequisite.csv": 0
         },
         {
-            "section.csv": 5
+            "section.csv": 0
         },
         {
             "student.csv": 1
+        }
+    ],
+    "error": [
+        {
+            "file": "student.csv",
+            "line": 3,
+            "message": [
+                "blank name"
+            ]
         }
     ]
 }
