@@ -11,40 +11,35 @@
 
     if (!$errors) {
         $token = $_GET['token'];
+        
+        $roundDAO = new RoundDAO();
+        $currentRound = $roundDAO->getCurrentRound();
 
-        if (verify_token($token)) {
-            $roundDAO = new RoundDAO();
-            $currentRound = $roundDAO->getCurrentRound();
+        $userDAO = new UserDAO();
+        $users = $userDAO->retrieveAllStudents();
 
-            $userDAO = new UserDAO();
-            $users = $userDAO->retrieveAllStudents();
+        $courseDAO = new CourseDAO();
+        $courses = $courseDAO->retrieveAll();
 
-            $courseDAO = new CourseDAO();
-            $courses = $courseDAO->retrieveAll();
-
-            $sectionDAO = new SectionDAO();
-            $sections = $sectionDAO->retrieveAll();
+        $sectionDAO = new SectionDAO();
+        $sections = $sectionDAO->retrieveAll();
             
-            $bidDAO = new BidDAO();
-            $prerequisites = $bidDAO->retrieveAllPrerequisites();
+        $bidDAO = new BidDAO();
+        $prerequisites = $bidDAO->retrieveAllPrerequisites();
 
-            // Only the bid details for the current round should be shown in the bid records.
-            // If the current round is round 2, list the last bid made by each user in each section.
-            // If there is no active round, the bids (whether successful or unsuccessful)
-            // for the most recently concluded round should be shown.
-            // The system does not need to maintain a history of bidding results
-            // from previous bidding rounds.
-            if ($roundDAO->roundIsActive()) {
-                $bids = $bidDAO->retrieveAllBids($currentRound['round']);
-            }
-            else {
-                $bids = $bidDAO->retrieveAllBids($currentRound['round'], true);
-            }
-            $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids(0);
+        // Only the bid details for the current round should be shown in the bid records.
+        // If the current round is round 2, list the last bid made by each user in each section.
+        // If there is no active round, the bids (whether successful or unsuccessful)
+        // for the most recently concluded round should be shown.
+        // The system does not need to maintain a history of bidding results
+        // from previous bidding rounds.
+        if ($roundDAO->roundIsActive()) {
+            $bids = $bidDAO->retrieveAllBids($currentRound['round']);
         }
         else {
-            $errors[] = "invalid token";
+            $bids = $bidDAO->retrieveAllBids($currentRound['round'], true);
         }
+        $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids(0);
     }
     
     if (!$errors) {
@@ -61,7 +56,7 @@
     else {
         $result = [
             "status" => "error",
-            "messages" => $errors
+            "message" => $errors
         ];
     }
 

@@ -87,7 +87,7 @@
     else {
         $result = [
             "status" => "error",
-            "messages" => array_values($errors)
+            "message" => array_values($errors)
         ];
     }
 

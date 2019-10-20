@@ -30,7 +30,7 @@
         else {
             $result = [
                 "status" => "error",
-                "messages" => $errors
+                "message" => $errors
             ];
         }
 
@@ -63,7 +63,7 @@
         else {
             $result = [
                 "status" => "error",
-                "messages" => $errors
+                "message" => $errors
             ];
         }
 
