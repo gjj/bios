@@ -61,7 +61,8 @@
         
                 // If no errors so far, then we proceed for our second round of validation checks...
                 if (!$errors) {
-                    if (!$bidDAO->hasBiddedFor($userId, $course)) {
+                    $existingBid = $bidDAO->findExistingBid($userId, $course);
+                    if (!$existingBid) {
                         $user = $userDAO->retrieveById($userId);
                         $course = $courseDAO->retrieveByCode($course);
                         $currentRound = $roundDAO->getCurrentRound()['round'];
@@ -108,7 +109,6 @@
                     // Validation 7/7 "not enough e-dollar" student has not enough e-dollars to place the bid.
                     // If it is an update of a previous bid for the same course, account for the e$ gained back
                     // from the cancellation
-                    $existingBid = $bidDAO->getAmountIfBidExists($userId, $course['course']);
                     
                     if ($existingBid) {
                         //$previousAmount = $existingBid['amount'];

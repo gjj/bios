@@ -344,7 +344,11 @@
 
         // If no errors so far, then we proceed for our second round of validation checks...
         if (!$errors) {
-            if (!$bidDAO->hasBiddedFor($userId, $course)) {
+            $existingBid = $bidDAO->findExistingBid($userId, $course);
+
+            print_r($existingBid);
+            
+            if (!$existingBid) {
                 // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
                 if ($dataStudents[$userId]['school'] !== $dataCourses[$course]['school']) {
                     $errors[] = "not own school course";
@@ -395,9 +399,7 @@
             
             // Validation 7/7 "not enough e-dollar" student has not enough e-dollars to place the bid.
             // If it is an update of a previous bid for the same course, account for the e$ gained back
-            // from the cancellation
-            $existingBid = $bidDAO->getAmountIfBidExists($userId, $course);
-            
+            // from the cancellation            
             if ($existingBid) {
                 //$previousAmount = $existingBid['amount'];
                 $bidDAO->refundbidamount($userId, $course);
