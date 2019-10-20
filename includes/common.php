@@ -78,16 +78,22 @@
 		if (empty($value)) {
 			return "blank $name";
 		}
+
+		if ($name == 'token') {
+			if (!verify_token($_REQUEST[$name])) {
+				return "invalid $name";
+			}
+		}
 	}
 
 	// Added new helper function for JSON.
 	function isMissingOrEmptyJson($name, $json) {
-		if (!array_key_exists($name, $json)) {
+		if (!$json or !array_key_exists($name, $json)) {
 			return "missing $name";
 		}
 		
 		// Client did send the value over, but is blank (and this is different from a missing field).
-		$value = $json->$name;
+		$value = $json[$name];
 		if (empty($value)) {
 			return "blank $name";
 		}

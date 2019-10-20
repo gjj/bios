@@ -13,7 +13,7 @@
     if (!isEmpty($errors)) {
         $result = [
             "status" => "error",
-            "messages" => array_values($errors)
+            "message" => array_values($errors)
         ];
 ***REMOVED***
     else {
@@ -30,7 +30,7 @@
                 $errors = ["Unable to process request parameter: " . $jsonError];
                 $result = [
                     "status" => "error",
-                    "messages" => array_values($errors)
+                    "message" => array_values($errors)
                 ];
         ***REMOVED***
             else {
@@ -44,7 +44,7 @@
                 if (!isEmpty($errors)) {
                     $result = [
                         "status" => "error",
-                        "messages" => array_values($errors)
+                        "message" => array_values($errors)
                     ];
             ***REMOVED***
                 else {
@@ -61,7 +61,7 @@
                         $errors = ["Invalid user ID."];
                         $result = [
                             "status" => "error",
-                            "messages" => array_values($errors)
+                            "message" => array_values($errors)
                         ];
                 ***REMOVED***
             ***REMOVED***
@@ -71,7 +71,7 @@
             $errors = ["Unauthorised access."];
             $result = [
                 "status" => "error",
-                "messages" => array_values($errors)
+                "message" => array_values($errors)
             ];
     ***REMOVED***
 ***REMOVED***

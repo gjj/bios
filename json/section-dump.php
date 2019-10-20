@@ -14,30 +14,23 @@
         $request = $_GET['r'];
         $token = $_GET['token'];
 
-        if (verify_token($token)) {
-            $requestJson = json_decode($request);
-            $jsonError = json_last_error();
+        $json = json_decode($request, true);
+        $jsonError = json_last_error();
+        
+        $errors = [
+            isMissingOrEmptyJson('course', $json),
+            isMissingOrEmptyJson('section', $json),
+        ];
 
-            if (!$jsonError) {
-                $errors = [
-                    isMissingOrEmptyJson('course', $requestJson),
-                    isMissingOrEmptyJson('section', $requestJson),
-                ];
+        $errors = array_filter($errors);
+            
+        // If pass input validation...
+        if (!$errors) {
+            $course = $json['course'];
+            $section = $json['section'];
 
-                $errors = array_filter($errors);
-        ***REMOVED***
-
-            // If pass input validation...
-            if (!$errors) {
-                $course = $requestJson->course;
-                $section = $requestJson->section;
-
-                $bidDAO = new BidDAO();
-                $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids(0, $course, $section);
-        ***REMOVED***
-    ***REMOVED***
-        else {
-            $errors[] = "invalid token";
+            $bidDAO = new BidDAO();
+            $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids(0, $course, $section);
     ***REMOVED***
 ***REMOVED***
     
@@ -50,7 +43,7 @@
     else {
         $result = [
             "status" => "error",
-            "messages" => array_values($errors)
+            "message" => array_values($errors)
         ];
 ***REMOVED***
 
