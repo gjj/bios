@@ -146,9 +146,11 @@
                 $section_num .= $section[$i];
         ***REMOVED***
     ***REMOVED***
+
         
-        $section_num = intval($section_num);
-        if ($section_num < 1 or $section_num > 99) {
+        //$section_num = intval($section_num);
+
+        if ($section_num < 1 or $section_num > 99 or !is_numeric($section_num)) {
             return false;
     ***REMOVED***
 
