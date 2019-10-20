@@ -28,10 +28,7 @@
             $user = $userDAO->retrieveStudentById($json['userid']);
 
             if (!$user) {
-                $errors = [
-                    "invalid userid"
-                ];
-
+                $errors[] = "invalid userid";
         ***REMOVED***
     ***REMOVED***
 ***REMOVED***

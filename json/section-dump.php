@@ -28,6 +28,16 @@
             $course = $json['course'];
             $section = $json['section'];
 
+            $courseDAO = new CourseDAO();
+            $sectionDAO = new SectionDAO();
+
+            if (!$courseDAO->retrieveByCode($course)) {
+                $errors[] = "invalid course";
+        ***REMOVED***
+            else if (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
+                $errors[] = "invalid section";
+        ***REMOVED***
+
             $bidDAO = new BidDAO();
             $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids(0, $course, $section);
     ***REMOVED***
