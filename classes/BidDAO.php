@@ -930,14 +930,15 @@ class BidDAO
         return $query->rowCount();
 ***REMOVED***
 
-    public function insertMinBidforAllCourses($courseCode, $minbid){
-        $sql = "INSERT INTO minbid (course, bidamount) VALUES (:courseCode, :minbid)";
+    public function insertMinBidforAllCourses($courseCode,$section, $minbid){
+        $sql = "INSERT INTO minbid (course, section, bidAmount) VALUES (:courseCode,:section, :minbid)";
 
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
         $stmt = $conn->prepare($sql);
         
         $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $stmt->bindParam(':section', $section, PDO::PARAM_STR);
         $stmt->bindParam(':minbid', $minbid, PDO::PARAM_STR);
 
         $result = false;
