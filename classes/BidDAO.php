@@ -847,7 +847,7 @@ class BidDAO
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $existingBid = $this->getAmountIfBidExists($userId, $courseCode, $section);
+        $existingBid = $this->findExistingBid($userId, $courseCode);
 
         $sql = "INSERT INTO bids (user_id, course, section, amount) VALUES (:userId, :courseCode, :section, :amount) ON DUPLICATE KEY UPDATE amount = :amount2";
         $query = $db->prepare($sql);
@@ -875,27 +875,25 @@ class BidDAO
 
         $query->execute();
 
-        return true;
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        
+        return $query->rowCount();
     }
 
-    public function hasBiddedFor($userId, $courseCode, $round = 1)
+    public function findExistingBid($userId, $courseCode, $round = 1)
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT section FROM bids WHERE user_id = :userId AND course = :courseCode AND ((round = :round AND result = '-') OR result = 'in')";
+        $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND ((round = :round AND result = '-') OR (round = 2 AND result = 'in'))";
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-
-        if ($query->rowCount()) {
-            return true;
-        }
-
-        return false;
+        
+        return $result;
     }
 
     public function getCourseByCode($userId, $courseCode, $round = 1)
