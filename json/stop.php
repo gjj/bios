@@ -15,12 +15,12 @@
     if (!$errors) {
         $token = $_GET['token'];
 
-        if (verify_token($token)) {
+        //if (verify_token($token)) {
             $json = doStop();
-        }
+        /*}
         else {
             $errors[] = "invalid token";
-        }
+        }*/
     }
 
     if (!$errors) {

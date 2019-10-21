@@ -25,6 +25,7 @@
         $sections = $sectionDAO->retrieveAll();
             
         $bidDAO = new BidDAO();
+        $coursesCompleted = $bidDAO->retrieveCompletedCourses();
         $prerequisites = $bidDAO->retrieveAllPrerequisites();
 
         // Only the bid details for the current round should be shown in the bid records.
@@ -49,7 +50,8 @@
             "section" => $sections,
             "student" => $users,
             "prerequisite" => $prerequisites,
-            "bids" => $bids,
+            "bid" => $bids,
+            "completed-course" => $coursesCompleted,
             "section-student" => $bidsSuccessful
         ];
     }

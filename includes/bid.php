@@ -1,7 +1,7 @@
 <?php
     require_once 'common.php';
 
-    function addBid($userId, $amount, $course, $section) {
+    function addOrUpdateBid($userId, $amount, $course, $section) {
         $bidDAO = new BidDAO();
         $roundDAO = new RoundDAO();
         $userDAO = new UserDAO();
@@ -29,6 +29,7 @@
         // If no errors so far, then we proceed for our second round of validation checks...
         if (!$errors) {
             $existingBid = $bidDAO->findExistingBid($userId, $course);
+            
             if (!$existingBid) {
                     $user = $userDAO->retrieveById($userId);
                     $course = $courseDAO->retrieveByCode($course);
@@ -99,9 +100,11 @@
                     $bidDAO->refundbidamount($userId, $course); // Drop prev bid first.
                 }
 
-                $bidDAO->addBidBootstrap($userId, $course, $section, $amount, $currentRound); // Last param add round
+                $bidDAO->addBidBootstrap($userId, $course, $section, $amount); // Last param add round
             }
         }
+
+        return $errors;
     }
     
 
