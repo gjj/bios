@@ -38,6 +38,7 @@
             "status" => "success",
         ];
         
+        // Why need to merge? See https://wiki.smu.edu.sg/is212/Project#Dump_.28User.29
         $result = array_merge($result, $user);
 ***REMOVED***
     else {
