@@ -27,16 +27,26 @@ if ($_POST) {
         $amount = $_POST['amount'][$i];
         $bids[$i]['amount'] = $amount;
         $sum += $amount;
+***REMOVED***
+    //Retrieve all value in "minVal[]" field
+    if ($currentRound['round'] == 2) {
+        for ($x = 0; $x < count($_POST['minVal']); $x++) {
+            if ($_POST['amount'][$x] < $_POST['minVal'][$x]) {
+                addError("Minimum Bid Value for {$_POST['course'][$x]} is e\${$_POST['minVal'][$x]}, your bid is e\${$_POST['amount'][$x]}");
+        ***REMOVED***
 
-        // Validation: Make sure each bid is min. e$10.
-        if ($amount < 10 or !is_numeric($amount) or $amount != round($amount, 2)) {
-            addError("Invalid amount. Minimum bid is e$10, and up to 2 decimal places only. [error: invalid amount]");
     ***REMOVED***
 ***REMOVED***
 
+
     // Validation: Make sure I sum(amount[]) < my current edollar!!!!
     if ($sum > $user['edollar']) {
-        addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}. [error: not enough e-dollar]");
+        addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
+***REMOVED***
+
+    // Validation: Make sure each bid is min. e$10.
+    if (min($_POST['amount']) < 10) {
+        addError("Minimum bid is e$10! You have entered a bid that is less than the minimum bid.");
 ***REMOVED***
 
     if (!isset($_SESSION['errors'])) {
@@ -107,7 +117,10 @@ include 'includes/views/header.php';
                                            ***REMOVED*** ?>"
                                                required/>
                                     </td>
-                                    <td>***REMOVED*** echo $cartItems['course']; ?></td>
+                                    <td>***REMOVED*** echo $cartItems['course']; ?><input type="hidden" id="course"
+                                                                                  name="course[]"
+                                                                                  value="***REMOVED*** echo $cartItems['course'] ?>">
+                                    </td>
                                     <td>***REMOVED*** echo $cartItems['section']; ?></td>
                                     <td>***REMOVED*** echo $cartItems['day']; ?></td>
                                     <td>***REMOVED*** echo $cartItems['start']; ?></td>
@@ -121,7 +134,8 @@ include 'includes/views/header.php';
                                             $row = (int)$cartItems['size'] - (int)$row;
                                             echo $row;
                                     ***REMOVED***
-                                        ?></td>
+                                        ?> <input type="hidden" id="minVal" name="minVal[]"
+                                                  value="***REMOVED*** echo $minBidVal ?>"></td>
                                 </tr>
                                 ***REMOVED***
                                 $i++;
