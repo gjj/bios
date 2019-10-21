@@ -854,7 +854,7 @@ class BidDAO
         $query->execute();
 
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        
+
         return $query->rowCount();
     }
 
@@ -870,7 +870,7 @@ class BidDAO
         $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        
+
         return $result;
     }
 
@@ -903,25 +903,30 @@ class BidDAO
         $query->bindParam(':sectionRQ', $section, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        return $query->rowCount();
+        if (($query->rowCount()) > 0) {
+            return $query->rowCount();
+        } else {
+            return 0;
+        }
     }
 
-    public function insertMinBidforAllCourses($courseCode,$section, $minbid){
+    public function insertMinBidforAllCourses($courseCode, $section, $minbid)
+    {
         $sql = "INSERT INTO minbid (course, section, bidAmount) VALUES (:courseCode,:section, :minbid)";
 
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
         $stmt = $conn->prepare($sql);
-        
+
         $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $stmt->bindParam(':section', $section, PDO::PARAM_STR);
         $stmt->bindParam(':minbid', $minbid, PDO::PARAM_STR);
 
         $result = false;
 
-        if($stmt ->execute()) {
+        if ($stmt->execute()) {
             $result = True;
         }
-        return $result; 
+        return $result;
     }
 }
