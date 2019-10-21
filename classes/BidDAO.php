@@ -118,6 +118,24 @@ class BidDAO
         return $result;
 ***REMOVED***
 
+    public function retrieveCompletedCourses()
+    {
+        $sql = "SELECT * FROM courses_completed ORDER BY course, user_id";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        //$result = $this->updateDayOfWeek($result);
+
+        // Returns my result set on success.
+        return $result;
+***REMOVED***
+
 ***REMOVED***
 ***REMOVED***Check if the course and section pair has already been added to cart.
 ***REMOVED***@params $userId The user ID to search for.
