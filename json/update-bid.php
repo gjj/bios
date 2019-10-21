@@ -33,7 +33,7 @@
             $course = $json['course'];
             $section = $json['section'];
             
-            addBid($userId, $amount, $course, $section); // check errors
+            $errors = addOrUpdateBid($userId, $amount, $course, $section); // check errors
         }
     }
     
