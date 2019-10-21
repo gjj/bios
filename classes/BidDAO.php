@@ -929,4 +929,23 @@ class BidDAO
         }
         return $result;
     }
+
+    public function getMinBidWithCourseCode($courseCode, $section)
+    {
+        $sql = "SELECT MIN(amount) AS  minAmount FROM bids WHERE course =:courseCode AND result = 'in'  AND round = 2 AND section = :section";
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        $query = $conn->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        if ($result['minAmount'] != "") {
+            $val = floatval($result['minAmount']) + 1.00;
+            return $val;
+        }
+        return 10;
+
+
+    }
 }
