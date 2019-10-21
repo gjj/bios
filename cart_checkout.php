@@ -1,53 +1,53 @@
 <?php
-    require_once 'includes/common.php';
-    
-    $viewData['title'] = "Cart";
+require_once 'includes/common.php';
 
-	if (!isLoggedIn()) {
-		header("Location: .");
-    }
+$viewData['title'] = "Cart";
 
-    $courseDAO = new CourseDAO();
-	$roundDAO = new RoundDAO();
-	$sectionDAO = new SectionDAO();
-	$roundDAO = new RoundDAO();
-    $bidDAO = new BidDAO();
-    
-	$currentRound = $roundDAO->getCurrentRound();
-    $user = currentUser();
+if (!isLoggedIn()) {
+    header("Location: .");
+}
 
-    if (isset($_SESSION['courseSections'])) {
-        $bids = $_SESSION['courseSections'];
-    }
-    
-    if ($_POST) {
-        // Retrieve all my name="amount[]" fields.
-        $sum = 0;
-        for ($i = 0; $i < count($_POST['amount']); $i++) {
-            $amount = $_POST['amount'][$i];
-            $bids[$i]['amount'] = $amount;
-            $sum += $amount;
+$courseDAO = new CourseDAO();
+$roundDAO = new RoundDAO();
+$sectionDAO = new SectionDAO();
+$roundDAO = new RoundDAO();
+$bidDAO = new BidDAO();
 
-            // Validation: Make sure each bid is min. e$10.
-            if ($amount < 10 or !is_numeric($amount) or $amount != round($amount, 2)) {
-                addError("Invalid amount. Minimum bid is e$10, and up to 2 decimal places only. [error: invalid amount]");
-            }
-        }
-        
-        // Validation: Make sure I sum(amount[]) < my current edollar!!!!
-        if ($sum > $user['edollar']) {
-            addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}. [error: not enough e-dollar]");
-        }
-        
-        if (!isset($_SESSION['errors'])) {
-            foreach ($bids as $bid) {
-                $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
-            }
+$currentRound = $roundDAO->getCurrentRound();
+$user = currentUser();
 
-            header("Location: cart");
+if (isset($_SESSION['courseSections'])) {
+    $bids = $_SESSION['courseSections'];
+}
+
+if ($_POST) {
+    // Retrieve all my name="amount[]" fields.
+    $sum = 0;
+    for ($i = 0; $i < count($_POST['amount']); $i++) {
+        $amount = $_POST['amount'][$i];
+        $bids[$i]['amount'] = $amount;
+        $sum += $amount;
+
+        // Validation: Make sure each bid is min. e$10.
+        if ($amount < 10 or !is_numeric($amount) or $amount != round($amount, 2)) {
+            addError("Invalid amount. Minimum bid is e$10, and up to 2 decimal places only. [error: invalid amount]");
         }
     }
-    include 'includes/views/header.php';
+
+    // Validation: Make sure I sum(amount[]) < my current edollar!!!!
+    if ($sum > $user['edollar']) {
+        addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}. [error: not enough e-dollar]");
+    }
+
+    if (!isset($_SESSION['errors'])) {
+        foreach ($bids as $bid) {
+            $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+        }
+
+        header("Location: cart");
+    }
+}
+include 'includes/views/header.php';
 ?>
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -55,74 +55,88 @@
         </div>
 
         <div class="row pb-5">
-			<div class="col-md-12">
+            <div class="col-md-12">
                 <h5>My Selected Sections</h5>
                 <h6> You currently have e$<?php echo $user['edollar']; ?> </h6>
-                            <?php
-								if (isset($_SESSION['errors'])) {
-							?>
-							<div class="alert alert-danger alert-dismissible fade show" role="alert">
-								<?php
-									printErrors();
-								?>
-								
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
+                <?php
+                if (isset($_SESSION['errors'])) {
+                    ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?php
+                        printErrors();
+                        ?>
 
-							<?php
-								}
-							?>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <?php
+                }
+                ?>
                 <section>
-                <form action="" method="post">
+                    <form action="" method="post">
                         <table class="table">
                             <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">Bid (e$)</th>
-                                    <th scope="col">Course Code</th>
-                                    <th scope="col">Section</th>
-                                    <th scope="col">Day</th>
-                                    <th scope="col">Start</th>
-                                    <th scope="col">End</th>
-                                    <th scope="col">Instructor</th>
-                                    <th scope="col">Venue</th>
-                                    <th scope="col">Size</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">Bid (e$)</th>
+                                <th scope="col">Course Code</th>
+                                <th scope="col">Section</th>
+                                <th scope="col">Day</th>
+                                <th scope="col">Start</th>
+                                <th scope="col">End</th>
+                                <th scope="col">Instructor</th>
+                                <th scope="col">Venue</th>
+                                <th scope="col">Size</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                    $i = 0;
-                                    foreach ($bids as $bid) {
-                                        $cartItems = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $bid['course'], $bid['section'], $currentRound['round']);
+                            <?php
+                            $i = 0;
+                            foreach ($bids as $bid) {
+                                $cartItems = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $bid['course'], $bid['section'], $currentRound['round']);
+                                $minBidVal = $bidDAO->getMinBidWithCourseCode($cartItems['course'], $cartItems['section']);
                                 ?>
                                 <tr>
                                     <td>
-                                        <input type="number" name="amount[]" class="form-control" step="0.01" min="10" required />
+                                        <input type="number" name="amount[]" class="form-control" step="0.01"
+                                               min="<?php if ($currentRound['round'] == 2) {
+                                                   echo $minBidVal;
+                                               } else {
+                                                   echo 10;
+                                               } ?>"
+                                               required/>
                                     </td>
-                                    <td><?php echo $cartItems['course'];?></td>
-                                    <td><?php echo $cartItems['section'];?></td>
-                                    <td><?php echo $cartItems['day'];?></td>
-                                    <td><?php echo $cartItems['start'];?></td>
-                                    <td><?php echo $cartItems['end'];?></td>
-                                    <td><?php echo $cartItems['instructor'];?></td>
-                                    <td><?php echo $cartItems['venue'];?></td>
-                                    <td><?php echo $cartItems['size'];?></td>
+                                    <td><?php echo $cartItems['course']; ?></td>
+                                    <td><?php echo $cartItems['section']; ?></td>
+                                    <td><?php echo $cartItems['day']; ?></td>
+                                    <td><?php echo $cartItems['start']; ?></td>
+                                    <td><?php echo $cartItems['end']; ?></td>
+                                    <td><?php echo $cartItems['instructor']; ?></td>
+                                    <td><?php echo $cartItems['venue']; ?></td>
+                                    <td><?php if ($currentRound['round'] == 1) {
+                                            echo $cartItems['size'];
+                                        } elseif ($currentRound['round'] == 2) {
+                                            $row = $bidDAO->getSuccessfulByCourseCode($cartItems['course'], $cartItems['section']);
+                                            $row = (int)$cartItems['size'] - (int)$row;
+                                            echo $row;
+                                        }
+                                        ?></td>
                                 </tr>
                                 <?php
-                                        $i++;
-                                    }
-                                ?>
+                                $i++;
+                            }
+                            ?>
                             </tbody>
                         </table>
                         <p>
                             <button type="submit" class="btn btn-info">Bid</button>
                         </p>
                     </form>
-				</section>
+                </section>
             </div>
         </div>
     </main>
 <?php
-	include 'includes/views/footer.php';
+include 'includes/views/footer.php';
 ?>
