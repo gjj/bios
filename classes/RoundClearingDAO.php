@@ -44,7 +44,7 @@ class RoundClearingDAO {
                 $size = $query2->fetch(PDO::FETCH_ASSOC);
                 
                 // If no. of bids > size of class
-                if ($numberOfBids > $size['size']) {
+                if ($numberOfBids >= $size['size']) {
                     // Derive the minimum clearing price based on the number of vacancies, (i.e. if the class has 35 vacancies,
                     // the 35th highest bid is the clearing price.)
                     // There is a clearing price only if there are at least n or more bids for a particular section, where n is the number of vacancies.
@@ -133,7 +133,12 @@ class RoundClearingDAO {
                     foreach ($refundList as $refund) {
                         $sql6 .= "UPDATE users SET edollar = edollar + {$refund['amount']} WHERE user_id = '{$refund['user_id']}';";
                 ***REMOVED***
-                    $query6 = $db->exec($sql6);
+
+                    // Fixed bug on 22 Oct
+                    if ($refundList) {
+                        $query6 = $db->exec($sql6);
+                ***REMOVED***
+                    
                     
             ***REMOVED***
                 else {

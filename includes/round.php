@@ -57,7 +57,7 @@
         if (!$errors) {
             $result = [
                 "status" => "success",
-                "results(internal-use-only-will-remove-soon)" => $clearingResults
+                //"results(internal-use-only-will-remove-soon)" => $clearingResults
             ];
     ***REMOVED***
         else {

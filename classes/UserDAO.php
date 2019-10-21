@@ -100,8 +100,7 @@ class UserDAO
 
     public function add($user)
     {
-        // calling stored procedure command
-        $sql = 'CALL insertUsers(:user_id, :password, :name, :school, :edollar)';
+        $sql = "INSERT INTO `users` (user_id, password, name, school, edollar, role) VALUES (:user_id, :password, :name, :school, :edollar, 0)";
 
         //Establish DB Connection
         $connMgr = new ConnectionManager();
