@@ -599,11 +599,10 @@ class BidDAO
             $db->beginTransaction();
 
             // Note: It's update and not add because our bids/cart info etc is all in one bids table.
-            if($round == 1){
+            if ($round == 1) {
                 $sql = "UPDATE bids SET result = '-', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
- 
-            }
-            else{
+
+            } else {
                 $sql = "UPDATE bids SET result = 'in', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
             }
             $query = $db->prepare($sql);
@@ -954,5 +953,5 @@ class BidDAO
 
     }
 
-    
+
 }
