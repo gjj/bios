@@ -351,7 +351,10 @@ if (isset($_GET['course'])) {
                                                 ?></td>
                                             <?php
                                             if ($currentRound['round'] == 2) {
-                                                echo "<td>Sample MinBid</td>";
+                                                $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section'])
+                                                ?>
+                                                <td>$<?php echo $minBid; ?></td>
+                                                <?php
                                             }
                                             ?>
                                             <td>
@@ -389,10 +392,7 @@ if (isset($_GET['course'])) {
                                                                     $error = 'Not own school course';
                                                                 }
                                                             }
-
-                                                            if ($currentRound['round'] == 2) {
-                                                                // round 2 must check vacancy left
-                                                            }
+                                                            
                                                         }
                                                     }
 
