@@ -599,8 +599,13 @@ class BidDAO
             $db->beginTransaction();
 
             // Note: It's update and not add because our bids/cart info etc is all in one bids table.
-            $sql = "UPDATE bids SET result = '-', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
-
+            if($round == 1){
+                $sql = "UPDATE bids SET result = '-', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
+ 
+            }
+            else{
+                $sql = "UPDATE bids SET result = 'in', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
+            }
             $query = $db->prepare($sql);
             $query->bindParam(':amount', $amount, PDO::PARAM_STR);
             $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
@@ -948,4 +953,6 @@ class BidDAO
 
 
     }
+
+    
 }
