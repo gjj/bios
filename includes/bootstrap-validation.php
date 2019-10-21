@@ -397,15 +397,24 @@
             
             // Validation 7/7 "not enough e-dollar" student has not enough e-dollars to place the bid.
             // If it is an update of a previous bid for the same course, account for the e$ gained back
-            // from the cancellation            
+            // from the cancellation
+
             if ($existingBid) {
-                //$previousAmount = $existingBid['amount'];
-                $bidDAO->refundbidamount($userId, $course);
+                $previousAmount = $existingBid['amount'];
+                $amount = $amount - $previousAmount;
+                //$bidDAO->refundbidamount($userId, $course);
             }
 
             $userEDollar = $bidDAO->getEDollar($userId)['edollar'];
             if ($amount > $userEDollar) {
                 $errors[] = "not enough e-dollar";
+            }
+
+            // If still no errors
+            if (!$errors) {
+                if ($existingBid) {
+                    $bidDAO->refundbidamount($userId, $course); // Drop prev bid first.
+                }
             }
         }
         
