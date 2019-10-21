@@ -8,6 +8,7 @@
         isMissingOrEmpty('password')
     ];
 
+
     $errors = array_filter($errors);
 
     if (!$errors) {
@@ -55,7 +56,7 @@
     else {
         $result = [
             "status" => "error",
-            "message" => $errors
+            "message" => array_values($errors)
         ];
 ***REMOVED***
 

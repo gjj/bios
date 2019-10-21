@@ -15,8 +15,10 @@
             "status" => "error",
             "message" => array_values($errors)
         ];
+
+        echo $result;
 ***REMOVED***
     else {
-        echo doBootstrap();        
+        echo doBootstrap();
 ***REMOVED***
 ?>
