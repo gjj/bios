@@ -40,9 +40,9 @@ if ($_POST) {
 
 
     // Validation: Make sure I sum(amount[]) < my current edollar!!!!
-    if ($sum > $user['edollar']) {
-        addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
-***REMOVED***
+    // if ($sum > $user['edollar']) {
+    //     addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
+    // }
 
     // Validation: Make sure each bid is min. e$10.
     if (min($_POST['amount']) < 10) {
@@ -109,12 +109,7 @@ include 'includes/views/header.php';
                                 ?>
                                 <tr>
                                     <td>
-                                        <input type="number" name="amount[]" class="form-control" step="0.01"
-                                               min="***REMOVED*** if ($currentRound['round'] == 2) {
-                                                   echo $minBidVal;
-                                           ***REMOVED*** else {
-                                                   echo 10;
-                                           ***REMOVED*** ?>"
+                                        <input type="number" name="amount[]" class="form-control" 
                                                required/>
                                     </td>
                                     <td>***REMOVED*** echo $cartItems['course']; ?><input type="hidden" id="course"
