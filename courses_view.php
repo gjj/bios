@@ -345,13 +345,20 @@ if (isset($_GET['course'])) {
                                                     echo $section['size'];
                                                 } elseif ($currentRound['round'] == 2) {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section']);
-                                                    $row = (int)$section['size'] - (int)$row;
-                                                    echo $row;
+                                                    $vacancy = (int)$section['size'] - (int)$row;
+                                                    echo $vacancy;
                                                 }
                                                 ?></td>
                                             <?php
                                             if ($currentRound['round'] == 2) {
-                                                $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section'])
+                                                // // More Vacancies than Bids
+                                                if($row <= $section['size']) {
+                                                    $minBid = 10;
+                                                }
+                                                // More Bids than Vacancies
+                                                // else{
+                                                //     $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
+                                                // }
                                                 ?>
                                                 <td>$<?php echo $minBid; ?></td>
                                                 <?php
