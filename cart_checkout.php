@@ -29,25 +29,40 @@ if ($_POST) {
         $sum += $amount;
 ***REMOVED***
     //Retrieve all value in "minVal[]" field
-    if ($currentRound['round'] == 2) {
-        for ($x = 0; $x < count($_POST['minVal']); $x++) {
-            if ($_POST['amount'][$x] < $_POST['minVal'][$x]) {
-                addError("Minimum Bid Value for {$_POST['course'][$x]} is e\${$_POST['minVal'][$x]}, your bid is e\${$_POST['amount'][$x]}");
-        ***REMOVED***
+    // if ($currentRound['round'] == 2) {
+    //     for ($x = 0; $x < count($_POST['minVal']); $x++) {
+    //         if ($_POST['amount'][$x] < $_POST['minVal'][$x]) {
+    //             addError("Minimum Bid Value for {$_POST['course'][$x]} is e\${$_POST['minVal'][$x]}, your bid is e\${$_POST['amount'][$x]}");
+    //     ***REMOVED***
 
-    ***REMOVED***
-***REMOVED***
+    // ***REMOVED***
+    // }
 
 
     // Validation: Make sure I sum(amount[]) < my current edollar!!!!
-    // if ($sum > $user['edollar']) {
-    //     addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
-    // }
+    if ($sum > $user['edollar']) {
+        addError("You do not have enough edollar to place all your bids! Sum of all your bids: e\${$sum} vs. what you have: e\${$user['edollar']}.");
+***REMOVED***
 
     // Validation: Make sure each bid is min. e$10.
-    if (min($_POST['amount']) < 10) {
-        addError("Minimum bid is e$10! You have entered a bid that is less than the minimum bid.");
+    foreach($bids as $bid){
+        $cartItems = $bidDAO->retrieveCartItemsByCodeAndSection($user['userid'], $bid['course'], $bid['section'], $currentRound['round']);
+        $row = $bidDAO->getSuccessfulByCourseCode($bid['course'], $bid['section']);
+        // More Vacancies than Bids
+        if($row <= $cartItems['size']) {
+            $minBid = 10;
+            if (min($_POST['amount']) < $minBid) {
+                addError("Minimum bid is e$10! You have entered a bid that is less than the minimum bid.");
+        ***REMOVED***
+    ***REMOVED***
+        // More Bids than Vacancies
+        // else{
+        //     $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
+        //     addError("Minimum bid is $minBid! You have entered a bid that is less than the minimum bid.");
+        // }
 ***REMOVED***
+    
+
 
     if (!isset($_SESSION['errors'])) {
         foreach ($bids as $bid) {
