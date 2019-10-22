@@ -138,7 +138,8 @@ include 'includes/views/header.php';
                                 <th scope="col">Instructor</th>
                                 <th scope="col">Venue</th>
                                 <th scope="col">Size</th>
-                                <th scope="col"></th>
+                                <th scope="col">Min Bid</th>
+                                <th scope="col">Delete?</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -167,11 +168,30 @@ include 'includes/views/header.php';
                                             <td>***REMOVED***
                                                 if ($currentRound['round'] == 2) {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($cartItem['course'], $cartItem['section']);
-                                                    $row = (int)$cartItem['size'] - (int)$row;
-                                                    echo $row;
+                                                    $vacancy = (int)$cartItem['size'] - (int)$row;
+                                                    echo $vacancy;
                                             ***REMOVED*** else {
                                                     echo $cartItem['size'];
                                             ***REMOVED*** ?></td>
+                                            <td>
+                                            ***REMOVED***
+                                            if ($currentRound['round'] == 2) {
+                                            // // More Vacancies than Bids
+                                                if($row <= $cartItem['size']) {
+                                                    $minBid = 10;
+                                            ***REMOVED***
+                                                // More Bids than Vacancies
+                                                // else{
+                                                //     $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
+                                                // }
+                                        ***REMOVED***
+                                            // For round 1, min bid is $10 
+                                            else{
+                                                $minBid = 10;
+                                        ***REMOVED***
+                                            echo $minBid;
+                                            ?>
+                                            </td>
                                             <td>
                                                 <a href="cart_delete?course=***REMOVED*** echo $cartItem['course']; ?>&section=***REMOVED*** echo $cartItem['section']; ?>">Delete</a>
                                             </td>
