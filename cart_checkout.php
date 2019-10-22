@@ -113,6 +113,7 @@ include 'includes/views/header.php';
                                 <th scope="col">Instructor</th>
                                 <th scope="col">Venue</th>
                                 <th scope="col">Size</th>
+                                <th scope="col">Min Bid</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -146,6 +147,25 @@ include 'includes/views/header.php';
                                         }
                                         ?> <input type="hidden" id="minVal" name="minVal[]"
                                                   value="<?php echo $minBidVal ?>"></td>
+                                    <td>
+                                    <?php
+                                    if ($currentRound['round'] == 2) {
+                                        // // More Vacancies than Bids
+                                            if($row <= $cartItems['size']) {
+                                                $minBid = 10;
+                                            }
+                                            // More Bids than Vacancies
+                                            // else{
+                                            //     $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
+                                            // }
+                                        }
+                                        // For round 1, min bid is $10 
+                                    else{
+                                        $minBid = 10;
+                                    }
+                                    echo $minBid;
+                                    ?>
+                                    </td>
                                 </tr>
                                 <?php
                                 $i++;
