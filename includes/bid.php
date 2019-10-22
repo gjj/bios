@@ -1,7 +1,7 @@
 ***REMOVED***
     require_once 'common.php';
 
-    function addOrUpdateBid($userId, $amount, $course, $section) {
+    function addOrUpdateBid($userId, $amount, $courseCode, $section) {
         $bidDAO = new BidDAO();
         $roundDAO = new RoundDAO();
         $userDAO = new UserDAO();
@@ -11,28 +11,35 @@
 
         $errors = [];
 
-        if (!is_numeric($amount) or $amount < 10 or $amount != round($amount, 2)) {
-            $errors[] = "invalid amount";
+        // Round is active or not.
+        if (!$roundDAO->roundIsActive()) {
+            $errors[] = "round ended";
     ***REMOVED***
 
-        if (!$courseDAO->retrieveByCode($course)) {
-            $errors[] = "invalid course";
-    ***REMOVED***
-        elseif (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
-            $errors[] = "invalid section";
-    ***REMOVED***
-
-        if (!$userDAO->retrieveById($userId)) {
-            $errors[] = "invalid userid";
-    ***REMOVED***
+        if (!$errors) {
+            if (!is_numeric($amount) or $amount < 10 or $amount != round($amount, 2)) {
+                $errors[] = "invalid amount";
+        ***REMOVED***
     
+            if (!$courseDAO->retrieveByCode($courseCode)) {
+                $errors[] = "invalid course";
+        ***REMOVED***
+            elseif (!$sectionDAO->retrieveByCodeAndSection($courseCode, $section)) {
+                $errors[] = "invalid section";
+        ***REMOVED***
+    
+            if (!$userDAO->retrieveById($userId)) {
+                $errors[] = "invalid userid";
+        ***REMOVED***
+    ***REMOVED***
+        
         // If no errors so far, then we proceed for our second round of validation checks...
         if (!$errors) {
-            $existingBid = $bidDAO->findExistingBid($userId, $course);
+            $existingBid = $bidDAO->findExistingBid($userId, $courseCode);
             
             if (!$existingBid) {
                     $user = $userDAO->retrieveById($userId);
-                    $course = $courseDAO->retrieveByCode($course);
+                    $course = $courseDAO->retrieveByCode($courseCode);
 
                     if ($currentRound == 2) {
                         // "bid too low" the amount must be more than the minimum bid (only applicable for round 2)
@@ -97,10 +104,10 @@
             // If still no errors
             if (!$errors) {
                 if ($existingBid) {
-                    $bidDAO->refundbidamount($userId, $course); // Drop prev bid first.
+                    $bidDAO->refundbidamount($userId, $courseCode); // Drop prev bid first.
             ***REMOVED***
 
-                $bidDAO->addBidBootstrap($userId, $course, $section, $amount); // Last param add round
+                $bidDAO->addBidBootstrap($userId, $courseCode, $section, $amount); // Last param add round
         ***REMOVED***
     ***REMOVED***
 
