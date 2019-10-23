@@ -174,23 +174,24 @@ include 'includes/views/header.php';
                                                     echo $cartItem['size'];
                                                 } ?></td>
                                             <td>
-                                            <?php
-                                            if ($currentRound['round'] == 2) {
-                                            // // More Vacancies than Bids
-                                                if($row <= $cartItem['size']) {
+                                                <?php
+                                                if ($currentRound['round'] == 2) {
+                                                    // // More Vacancies than Bids
+                                                    if ($row < $cartItem['size']) {
+                                                        $minBid = 10;
+                                                    } // More Bids than Vacancies
+                                                    else {
+                                                        $minBid = $bidDAO->getMinBidWithCourseCode($cartItem['course'], $cartItem['section']);
+                                                    }
+                                                } // For round 1, min bid is $10
+                                                else {
                                                     $minBid = 10;
                                                 }
-                                                // More Bids than Vacancies
-                                                // else{
-                                                //     $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
-                                                // }
-                                            }
-                                            // For round 1, min bid is $10 
-                                            else{
-                                                $minBid = 10;
-                                            }
-                                            echo $minBid;
-                                            ?>
+                                                ?>
+                                                $
+                                                <?php
+                                                echo $minBid;
+                                                ?>
                                             </td>
                                             <td>
                                                 <a href="cart_delete?course=<?php echo $cartItem['course']; ?>&section=<?php echo $cartItem['section']; ?>">Delete</a>
