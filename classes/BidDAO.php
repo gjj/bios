@@ -971,5 +971,63 @@ class BidDAO
 
     }
 
+    //This functions Retrieve ID of min Bid User
+    public function getIdofMinBidUser($courseCode, $section, $minVal)
+    {
+        $minVal = (int)$minVal - 1;
+        // Call DB Connection
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        //Set SQL Command
+        $sql = "SELECT * FROM `bids` AS bd WHERE bd.course = :courseCode AND section = :section AND round = 2 AND amount = :amt AND result = 'in'";
+        $query = $conn->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':amt', $minVal, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        return $result;
 
+    }
+
+    //This functions Update user's Bid for Round 2 Clearing
+    public function updateUserBid($userId, $courseCode, $section)
+    {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        try {
+            // We start our transaction.
+            $db->beginTransaction();
+            $sql = "UPDATE bids SET result = 'out' WHERE course = :courseCode AND section = :section AND result = 'in' AND round = 2 AND user_id = :userId";
+            $query = $db->prepare($sql);
+            $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+            $query->bindParam(':section', $section, PDO::PARAM_STR);
+            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $query->execute();
+            // We've got this far without an exception, so commit the changes.
+            $db->commit();
+            return true;
+        } catch (Exception $e) {
+            $db->rollback();
+
+            return false;
+
+        }
+
+    }
+
+    public function refundBidUser($minVal, $userId)
+    {
+        $minVal = (int)$minVal - 1;
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        $sql = "UPDATE users SET edollar = edollar + :amount WHERE user_id = :userId";
+        $query = $db->prepare($sql);
+        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $query->bindParam(':amount', $minVal, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        return $result;
+
+    }
 }
