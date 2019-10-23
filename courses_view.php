@@ -352,13 +352,12 @@ if (isset($_GET['course'])) {
                                             ***REMOVED***
                                             if ($currentRound['round'] == 2) {
                                                 // // More Vacancies than Bids
-                                                if($row <= $section['size']) {
+                                                if ($row < $section['size']) {
                                                     $minBid = 10;
+                                            ***REMOVED*** // More Bids than Vacancies
+                                                else {
+                                                    $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
                                             ***REMOVED***
-                                                // More Bids than Vacancies
-                                                // else{
-                                                //     $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
-                                                // }
                                                 ?>
                                                 <td>$***REMOVED*** echo $minBid; ?></td>
                                                 ***REMOVED***
@@ -399,7 +398,7 @@ if (isset($_GET['course'])) {
                                                                     $error = 'Not own school course';
                                                             ***REMOVED***
                                                         ***REMOVED***
-                                                            
+
                                                     ***REMOVED***
                                                 ***REMOVED***
 
