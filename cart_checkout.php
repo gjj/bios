@@ -19,7 +19,6 @@ $user = currentUser();
 if (isset($_SESSION['courseSections'])) {
     $bids = $_SESSION['courseSections'];
 }
-
 if ($_POST) {
     // Retrieve all my name="amount[]" fields.
     $sum = 0;
@@ -46,7 +45,7 @@ if ($_POST) {
         $minBid = 10;
         if ($row < $cartItems['size']) {
             if (min($_POST['amount']) < $minBid) {
-                addError("Minimum bid is e$10! You have entered a bid that is less than the minimum bid.");
+                addError("Minimum bid for {$bid['course']} is e$10! You have entered a bid that is less than the minimum bid.");
             }
         }
         if ($bid['minBidVal'] > $bid['amount'] and $currentRound['round'] == 2 and $bid['amount'] > $minBid) {
@@ -59,23 +58,72 @@ if ($_POST) {
 
     if (!isset($_SESSION['errors'])) {
         foreach ($bids as $bid) {
-            if ($currentRound['round'] == 1 or $bid['seatsLeft'] >= 1) {
-                $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round'], $bid['minBidVal']);
-            } else {
-                $minBidUser = $bidDAO->getIdofMinBidUser($bid['course'], $bid['section'], $bid['minBidVal']);
-                $resultBid = $bidDAO->updateUserBid($minBidUser['user_id'], $bid['course'], $bid['section']);
-                if ($resultBid == true) {
-                    $resultBid = false;
-                    //Execute Update new User's Bid
-                    $resultBid = $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
-                    if ($resultBid == true) {
-                        //Execute to refund User
-                        $bidDAO->refundBidUser($bid['minBidVal'], $minBidUser['user_id']);
+            // if ($currentRound['round'] == 1 && $bid['seatsLeft'] >= 1) {
+            //     $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round'], $bid['minBidVal']);
+            // } else {
+            //     // Round 2 or 0 vacancy for either Round 1 or 2
+            //     $minBidUser = $bidDAO->getIdofMinBidUser($bid['course'], $bid['section'], $bid['minBidVal']);
+            //     var_dump($minBidUser);
+            //     $resultBid = $bidDAO->updateUserBid($minBidUser['user_id'], $bid['course'], $bid['section']);
+            //     if ($resultBid == true) {
+            //         $resultBid = false;
+            //         //Execute Update new User's Bid
+            //         $resultBid = $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+            //         if ($resultBid == true) {
+            //             //Execute to refund User
+            //             $bidDAO->refundBidUser($bid['minBidVal'], $minBidUser['user_id']);
+            //         }
+
+            //     }
+
+            // }
+                // Round 2
+                if($currentRound['round'] == 2) {
+                    // Got vacancy, bidd is successful
+                    if($bid['seatsLeft'] >=1) {
+                        $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+                        $minBid = 10;
                     }
+                    // Vacancy = 0, compare user's bid against all bids and store min bid
+                    else{
+                        // Let user submit bid first, then check if bid can stay as in, or else update to out
+                        $currentbid = $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+                        // if min bid doesn't exist in min bid table yet, find min bid and insert into minbid table
+                        if($bidDAO ->getMinBidfromMinBidTable($bid['course'], $bid['section']) == []){
+                            $minBid = $bidDAO -> getMinBidWithCourseCode($bid['course'], $bid['section']);
+                            $bidDAO -> insertMinBidforAllCourses($bid['course'], $bid['section'], $minBid, $user['userid']);
+                        }
+                        // if min bid already exists in min bid table, compare current bid with min bid
+                        else{
+                            $existingMinBid = $bidDAO -> getMinBidfromMinBidTable($bid['course'], $bid['section']);
+                            // if user's bid is lower than existing min bid, update user's bid to out
+                            if($currentbid < $existingMinBid) {
+                                $bidDAO -> updateUserBid($user['userid'], $bid['course'], $bid['section']);
+                            }
+                            // if user's bid is equal to existing min bid, 
+                            // elseif {
 
+                            // }
+                            // if user's bid is higher than existing min bid,
+                            // 1) first retrieve user_id of existing min bid's owner
+                            // 2) change existing min bid's owner's bid status from in to out
+                            // 3) then update min bid in the table for that coursesection 
+                            else {
+                                $minBidDetails = $bidDAO -> getMinBidfromMinBidTable($bid['course'], $bid['section']);
+                                foreach($minBidDetails as $minBidDetail) {
+                                    $prevMinBidUserId = $minBidDetail['user_id'];
+                                    $prevMinBidUserCourse = $minBidDetail['course'];
+                                    $prevMinBidUserSection = $minBidDetail['section'];
+                                    $bidDAO -> updateUserBid($prevMinBidUserId, $prevMinBidUserCourse, $prevMinBidUserSection);
+                                }
+                                $minBid = $bid['amount'] + 1;
+                                $bidDAO -> updateMinBidforAllCourses($bid['course'], $bid['section'], $minBid,$user['userid']);
+                            }
+                        }
+    
+                    }
+                    $_SESSION['minBid'] = $minBid; 
                 }
-
-            }
         }
 
         header("Location: cart");
@@ -151,31 +199,43 @@ include 'includes/views/header.php';
                                         } elseif ($currentRound['round'] == 2) {
                                             $row = $bidDAO->getSuccessfulByCourseCode($cartItems['course'], $cartItems['section']);
                                             $vacancy = (int)$cartItems['size'] - (int)$row;
-                                            echo $vacancy;
+                                            if($vacancy >= 0) {
+                                                echo $vacancy;
+                                            }
+                                            else {
+                                                $vacancy = 0;
+                                                echo $vacancy;
+                                            }
                                         }
                                         ?><input type="hidden" id="seats" name="seats[]"
                                                  value="<?php echo $vacancy ?>"></td>
-                                    <td>
+                                    <td>$
                                         <?php
                                         if ($currentRound['round'] == 2) {
                                             // // More Vacancies than Bids
-                                            if ($row < $cartItems['size']) {
+                                            if ($vacancy < $cartItems['size']) {
                                                 $minBid = 10;
+                                                echo $minBid;
                                             } // More Bids than Vacancies
                                             else {
-                                                $minBid = $bidDAO->getMinBidWithCourseCode($cartItems['course'], $cartItems['section']);
+                                                // Need to retrieve minBid from minBid table, not minbid from all bids
+                                                $minBidDetails = $bidDAO -> getMinBidfromMinBidTable($cartItems['course'], $cartItems['section']);
+                                                foreach($minBidDetails as $minBidDetail) {
+                                                    $minBid = floatval($minBidDetail['bidAmount']);
+                                                    echo $minBid;
+                                                }
                                             }
                                         } // For round 1, min bid is $10
                                         else {
                                             $minBid = 10;
+                                            echo $minBid;
                                         }
+                                        echo "<input type='hidden' id='minVal' name='minVal[]'
+                                        value=$minBid>";
                                         ?>
-                                        $
-                                        <?php
-                                        echo $minBid;
-                                        ?>
-                                        <input type="hidden" id="minVal" name="minVal[]"
-                                               value="<?php echo $minBid ?>">
+                                        
+                                
+                                        
                                     </td>
                                 </tr>
                                 <?php
