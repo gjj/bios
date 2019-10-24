@@ -181,7 +181,8 @@ class RoundClearingDAO {
 
         $bidDAO = new BidDAO();
         $roundDAO = new RoundDAO();
-        $allSuccessfulBids = $roundDAO->getSuccessfulByCourseCode($courseCode, $section);
+
+        $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($courseCode, $section);
 
         $size = $bidDAO->getCourseByCodeAndSection($courseCode, $section)['size'];
 
@@ -191,7 +192,7 @@ class RoundClearingDAO {
         // successfully during the first round.
         $vacancy = (int)$size - (int)$allSuccessfulBids;
         
-        $sql = "SELECT * FROM bids WHERE round = :round AND result = '-' AND course = :courseCode AND section = :section ORDER BY amount DESC";
+        $sql = "SELECT * FROM bids WHERE round = 2 AND result = '-' AND course = :courseCode AND section = :section ORDER BY amount DESC";
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
@@ -212,7 +213,7 @@ class RoundClearingDAO {
 
             $clearingPrice = $bids[$vacancy-1]['amount'];
 
-            return $clearingPrice;
+            //return $clearingPrice;
 
             $sql2 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = 2 AND amount >= :clearingPrice;";
             $query2 = $db->prepare($sql2);
