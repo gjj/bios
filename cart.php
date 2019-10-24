@@ -167,7 +167,7 @@ include 'includes/views/header.php';
                                             <td><?php echo $cartItem['venue']; ?></td>
                                             <td><?php
                                                 if ($currentRound['round'] == 2) {
-                                                    $row = $bidDAO->getSuccessfulByCourseCode($cartItem['course'], $cartItem['section']);
+                                                    $row = $bidDAO->getSuccessfulByCourseCode($cartItem['course'], $cartItem['section'], 1);
                                                     $vacancy = (int)$cartItem['size'] - (int)$row;
                                                     echo $vacancy;
                                                     

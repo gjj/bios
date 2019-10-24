@@ -942,6 +942,18 @@ class BidDAO
     public function insertOrUpdateMinBid($courseCode, $section, $amount) {
         $sql = "INSERT INTO minbid (course, section, bidAmount) VALUES (:courseCode, :section, :amount) ON DUPLICATE KEY UPDATE bidAmount = :amount2";
         
+        $minBidRecord = $this->getMinBid($courseCode, $section);
+        $minBid = 0;
+
+        if ($minBidRecord) {
+            $minBid = $minBidRecord['bidAmount'];
+        }
+        
+        // Min bid will never be lower. If it's lower, remain the same.
+        if ($amount < $minBid) {
+            $amount = $minBid;
+        }
+
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
         $stmt = $conn->prepare($sql);
@@ -1025,10 +1037,9 @@ class BidDAO
         return $result;
     }
 
-    public function getMinBidfromMinBidTable($courseCode, $section)
+    public function getMinBid($courseCode, $section)
     {
         $sql = "SELECT * FROM minbid WHERE course =:courseCode AND section = :section";
-        $result = [];
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
         $stmt = $conn->prepare($sql);
@@ -1037,7 +1048,7 @@ class BidDAO
         $stmt->bindParam(':section', $section, PDO::PARAM_STR);
         $stmt->execute();
 
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $result;
     }

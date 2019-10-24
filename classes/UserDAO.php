@@ -127,7 +127,7 @@ class UserDAO
     public function truncateAllTable()
     {
         // calling stored procedure command
-        $sql = 'CALL truncate_tables()';
+        $sql = 'CALL truncate_tables();';
 
         //Establish DB Connection
         $connMgr = new ConnectionManager();
