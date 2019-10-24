@@ -344,7 +344,7 @@ if (isset($_GET['course'])) {
                                                 if ($currentRound['round'] == 1 and $currentRound['status'] == 'started') {
                                                     echo $section['size'];
                                                 } else {
-                                                    $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section']);
+                                                    $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                     $vacancy = (int)$section['size'] - (int)$row;
                                                     echo $vacancy;
                                     
