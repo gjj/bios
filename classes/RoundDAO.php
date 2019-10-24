@@ -91,5 +91,17 @@ class RoundDAO {
         
         $stmt->execute();
         $count = $stmt->rowCount();
-***REMOVED*** 
+	}
+
+	public function removeAllMinBid() {
+        $sql = 'TRUNCATE TABLE minbid';
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        
+        $stmt = $conn->prepare($sql);
+        
+        $stmt->execute();
+        $count = $stmt->rowCount();
+	}
 }

@@ -94,6 +94,7 @@ function doBootstrap()
 
                 // Truncate all tables
                 $userDAO->truncateAllTable();
+                $roundDAO->removeAllMinBid();
 
                 // Begin importing student.csv.
                 $header = fgetcsv($students); // Skip first row.
