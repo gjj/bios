@@ -1,7 +1,7 @@
 <?php
     require_once 'common.php';
 
-    function addOrUpdateBid($userId, $amount, $courseCode, $section) {
+    function addOrUpdateBid($userId, $amount, $courseCode, $section, $round = 1) {
         $bidDAO = new BidDAO();
         $roundDAO = new RoundDAO();
         $userDAO = new UserDAO();
@@ -106,8 +106,8 @@
                 if ($existingBid) {
                     $bidDAO->refundbidamount($userId, $courseCode); // Drop prev bid first.
                 }
-
-                $bidDAO->addBidBootstrap($userId, $courseCode, $section, $amount); // Last param add round
+                
+                $bidDAO->addBid($userId, $courseCode, $section, $amount); // Last param add round
             }
         }
 

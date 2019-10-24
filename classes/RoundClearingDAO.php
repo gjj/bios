@@ -2,7 +2,7 @@
 
 class RoundClearingDAO {
     public function roundClearing($round) {
-        //if ($round == 1) {
+        if ($round == 1) {
             $result = array();
 
             $connMgr = new ConnectionManager();
@@ -168,9 +168,59 @@ class RoundClearingDAO {
             $query->execute();
 
             return $result;
-        /*}
+        }
         else {
-            // round 2
-        }*/
+            // round 2. think should be refund only?
+        }
+    }
+
+    // only used in round 2
+    public function clearCourseSection($courseCode, $section) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $bidDAO = new BidDAO();
+        $roundDAO = new RoundDAO();
+        $allSuccessfulBids = $roundDAO->getSuccessfulByCourseCode($courseCode, $section);
+
+        $size = $bidDAO->getCourseByCodeAndSection($courseCode, $section)['size'];
+
+        // Total Available Seats: Number of seats available for this section at the start of the round,
+        // after accounting for the number of seats successfully taken up during the first round.
+        // Number of seats could be updated depending if any students dropped a section that he/she bid for
+        // successfully during the first round.
+        $vacancy = (int)$size - (int)$allSuccessfulBids;
+        
+        $sql = "SELECT * FROM bids WHERE round = :round AND result = '-' AND course = :courseCode AND section = :section ORDER BY amount DESC";
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+        $bids = $query->fetchAll(PDO::FETCH_ASSOC);
+                
+        $numberOfBids = $query->rowCount();
+
+        // After each bid, do the following processing to re-compute the minimum bid value:
+
+        // Case 1: If there are less than N bids for the section (where N is the total available seats),
+        // the Current Vacancies are (N - number of bids). The minimum bid value remains the same as there
+        // are still unfilled vacancies in this section that students can bid for using the minimum bid value.
+        if ($numberOfBids < $vacancy) {
+            $minBid = 10;
+            $bidDAO->insertOrUpdateMinBid($courseCode, $section, $minBid);
+
+            $clearingPrice = $bids[$vacancy-1]['amount'];
+
+            return $clearingPrice;
+
+            $sql2 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = 2 AND amount >= :clearingPrice;";
+            $query2 = $db->prepare($sql2);
+            $query2->setFetchMode(PDO::FETCH_ASSOC);
+            $query2->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+            $query2->bindParam(':section', $section, PDO::PARAM_STR);
+            $query2->bindParam(':clearingPrice', $minBid, PDO::PARAM_STR);
+            $query2->execute();
+        }
     }
 }
