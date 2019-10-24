@@ -36,12 +36,12 @@
     ***REMOVED***
 
         if ($currentRound['round'] == 2) {
-            
+            // check min bid + vacancy maybe?
     ***REMOVED***
         
         if (!isset($_SESSION['errors'])) {
             foreach ($bids as $bid) {
-                $bidDAO->addBidViaCart($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
+                $bidDAO->addBid($user['userid'], $bid['course'], $bid['section'], $bid['amount'], $currentRound['round']);
         ***REMOVED***
             header("Location: cart");
     ***REMOVED***

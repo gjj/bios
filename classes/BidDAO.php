@@ -607,7 +607,7 @@ class BidDAO
         return $isAddOK;
 ***REMOVED***
 
-    public function addBidViaCart($userId, $courseCode, $section, $amount, $round)
+    /*public function addBidViaCart($userId, $courseCode, $section, $amount, $round)
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -619,9 +619,12 @@ class BidDAO
             // Note: It's update and not add because our bids/cart info etc is all in one bids table.
             if ($round == 1) {
                 $sql = "UPDATE bids SET result = '-', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
+                //$sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2, result = '-'";
 
-        ***REMOVED*** else {
-                $sql = "UPDATE bids SET result = 'in', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
+        ***REMOVED*** elseif ($round == 2) {
+                // Edited 24 Oct.
+                $this->addBid($userId, $courseCode, $section, $amount, $round);
+                return true;
         ***REMOVED***
             $query = $db->prepare($sql);
             $query->bindParam(':amount', $amount, PDO::PARAM_STR);
@@ -649,7 +652,7 @@ class BidDAO
 
             return false;
     ***REMOVED***
-***REMOVED***
+***REMOVED****/
 
     public function updateBid($userId, $courseCode, $section, $amount, $round)
     {
@@ -848,7 +851,9 @@ class BidDAO
 
         $existingBid = $this->findExistingBid($userId, $courseCode, $round);
 
-        $sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2";
+        //$sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2";
+        $sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2, result = '-'";
+        
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
@@ -924,7 +929,7 @@ class BidDAO
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT * FROM section WHERE course = :courseCode AND section = :section";
+        $sql = "SELECT * FROM sections WHERE course = :courseCode AND section = :section";
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
@@ -935,7 +940,7 @@ class BidDAO
 ***REMOVED***
 
     public function insertOrUpdateMinBid($courseCode, $section, $amount) {
-        $sql = "INSERT INTO minbid (course, section, amount) VALUES (:courseCode, :section, :amount) ON DUPLICATE KEY UPDATE amount = :amount2";
+        $sql = "INSERT INTO minbid (course, section, bidAmount) VALUES (:courseCode, :section, :amount) ON DUPLICATE KEY UPDATE bidAmount = :amount2";
         
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
@@ -944,6 +949,7 @@ class BidDAO
         $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $stmt->bindParam(':section', $section, PDO::PARAM_STR);
         $stmt->bindParam(':amount', $amount, PDO::PARAM_STR);
+        $stmt->bindParam(':amount2', $amount, PDO::PARAM_STR);
 
         $result = false;
 
