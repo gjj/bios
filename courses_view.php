@@ -341,9 +341,9 @@ if (isset($_GET['course'])) {
                                             <td>***REMOVED*** echo $section['instructor']; ?></td>
                                             <td>***REMOVED*** echo $section['venue']; ?></td>
                                             <td>***REMOVED***
-                                                if ($currentRound['round'] == 1) {
+                                                if ($currentRound['round'] == 1 and $currentRound['status'] == 'started') {
                                                     echo $section['size'];
-                                            ***REMOVED*** elseif ($currentRound['round'] == 2) {
+                                            ***REMOVED*** else {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section']);
                                                     $vacancy = (int)$section['size'] - (int)$row;
                                                     if($vacancy >= 0) {
