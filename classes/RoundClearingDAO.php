@@ -182,7 +182,7 @@ class RoundClearingDAO {
         $bidDAO = new BidDAO();
         $roundDAO = new RoundDAO();
 
-        $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($courseCode, $section);
+        $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($courseCode, $section, 1);
 
         $size = $bidDAO->getCourseByCodeAndSection($courseCode, $section)['size'];
 
@@ -211,10 +211,6 @@ class RoundClearingDAO {
             $minBid = 10;
             $bidDAO->insertOrUpdateMinBid($courseCode, $section, $minBid);
 
-            $clearingPrice = $bids[$vacancy-1]['amount'];
-
-            //return $clearingPrice;
-
             $sql2 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = 2 AND amount >= :clearingPrice;";
             $query2 = $db->prepare($sql2);
             $query2->setFetchMode(PDO::FETCH_ASSOC);
@@ -222,6 +218,93 @@ class RoundClearingDAO {
             $query2->bindParam(':section', $section, PDO::PARAM_STR);
             $query2->bindParam(':clearingPrice', $minBid, PDO::PARAM_STR);
             $query2->execute();
+    ***REMOVED***
+        else {
+            // Case 2: If there are N or more bids for the section,
+            $clearingPrice = $bids[$vacancy-1]['amount'];
+
+            // the minimum bid value is 1 dollar more than the Nth bid.
+            $minBid = $clearingPrice + 1;
+
+            $bidDAO->insertOrUpdateMinBid($courseCode, $section, $minBid);
+
+            $bidsCount = array_count_values(array_column($bids, 'amount'));
+            $bidsAtClearingPrice = $bidsCount[$clearingPrice];
+
+            // If there are other bids with the same bid price as the Nth bid
+            // and the class is unable to accommodate all of them, all bids with the same price
+            // will be unsuccessful.
+            if ($bidsAtClearingPrice > 1) {
+                // [CANNOT USE THIS] amount > $clearingPrice would exclude clearingPrice. Since all bids at clearing price will be dropped.
+                
+                $vacancy - $bidsAtClearingPrice; // 10-2
+                $numberOfBids; // 15
+
+                // $clearing = 18
+                // $bidsAtClearing = 2
+                // vacancy = 3
+                // bids = 5
+                // bids[]
+
+                // check if can accommodate!
+                // $bids = [20, 19, 18, 18, 17];
+                // index:  [0,  1,  2,  3,  4]; i.e. if $bids[3-1] == $bids[3] would mean cannot accommodate!
+                if ($bids[$vacancy-1] == $bids[$vacancy]) {
+                    // Cannot accommodate
+
+                    $sql3 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = 2 AND amount > :clearingPrice;";
+                    $query3 = $db->prepare($sql3);
+                    $query3->setFetchMode(PDO::FETCH_ASSOC);
+                    $query3->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+                    $query3->bindParam(':section', $section, PDO::PARAM_STR);
+                    $query3->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
+                    $query3->execute();
+
+                    $sql4 = "UPDATE bids SET result = 'out' WHERE course = :courseCode AND section = :section AND round = 2 AND amount <= :clearingPrice;";
+                    $query4 = $db->prepare($sql4);
+                    $query4->setFetchMode(PDO::FETCH_ASSOC);
+                    $query4->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+                    $query4->bindParam(':section', $section, PDO::PARAM_STR);
+                    $query4->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
+                    $query4->execute();
+            ***REMOVED***
+                else {
+                    // Can accommodate!
+
+                    $sql3 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = 2 AND amount >= :clearingPrice;";
+                    $query3 = $db->prepare($sql3);
+                    $query3->setFetchMode(PDO::FETCH_ASSOC);
+                    $query3->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+                    $query3->bindParam(':section', $section, PDO::PARAM_STR);
+                    $query3->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
+                    $query3->execute();
+
+                    $sql4 = "UPDATE bids SET result = 'out' WHERE course = :courseCode AND section = :section AND round = 2 AND amount < :clearingPrice;";
+                    $query4 = $db->prepare($sql4);
+                    $query4->setFetchMode(PDO::FETCH_ASSOC);
+                    $query4->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+                    $query4->bindParam(':section', $section, PDO::PARAM_STR);
+                    $query4->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
+                    $query4->execute();
+            ***REMOVED***
+        ***REMOVED***
+            else {
+                $sql3 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = 2 AND amount >= :clearingPrice;";
+                $query3 = $db->prepare($sql3);
+                $query3->setFetchMode(PDO::FETCH_ASSOC);
+                $query3->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+                $query3->bindParam(':section', $section, PDO::PARAM_STR);
+                $query3->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
+                $query3->execute();
+                
+                $sql4 = "UPDATE bids SET result = 'out' WHERE course = :courseCode AND section = :section AND round = 2 AND amount < :clearingPrice;";
+                $query4 = $db->prepare($sql4);
+                $query4->setFetchMode(PDO::FETCH_ASSOC);
+                $query4->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+                $query4->bindParam(':section', $section, PDO::PARAM_STR);
+                $query4->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
+                $query4->execute();
+        ***REMOVED***
     ***REMOVED***
 ***REMOVED***
 }
