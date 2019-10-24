@@ -170,6 +170,7 @@ include 'includes/views/header.php';
                                                     $row = $bidDAO->getSuccessfulByCourseCode($cartItem['course'], $cartItem['section']);
                                                     $vacancy = (int)$cartItem['size'] - (int)$row;
                                                     echo $vacancy;
+                                                    
                                             ***REMOVED*** else {
                                                     echo $cartItem['size'];
                                             ***REMOVED*** ?></td>

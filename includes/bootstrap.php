@@ -307,7 +307,7 @@ function doBootstrap()
                         $course = $data[2];
                         $section = $data[3];
 
-                        $bidDAO->addBidBootstrap($userId, $course, $section, $amount);
+                        $bidDAO->addBid($userId, $course, $section, $amount);
                         $bids_processed++;
                 ***REMOVED***
                     $bids_row++;

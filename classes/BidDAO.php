@@ -607,7 +607,7 @@ class BidDAO
         return $isAddOK;
 ***REMOVED***
 
-    public function addBid($userId, $courseCode, $section, $amount, $round)
+    public function addBidViaCart($userId, $courseCode, $section, $amount, $round)
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -829,7 +829,6 @@ class BidDAO
                 $sql = "DELETE FROM bids WHERE course = :courseCode AND user_id = :userId AND result = '-'";
         ***REMOVED***
 
-
             $query = $db->prepare($sql);
             $query->bindParam(':userId', $userId, PDO::PARAM_STR);
             $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
@@ -842,21 +841,22 @@ class BidDAO
     ***REMOVED***
 ***REMOVED***
 
-    public function addBidBootstrap($userId, $courseCode, $section, $amount)
+    public function addBid($userId, $courseCode, $section, $amount, $round = 1)
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $existingBid = $this->findExistingBid($userId, $courseCode);
+        $existingBid = $this->findExistingBid($userId, $courseCode, $round);
 
-        $sql = "INSERT INTO bids (user_id, course, section, amount) VALUES (:userId, :courseCode, :section, :amount) ON DUPLICATE KEY UPDATE amount = :amount2";
+        $sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2";
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':amount', $amount, PDO::PARAM_STR);
         $query->bindParam(':amount2', $amount, PDO::PARAM_STR);
-
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+        
         $query->execute();
 
         $amountToDebit = $amount;
@@ -876,6 +876,12 @@ class BidDAO
         $query->execute();
 
         $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        // Only if round 2.
+        if ($round == 2) {
+            $roundClearingDAO = new RoundClearingDAO();
+            $roundClearingDAO->clearCourseSection($courseCode, $section);
+    ***REMOVED***
 
         return $query->rowCount();
 ***REMOVED***
@@ -913,23 +919,61 @@ class BidDAO
         return $result;
 ***REMOVED***
 
-    //Retrieve number of Successful bids of all user of a particular course code
-    public function getSuccessfulByCourseCode($courseCode, $section)
+    public function getCourseByCodeAndSection($courseCode, $section)
     {
-        $sql = "SELECT * FROM bids AS bd INNER JOIN sections as sc ON bd.course = sc.course AND bd.section = sc.section  WHERE result = 'in' and bd.course = :courseCode and bd.section = :sectionRQ";
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
 
+        $sql = "SELECT * FROM section WHERE course = :courseCode AND section = :section";
+        $query = $db->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+***REMOVED***
+
+    public function insertOrUpdateMinBid($courseCode, $section, $amount) {
+        $sql = "INSERT INTO minbid (course, section, amount) VALUES (:courseCode, :section, :amount) ON DUPLICATE KEY UPDATE amount = :amount2";
+        
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $stmt->bindParam(':section', $section, PDO::PARAM_STR);
+        $stmt->bindParam(':amount', $amount, PDO::PARAM_STR);
+
+        $result = false;
+
+        if ($stmt->execute()) {
+            $result = true;
+    ***REMOVED***
+        return $result;
+***REMOVED***
+
+    //Retrieve number of Successful bids of all user of a particular course code
+    public function getSuccessfulByCourseCode($courseCode, $section, $round = 0)
+    {
+        //$sql = "SELECT * FROM bids AS bd INNER JOIN sections as sc ON bd.course = sc.course AND bd.section = sc.section  WHERE result = 'in' and bd.course = :courseCode and bd.section = :sectionRQ";
+        $sql = "SELECT COUNT(*) AS bids FROM bids WHERE course = :courseCode AND section = :section AND result = 'in'";
+
+        if ($round) {
+            $sql .= " AND round = :round";
+    ***REMOVED***
+
+        // Edited on 24 Oct.
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-        $query->bindParam(':sectionRQ', $section, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        if (($query->rowCount()) > 0) {
-            return $query->rowCount();
-    ***REMOVED*** else {
-            return 0;
-    ***REMOVED***
+        
+        return $result['bids']; // CANNOT do $query->rowCount();
 ***REMOVED***
 
     public function insertMinBidforAllCourses($courseCode, $section, $minbid, $user_id)
@@ -956,7 +1000,7 @@ class BidDAO
     public function updateMinBidforAllCourses($courseCode, $section, $minbid,$user_id)
     {
         $sql = "UPDATE minbid SET bidAmount = :minbid WHERE course = :courseCode AND section = :section AND user_id = :user_id";
-
+        
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
         $stmt = $conn->prepare($sql);
