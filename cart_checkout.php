@@ -230,8 +230,9 @@ include 'includes/views/header.php';
                                             $minBid = 10;
                                             echo $minBid;
                                         }
-                                        echo "<input type='hidden' id='minVal' name='minVal[]'
-                                        value=$minBid>";
+                                        // commented out cos it ERRORs out here!!!!
+                                        // echo "<input type='hidden' id='minVal' name='minVal[]'
+                                        // value=$minBid>";
                                         ?>
                                         
                                 
