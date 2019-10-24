@@ -48,7 +48,16 @@ include 'includes/views/header.php';
                                                 <td><?php echo $bid['amount']; ?></td>
                                                 <td><?php echo $bid['course']; ?></td>
                                                 <td><?php echo $bid['section']; ?></td>
-                                                <td><?php echo $bid['result']; ?></td>
+                                                <td>
+                                                    <?php
+                                                        $result = $bid['result'];
+
+                                                        if ($result == '-') echo 'Pending';
+                                                        if ($result == 'in') echo 'Success';
+                                                        if ($result == 'out') echo 'Fail';
+
+                                                    ?>
+                                                </td>
                                                 <td><?php echo $bid['round']; ?></td>
                                             </tr>
                                             <?php
