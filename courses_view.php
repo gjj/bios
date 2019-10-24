@@ -346,20 +346,45 @@ if (isset($_GET['course'])) {
                                             ***REMOVED*** elseif ($currentRound['round'] == 2) {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section']);
                                                     $vacancy = (int)$section['size'] - (int)$row;
-                                                    echo $vacancy;
+                                                    if($vacancy >= 0) {
+                                                        echo $vacancy;
+                                                ***REMOVED***
+                                                    else {
+                                                        $vacancy = 0;
+                                                        echo $vacancy;
+                                                ***REMOVED***
+                                    
                                             ***REMOVED***
                                                 ?></td>
                                             ***REMOVED***
                                             if ($currentRound['round'] == 2) {
                                                 // // More Vacancies than Bids
+                                                echo "<td>";
                                                 if ($row < $section['size']) {
                                                     $minBid = 10;
+                                                    echo $minBid;
                                             ***REMOVED*** // More Bids than Vacancies
                                                 else {
-                                                    $minBid = $bidDAO->getMinBidWithCourseCode($course['course'], $section['section']);
+                                                    // Need to retrieve minBid from minBid table, not minbid from all bids
+                                                    // $minBid = $bidDAO->getMinBidWithCourseCode($cartItems['course'], $cartItems['section']);
+                                                    // $minBidDetails = $bidDAO -> getMinBidfromMinBidTable($course['course'], $section['section']);
+                                                    // foreach($minBidDetails as $minBidDetail) {
+                                                    //     $minBid = floatval($minBidDetail['bidAmount']);
+                                                    //     var_dump($minBid);
+                                                    //     echo $minBid;
+                                                    // }
+                                                    // var_dump($minBidDetails);
+                                                    // var_dump($minBid);
+                                                    if(isset($_SESSION['minBid'])){
+                                                        $minBid = $_SESSION['minBid'];
+                                                        echo $minBid;
+                                                ***REMOVED***
                                             ***REMOVED***
+                                                
+                                                // echo "<td>$$minBid</td>";
+                                                echo "</td>";
                                                 ?>
-                                                <td>$***REMOVED*** echo $minBid; ?></td>
+                                                
                                                 ***REMOVED***
                                         ***REMOVED***
                                             ?>

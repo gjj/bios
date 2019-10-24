@@ -932,9 +932,9 @@ class BidDAO
     ***REMOVED***
 ***REMOVED***
 
-    public function insertMinBidforAllCourses($courseCode, $section, $minbid)
+    public function insertMinBidforAllCourses($courseCode, $section, $minbid, $user_id)
     {
-        $sql = "INSERT INTO minbid (course, section, bidAmount) VALUES (:courseCode,:section, :minbid)";
+        $sql = "INSERT INTO minbid (course, section, bidAmount, user_id) VALUES (:courseCode,:section, :minbid, :user_id)";
 
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
@@ -943,12 +943,52 @@ class BidDAO
         $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $stmt->bindParam(':section', $section, PDO::PARAM_STR);
         $stmt->bindParam(':minbid', $minbid, PDO::PARAM_STR);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
 
         $result = false;
 
         if ($stmt->execute()) {
             $result = True;
     ***REMOVED***
+        return $result;
+***REMOVED***
+
+    public function updateMinBidforAllCourses($courseCode, $section, $minbid,$user_id)
+    {
+        $sql = "UPDATE minbid SET bidAmount = :minbid WHERE course = :courseCode AND section = :section AND user_id = :user_id";
+
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $stmt->bindParam(':section', $section, PDO::PARAM_STR);
+        $stmt->bindParam(':minbid', $minbid, PDO::PARAM_STR);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
+
+
+        $result = false;
+
+        if ($stmt->execute()) {
+            $result = True;
+    ***REMOVED***
+        return $result;
+***REMOVED***
+
+    public function getMinBidfromMinBidTable($courseCode, $section)
+    {
+        $sql = "SELECT * FROM minbid WHERE course =:courseCode AND section = :section";
+        $result = [];
+        $connMgr = new ConnectionManager();
+        $conn = $connMgr->getConnection();
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $stmt->bindParam(':section', $section, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         return $result;
 ***REMOVED***
 
