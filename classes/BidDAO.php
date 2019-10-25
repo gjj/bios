@@ -17,8 +17,9 @@ class BidDAO
 ***REMOVED***
     public function retrieveAllBidsByUser($userId, $round)
     {
-        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = '-'";
 
+        if ($round == 1) $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = '-'";
+        else  $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result IN ('in', 'out')";
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
@@ -97,7 +98,8 @@ class BidDAO
 
     public function retrieveBidsByCodeAndSection($userId, $courseCode, $section, $round)
     {
-        $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = '-'";
+        if ($round == 1) $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = '-'";
+        else $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -659,7 +661,7 @@ class BidDAO
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
+        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId";
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
@@ -671,7 +673,7 @@ class BidDAO
         $currentAmount = $query->fetch(PDO::FETCH_ASSOC);
 
         if ($query->rowCount()) {
-            $sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = '-' AND round = :round";
+            $sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND round = :round";
 
             $query = $db->prepare($sql);
             $query->setFetchMode(PDO::FETCH_ASSOC);
@@ -690,6 +692,13 @@ class BidDAO
             $query->setFetchMode(PDO::FETCH_ASSOC);
             $query->bindParam(':userId', $userId, PDO::PARAM_STR);
             $query->bindParam(':amount', $difference, PDO::PARAM_STR);
+
+            $roundDAO = new RoundDAO();
+            $currentRound = $roundDAO->getCurrentRound()['round'];
+            if ($currentRound == 2) {
+                $roundClearingDAO = new RoundClearingDAO();
+                $roundClearingDAO->clearCourseSection($courseCode, $section);
+        ***REMOVED***
 
             $isUpdateOk = False;
             if ($query->execute()) {
@@ -800,9 +809,9 @@ class BidDAO
         $db = $connMgr->getConnection();
 
         if ($section) {
-            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
+            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId"; // AND result = '-'
     ***REMOVED*** else {
-            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND user_id = :userId AND result = '-'";
+            $sql = "SELECT amount FROM bids WHERE course = :courseCode AND user_id = :userId"; // AND result = '-'
     ***REMOVED***
 
         $query = $db->prepare($sql);
@@ -827,9 +836,9 @@ class BidDAO
             $query->execute();
 
             if ($section) {
-                $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND result = '-'";
+                $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId"; // AND result = '-'
         ***REMOVED*** else {
-                $sql = "DELETE FROM bids WHERE course = :courseCode AND user_id = :userId AND result = '-'";
+                $sql = "DELETE FROM bids WHERE course = :courseCode AND user_id = :userId"; // AND result = '-'
         ***REMOVED***
 
             $query = $db->prepare($sql);
@@ -837,6 +846,13 @@ class BidDAO
             $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
             if ($section) $query->bindParam(':section', $section, PDO::PARAM_STR);
             $query->execute();
+
+            $roundDAO = new RoundDAO();
+            $currentRound = $roundDAO->getCurrentRound()['round'];
+            if ($currentRound == 2) {
+                $roundClearingDAO = new RoundClearingDAO();
+                $roundClearingDAO->clearCourseSection($courseCode, $section);
+        ***REMOVED***
 
             return true;
     ***REMOVED*** else {
@@ -969,6 +985,26 @@ class BidDAO
             $result = true;
     ***REMOVED***
         return $result;
+***REMOVED***
+
+    public function getBidsCountByCourseSection($courseCode, $section, $round = 0)
+    {
+        $sql = "SELECT COUNT(*) AS bids FROM bids WHERE course = :courseCode AND section = :section";
+
+        if ($round) {
+            $sql .= " AND round = :round";
+    ***REMOVED***
+        
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        $query = $db->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        
+        return $result['bids']; // CANNOT do $query->rowCount();
 ***REMOVED***
 
     //Retrieve number of Successful bids of all user of a particular course code

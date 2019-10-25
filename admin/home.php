@@ -121,7 +121,7 @@ if ($roundDAO->roundIsActive()) {
                         ?>
                             <b>Status:</b> ***REMOVED*** echo $result['status']; ?><br/>
                             ***REMOVED*** if ($result['status'] == "error") { ?>
-                                <b>Error Message(s): </b>***REMOVED*** echo implode(", ", $result['messages']); ?><br/>
+                                <b>Error Message(s): </b>***REMOVED*** echo implode(", ", $result['message']); ?><br/>
                             ***REMOVED***
                                     
                             ***REMOVED***
