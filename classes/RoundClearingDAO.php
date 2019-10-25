@@ -202,6 +202,8 @@ class RoundClearingDAO {
                 
         $numberOfBids = $query->rowCount();
 
+        print_r($numberOfBids);
+
         // After each bid, do the following processing to re-compute the minimum bid value:
 
         // Case 1: If there are less than N bids for the section (where N is the total available seats),
@@ -220,6 +222,7 @@ class RoundClearingDAO {
             $query2->execute();
         }
         else {
+            print "ok";
             // Case 2: If there are N or more bids for the section,
             $clearingPrice = $bids[$vacancy-1]['amount'];
 

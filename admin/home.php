@@ -121,7 +121,7 @@ if ($roundDAO->roundIsActive()) {
                         ?>
                             <b>Status:</b> <?php echo $result['status']; ?><br/>
                             <?php if ($result['status'] == "error") { ?>
-                                <b>Error Message(s): </b><?php echo implode(", ", $result['messages']); ?><br/>
+                                <b>Error Message(s): </b><?php echo implode(", ", $result['message']); ?><br/>
                             <?php
                                     
                                 }
