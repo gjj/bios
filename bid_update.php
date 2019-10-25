@@ -50,13 +50,25 @@
             if ($difference > $user['edollar']) {
                 addError("You do not have enough edollar to place all your bids! You need to topup e\${$difference} vs. what you have: e\${$user['edollar']}.");
             }
+
+            if ($currentRound['round'] == 2) {
+                // check min bid + vacancy maybe?
+                $minBid = $bidDAO->getMinBid($bid['course'], $bid['section']);
+    
+                if ($minBid) $minBid = $minBid['bidAmount'];
+                else $minBid = 10;
+    
+                if ($amount < $minBid) {
+                    addError("This section (" . $bid['course'] . ", " . $bid['section'] . ") has a minimum bid of e$" . $minBid . " and you are bidding below it (e$" . $amount . ").");
+                }
+            }
         }
 
         // If there are NO errors from previous checks... then I update my bid.
         if (!isset($_SESSION['errors'])) {
             $bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $amount, $currentRound['round']);
-
-            header("Location: cart");
+            
+            //header("Location: cart");
         }
     }
     include 'includes/views/header.php';
