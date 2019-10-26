@@ -68,7 +68,7 @@
         if (!isset($_SESSION['errors'])) {
             $bidDAO->updateBid($user['userid'], $bid['course'], $bid['section'], $amount, $currentRound['round']);
             
-            //header("Location: cart");
+            header("Location: cart");
         }
     }
     include 'includes/views/header.php';

@@ -150,6 +150,8 @@ class BidDAO
     {
         $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in')";
 
+        if ($round == 2) $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND round = :round AND result IN ('in', 'out', 'cart')";
+
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
@@ -252,9 +254,10 @@ class BidDAO
         return $result;
     }
 
-    public function getSuccessfulBid($userId, $course)
+    public function getSuccessfulBid($userId, $course, $round = 0)
     {
-        $sql = "SELECT * FROM bids WHERE result = 'in' AND course = :course AND user_id = :userId;";
+        $sql = "SELECT * FROM bids WHERE result = 'in' AND course = :course AND user_id = :userId";
+        if ($round) $sql .= " AND round = :round";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -263,6 +266,7 @@ class BidDAO
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':course', $course, PDO::PARAM_STR);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+        if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
