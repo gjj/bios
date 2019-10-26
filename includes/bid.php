@@ -1,7 +1,7 @@
 <?php
 require_once 'common.php';
 
-function addOrUpdateBid($userId, $amount, $courseCode, $section, $round = 1)
+function addOrUpdateBid($userId, $amount, $courseCode, $section)
 {
     $bidDAO = new BidDAO();
     $roundDAO = new RoundDAO();
@@ -35,32 +35,34 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section, $round = 1)
     if (!$roundDAO->roundIsActive()) {
         $errors[] = "round ended";
     }
-
+    
     // If no errors so far, then we proceed for our second round of validation checks...
     if (!$errors) {
         $existingBid = $bidDAO->findExistingBid($userId, $courseCode);
 
+        $course = $courseDAO->retrieveByCode($courseCode);
+    
+        if ($currentRound == 2) {
+            // "bid too low" the amount must be more than the minimum bid (only applicable for round 2)
+            // check min bid + vacancy maybe?
+            $minBid = $bidDAO->getMinBid($courseCode, $section);
+
+            if ($minBid) $minBid = $minBid['bidAmount'];
+            else $minBid = 10;
+
+            if ($amount < $minBid) {
+                $errors[] = "bid too low";
+            }
+
+            // course enrolled: Student has already won a bid for a section in this course in a previous round.
+            if ($bidDAO->getSuccessfulBid($userId, $course['course'], 1)) {
+                $errors[] = "course enrolled";
+            }
+        }
+
         if (!$existingBid) {
             $user = $userDAO->retrieveById($userId);
-            $course = $courseDAO->retrieveByCode($courseCode);
-
-            if ($currentRound == 2) {
-                // "bid too low" the amount must be more than the minimum bid (only applicable for round 2)
-                // check min bid + vacancy maybe?
-                $minBid = $bidDAO->getMinBid($courseCode, $section);
-    
-                if ($minBid) $minBid = $minBid['bidAmount'];
-                else $minBid = 10;
-    
-                if ($amount < $minBid) {
-                    $errors[] = "bid too low";
-                }
-
-                // course enrolled: Student has already won a bid for a section in this course in a previous round.
-                if ($bidDAO->getSuccessfulBid($userId, $course, 1)) {
-                    $errors[] = "course enrolled";
-                }
-            }
+            
 
             // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
             if ($user['school'] !== $course['school']) {
@@ -120,10 +122,10 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section, $round = 1)
         // If still no errors
         if (!$errors) {
             if ($existingBid) {
-                $bidDAO->refundbidamount($userId, $courseCode); // Drop prev bid first.
+                $bidDAO->refundbidamount($userId, $courseCode); // Drop prev bid first if exist.
             }
 
-            $bidDAO->addBid($userId, $courseCode, $section, $amount); // Last param add round
+            $bidDAO->addBid($userId, $courseCode, $section, $amount, $currentRound); // [EDIT: Added] Last param pls add round
         }
     }
 
@@ -137,7 +139,7 @@ function deleteBid($userId, $course, $section)
     $bidDAO = new BidDAO();
 
     if ($roundDAO->roundIsActive()) {
-        if ($bidDAO->refundbidamount($userId, $code, $section)) { } else {
+        if ($bidDAO->refundbidamount($userId, $$course, $section)) { } else {
 
             // "invalid course"	Course code does not exist in the system's records
             // "invalid userid"	userid does not exist in the system's records
