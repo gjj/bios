@@ -23,7 +23,7 @@ class UserDAO
 
     public function retrieveById($userId)
     {
-        $sql = "SELECT user_id AS userid, password, name, school, FORMAT(edollar, 1) AS edollar FROM users WHERE user_id = :userId";
+        $sql = "SELECT user_id AS userid, password, name, school, edollar AS edollar FROM users WHERE user_id = :userId";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();

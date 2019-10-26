@@ -2,12 +2,12 @@
 
 class RoundClearingDAO {
     public function roundClearing($round) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
         if ($round == 1) {
-            $result = array();
-
-            $connMgr = new ConnectionManager();
-            $db = $connMgr->getConnection();
-
+            $result = [];
+            
             $sql = "SELECT DISTINCT course, section FROM bids WHERE round = :round AND result = '-'";
 
             $query = $db->prepare($sql);
@@ -136,7 +136,7 @@ class RoundClearingDAO {
 
                     // Fixed bug on 22 Oct
                     if ($refundList) {
-                        $query6 = $db->exec($sql6);
+                        $db->exec($sql6);
                 ***REMOVED***
                     
                     
@@ -171,6 +171,22 @@ class RoundClearingDAO {
     ***REMOVED***
         else {
             // round 2. think should be refund only?
+
+            $sql = "SELECT * FROM bids WHERE round = :round AND result = 'out' ORDER BY course, section, amount DESC";
+            $query = $db->prepare($sql);
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            $query->bindParam(':round', $round, PDO::PARAM_STR);
+            $query->execute();
+            $refundList = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            $sql2 = "";
+            foreach ($refundList as $refund) {
+                $sql2 .= "UPDATE users SET edollar = edollar + {$refund['amount']} WHERE user_id = '{$refund['user_id']}';";
+        ***REMOVED***
+            
+            if ($refundList) {
+                $db->exec($sql2);
+        ***REMOVED***
     ***REMOVED***
 ***REMOVED***
 
@@ -192,7 +208,7 @@ class RoundClearingDAO {
         // successfully during the first round.
         $vacancy = (int)$size - (int)$allSuccessfulBids;
         
-        $sql = "SELECT * FROM bids WHERE round = 2 AND result = '-' AND course = :courseCode AND section = :section ORDER BY amount DESC";
+        $sql = "SELECT * FROM bids WHERE round = 2 AND result IN ('-', 'in', 'out') AND course = :courseCode AND section = :section ORDER BY amount DESC";
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
@@ -201,8 +217,6 @@ class RoundClearingDAO {
         $bids = $query->fetchAll(PDO::FETCH_ASSOC);
                 
         $numberOfBids = $query->rowCount();
-
-        print_r($numberOfBids);
 
         // After each bid, do the following processing to re-compute the minimum bid value:
 
@@ -222,7 +236,6 @@ class RoundClearingDAO {
             $query2->execute();
     ***REMOVED***
         else {
-            print "ok";
             // Case 2: If there are N or more bids for the section,
             $clearingPrice = $bids[$vacancy-1]['amount'];
 
