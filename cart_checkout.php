@@ -37,6 +37,16 @@
 
         if ($currentRound['round'] == 2) {
             // check min bid + vacancy maybe?
+            foreach ($bids as $bid) {
+                $minBid = $bidDAO->getMinBid($bid['course'], $bid['section']);
+
+                if ($minBid) $minBid = $minBid['bidAmount'];
+                else $minBid = 10;
+
+                if ($bid['amount'] < $minBid) {
+                    addError("This section (" . $bid['course'] . ", " . $bid['section'] . ") has a minimum bid of e$" . $minBid . " and you are bidding below it (e$" . $bid['amount'] . ").");
+            ***REMOVED***
+        ***REMOVED***
     ***REMOVED***
         
         if (!isset($_SESSION['errors'])) {
