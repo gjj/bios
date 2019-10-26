@@ -12,10 +12,7 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section, $round = 1)
 
     $errors = [];
 
-    // Round is active or not.
-    if (!$roundDAO->roundIsActive()) {
-        $errors[] = "round ended";
-    }
+    
 
     if (!$errors) {
         if (!is_numeric($amount) or $amount < 10 or $amount != round($amount, 2)) {
@@ -33,6 +30,12 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section, $round = 1)
         }
     }
 
+    // Not sure to place it here or not.
+    // Round is active or not.
+    if (!$roundDAO->roundIsActive()) {
+        $errors[] = "round ended";
+    }
+
     // If no errors so far, then we proceed for our second round of validation checks...
     if (!$errors) {
         $existingBid = $bidDAO->findExistingBid($userId, $courseCode);
@@ -43,6 +46,20 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section, $round = 1)
 
             if ($currentRound == 2) {
                 // "bid too low" the amount must be more than the minimum bid (only applicable for round 2)
+                // check min bid + vacancy maybe?
+                $minBid = $bidDAO->getMinBid($courseCode, $section);
+    
+                if ($minBid) $minBid = $minBid['bidAmount'];
+                else $minBid = 10;
+    
+                if ($amount < $minBid) {
+                    $errors[] = "bid too low";
+                }
+
+                // course enrolled: Student has already won a bid for a section in this course in a previous round.
+                if ($bidDAO->getSuccessfulBid($userId, $course, 1)) {
+                    $errors[] = "course enrolled";
+                }
             }
 
             // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
