@@ -38,8 +38,13 @@
                 $errors[] = "invalid section";
         ***REMOVED***
 
+            $roundDAO = new RoundDAO();
             $bidDAO = new BidDAO();
-            $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids(0, $course, $section);
+            $currentRound = $roundDAO->getCurrentRound();
+            
+            $round = 1; // if ($currentRound['round'] == 2 and $currentRound['status'] == 'started') 
+            if ($currentRound['round'] == 2 and $currentRound['status'] == 'stopped') $round = 2;
+            $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids($round, $course, $section);
     ***REMOVED***
 ***REMOVED***
     

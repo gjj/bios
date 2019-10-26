@@ -265,7 +265,7 @@ class RoundClearingDAO {
                 // check if can accommodate!
                 // $bids = [20, 19, 18, 18, 17];
                 // index:  [0,  1,  2,  3,  4]; i.e. if $bids[3-1] == $bids[3] would mean cannot accommodate!
-                if ($bids[$vacancy-1] == $bids[$vacancy]) {
+                if ((count($bids) > $vacancy) and ($bids[$vacancy-1] == $bids[$vacancy])) {
                     // Cannot accommodate
 
                     $sql3 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = 2 AND amount > :clearingPrice;";
