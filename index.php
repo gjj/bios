@@ -18,8 +18,18 @@
 	<title>BIOS | Merlion University</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" crossorigin="anonymous" />
 	<link rel="stylesheet" type="text/css" href="assets/css/bios.css" />
+
+	<style>
+		.merlion-background {
+			background: url('assets/images/merlion-bg.jpg') no-repeat center center fixed; /* http://source.unsplash.com/1920x1080/?singapore-skyline */
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			background-size: cover;
+			-o-background-size: cover;
+		}
+	</style>
 </head>
-<body class="login">
+<body class="login merlion-background">
 	<section class="h-100">
 		<div class="container h-100">
 			<div class="row justify-content-md-center h-100">
