@@ -137,9 +137,9 @@ include 'includes/views/header.php';
                                 <th scope="col">End</th>
                                 <th scope="col">Instructor</th>
                                 <th scope="col">Venue</th>
-                                <th scope="col">Size</th>
-                                <th scope="col">Min Bid</th>
-                                <th scope="col">Delete?</th>
+                                <th scope="col">Vacancy</th>
+                                <th scope="col">Min Bid (e$)</th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -175,24 +175,21 @@ include 'includes/views/header.php';
                                                     echo $cartItem['size'];
                                                 } ?></td>
                                             <td>
-                                                <?php
+                                            <?php
+                                                $minBid = 10;
                                                 if ($currentRound['round'] == 2) {
-                                                    // // More Vacancies than Bids
-                                                    if ($row < $cartItem['size']) {
-                                                        $minBid = 10;
-                                                    } // More Bids than Vacancies
-                                                    else {
-                                                        $minBid = $bidDAO->getMinBidWithCourseCode($cartItem['course'], $cartItem['section']);
+                                                    $vacancy = (int)$cartItem['size'] - (int)$row;
+
+                                                    $numberOfBids = $bidDAO->getBidsCountByCourseSection($cartItem['course'], $cartItem['section'], 2);
+
+                                                    if ($numberOfBids >= $vacancy) {
+                                                        // More Bids than Vacancies
+                                                        $minBid = $bidDAO->getMinBid($cartItem['course'], $cartItem['section'])['bidAmount'];
                                                     }
-                                                } // For round 1, min bid is $10
-                                                else {
-                                                    $minBid = 10;
                                                 }
-                                                ?>
-                                                $
-                                                <?php
-                                                echo $minBid;
-                                                ?>
+
+                                                echo number_format($minBid, 2);
+                                            ?>
                                             </td>
                                             <td>
                                                 <a href="cart_delete?course=<?php echo $cartItem['course']; ?>&section=<?php echo $cartItem['section']; ?>">Delete</a>
@@ -241,14 +238,17 @@ include 'includes/views/header.php';
                             <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Bid (e$)</th>
+                                <th scope="col">Min Bid (e$)</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Course Code</th>
                                 <th scope="col">Section</th>
                                 <th scope="col">Day</th>
                                 <th scope="col">Start</th>
                                 <th scope="col">End</th>
-                                <th scope="col">Instructor</th>
-                                <th scope="col">Venue</th>
-                                <th scope="col">Size</th>
+                                <!--<th scope="col">Instructor</th>
+                                <th scope="col">Venue</th>-->
+                                <th scope="col">Vacancy</th>
+                                
                                 <th scope="col"></th>
                             </tr>
                             </thead>
@@ -259,17 +259,51 @@ include 'includes/views/header.php';
                             if ($roundDAO->roundIsActive()) {
                                 if ($bids) {
                                     foreach ($bids as $bid) {
-                                        ?>
+                                        $row = $bidDAO->getSuccessfulByCourseCode($bid['course'], $bid['section'], 1);
+                            ?>
                                         <tr>
                                             <td><?php echo $bid['amount']; ?></td>
+                                            <td>
+                                                <?php
+                                                    $minBid = 10;
+                                                    if ($currentRound['round'] == 2) {
+                                                        $vacancy = (int)$bid['size'] - (int)$row;
+
+                                                        $numberOfBids = $bidDAO->getBidsCountByCourseSection($bid['course'], $bid['section'], 2);
+
+                                                        if ($numberOfBids >= $vacancy) {
+                                                            // More Bids than Vacancies
+                                                            $minBid = $bidDAO->getMinBid($bid['course'], $bid['section'])['bidAmount'];
+                                                        }
+                                                    }
+
+                                                    echo number_format($minBid, 2);
+                                                ?>
+                                            </td>
+                                            <?php
+                                                if ($bid['result'] == '-') echo '<td>Pendiing</td>';
+                                                else if ($bid['result'] == 'in') echo '<td class="bg-success text-white">Success</td>';
+                                                else if ($bid['result'] == 'out') echo '<td class="bg-danger text-white">Fail</td>';
+                                                else echo '<td>Error</td>';                                                   
+                                            ?>
                                             <td><?php echo $bid['course']; ?></td>
                                             <td><?php echo $bid['section']; ?></td>
                                             <td><?php echo $bid['day']; ?></td>
                                             <td><?php echo $bid['start']; ?></td>
                                             <td><?php echo $bid['end']; ?></td>
-                                            <td><?php echo $bid['instructor']; ?></td>
-                                            <td><?php echo $bid['venue']; ?></td>
-                                            <td><?php echo $bid['size']; ?></td>
+                                            <!--<td><?php echo $bid['instructor']; ?></td>
+                                            <td><?php echo $bid['venue']; ?></td>-->
+                                            <td>
+                                                <?php
+                                                    if ($currentRound['round'] == 2) {
+                                                        $vacancy = (int)$bid['size'] - (int)$row;
+                                                        echo $vacancy;
+                                                        
+                                                    } else {
+                                                        echo $bid['size'];
+                                                    }
+                                                ?>
+                                            </td>
                                             <td>
                                                 <a href="bid_update?course=<?php echo $bid['course']; ?>&section=<?php echo $bid['section']; ?>">Update</a>
                                                 |
