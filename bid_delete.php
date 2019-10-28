@@ -21,7 +21,7 @@
         $code = $_GET['course'];
         $section = $_GET['section'];
 
-        if ($bidDAO->refundbidamount($user['userid'], $code, $section)) {
+        if ($bidDAO->refundbidamount($user['userid'], $code, $section, $currentRound['round'])) {
             header("Location: cart?deleted=1");
         }
         else {
