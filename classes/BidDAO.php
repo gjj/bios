@@ -281,9 +281,8 @@ class BidDAO
         if ($course and $section) $text = "";
         if ($round == 1) {
             $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' AND round = 1 ";
-        }
-        elseif ($round == 2) {
-            $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' AND round IN (1, 2) ";            
+        } elseif ($round == 2) {
+            $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' AND round IN (1, 2) ";
         } else {
             $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' ";
         }
@@ -879,7 +878,7 @@ class BidDAO
 
         //$sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2";
         $sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2, result = '-'";
-        
+
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
@@ -887,7 +886,7 @@ class BidDAO
         $query->bindParam(':amount', $amount, PDO::PARAM_STR);
         $query->bindParam(':amount2', $amount, PDO::PARAM_STR);
         $query->bindParam(':round', $round, PDO::PARAM_STR);
-        
+
         $query->execute();
 
         $amountToDebit = $amount;
@@ -965,16 +964,17 @@ class BidDAO
         return $result;
     }
 
-    public function insertOrUpdateMinBid($courseCode, $section, $amount) {
+    public function insertOrUpdateMinBid($courseCode, $section, $amount)
+    {
         $sql = "INSERT INTO minbid (course, section, bidAmount) VALUES (:courseCode, :section, :amount) ON DUPLICATE KEY UPDATE bidAmount = :amount2";
-        
+
         $minBidRecord = $this->getMinBid($courseCode, $section);
         $minBid = 10;
 
         if ($minBidRecord) {
             $minBid = $minBidRecord['bidAmount'];
         }
-        
+
         // Min bid will never be lower. If it's lower, remain the same.
         if ($amount < $minBid) {
             $amount = $minBid;
@@ -1004,7 +1004,7 @@ class BidDAO
         if ($round) {
             $sql .= " AND round = :round";
         }
-        
+
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
         $query = $db->prepare($sql);
@@ -1013,7 +1013,7 @@ class BidDAO
         if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        
+
         return $result['bids']; // CANNOT do $query->rowCount();
     }
 
@@ -1036,7 +1036,7 @@ class BidDAO
         if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
-        
+
         return $result['bids']; // CANNOT do $query->rowCount();
     }
 
@@ -1061,10 +1061,10 @@ class BidDAO
         return $result;
     }
 
-    public function updateMinBidforAllCourses($courseCode, $section, $minbid,$user_id)
+    public function updateMinBidforAllCourses($courseCode, $section, $minbid, $user_id)
     {
         $sql = "UPDATE minbid SET bidAmount = :minbid WHERE course = :courseCode AND section = :section AND user_id = :user_id";
-        
+
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
         $stmt = $conn->prepare($sql);
@@ -1176,5 +1176,55 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
         return $result;
 
+    }
+
+    public function dropBid($bidId, $userId)
+    {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        try {
+            // We start our transaction.
+            $db->beginTransaction();
+            $sql = "SELECT * from bids WHERE id = :bidId";
+            $query = $db->prepare($sql);
+            $query->bindParam(':bidId', $bidId, PDO::PARAM_STR);
+            $query->execute();
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+            $sql = "DELETE FROM bids WHERE id = :bidId";
+            $query = $db->prepare($sql);
+            $query->bindParam(':bidId', $bidId, PDO::PARAM_STR);
+            $query->execute();
+            $sql = "UPDATE users SET edollar = edollar + (:amount) WHERE user_id = :userId";
+            $query = $db->prepare($sql);
+            $query->bindParam(':amount', $result['amount'], PDO::PARAM_STR);
+            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $query->execute();
+            // We've got this far without an exception, so commit the changes.
+            $db->commit();
+            return true;
+        } catch (Exception $e) {
+            $db->rollBack();
+        }
+
+    }
+
+    public function retrieveBidsDump($section, $course, $round)
+    {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        $sql = "SELECT (ROW_NUMBER() OVER(ORDER BY user_id)) AS 'row', user_id AS userid, amount, CASE WHEN result = '-' THEN 'unconfirmed' ELSE result END AS result FROM bids WHERE course = :course AND section = :section AND round=:round ORDER BY amount ASC, user_id ASC";
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':course', $course, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+        $query->execute();
+        $result = [];
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $row['amount'] = (float)$row['amount'];
+            $result[] = $row;
+        }
+        return $result;
     }
 }
