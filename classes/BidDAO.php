@@ -680,8 +680,6 @@ class BidDAO
 
         $currentAmount = $query->fetch(PDO::FETCH_ASSOC);
 
-        error_log(print_r($currentAmount) . "\n", 3, "bios.txt");
-
         if ($query->rowCount()) {
             $sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND round = :round";
 
@@ -695,9 +693,6 @@ class BidDAO
             $query->execute();
 
             $difference = $amount - $currentAmount['amount']; // DIRECTION MATTERS HERE!
-
-            error_log("difference: " . ($difference) . "\n", 3, "bios.txt");
-
 
             $sql = "UPDATE users SET edollar = edollar - (:amount) WHERE user_id = :userId"; // Because it will affect this.
 
