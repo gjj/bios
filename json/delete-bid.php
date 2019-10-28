@@ -22,6 +22,7 @@ if (!$errors) {
     $userDAO = new UserDAO();
     $courseDAO = new CourseDAO();
     $sectionDAO = new SectionDAO();
+    $currentRound = $roundDAO->getCurrentRound()['round'];
 
     $errors = [
         isMissingOrEmptyJson('course', $json),
@@ -64,7 +65,7 @@ if (!$errors) {
         }
 
         if (!$errors) {
-            $refundSuccessful = $bidDAO->refundbidamount($userId, $course, $section);
+            $refundSuccessful = $bidDAO->refundbidamount($userId, $course, $section, $currentRound);
         }
     }
 }
@@ -80,4 +81,4 @@ if (!$errors) {
     ];
 }
 
-echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK);
+echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION );

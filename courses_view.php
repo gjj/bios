@@ -28,6 +28,13 @@ if (!empty($_POST))
 
             if ($currentRound['round'] == 2) {
                 // round 2 must check vacancy left
+                $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($courseCode, $section, 1);
+                $size = $bidDAO->getCourseByCodeAndSection($courseCode, $section)['size'];
+                $vacancy = (int)$size - (int)$allSuccessfulBids;
+
+                if ($vacancy == 0) {
+                    addError("No vacancy left for course $courseCode, $section. [error: no vacancy]");
+                }
             }
 
             $hasSuccessfulBid = $bidDAO->getSuccessfulBid($user['userid'], $courseCode);
@@ -398,6 +405,17 @@ if (isset($_GET['course'])) {
                                                         if ($hasSuccessfulBid) {
                                                             $error = "Already enrolled";
                                                         } else {
+                                                            if ($currentRound['round'] == 2) {
+                                                                // round 2 must check vacancy left
+                                                                $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
+                                                                $size = $bidDAO->getCourseByCodeAndSection($course['course'], $section['section'])['size'];
+                                                                $vacancy = (int)$size - (int)$allSuccessfulBids;
+                                                
+                                                                if ($vacancy == 0) {
+                                                                    $error = 'No vacancy';
+                                                                }
+                                                            }
+
                                                             if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
                                                                 $error = 'Added to cart';
                                                             }

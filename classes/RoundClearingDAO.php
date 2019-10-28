@@ -268,14 +268,8 @@ class RoundClearingDAO {
                 // $bids = [20, 19, 18, 18, 17];
                 // index:  [0,  1,  2,  3,  4]; i.e. if $bids[3-1] == $bids[3] would mean cannot accommodate!
 
-                error_log(print_r($bids, true)."\n", 3, "bios.log");
-                error_log($bids[$vacancy-1]['amount']."\n", 3, "bios.log");
-                error_log($bids[$vacancy]['amount']. "\n", 3, "bios.log");
-
                 if ((count($bids) > $vacancy) and ($bids[$vacancy-1]['amount'] == $bids[$vacancy]['amount'])) {
                     // Cannot accommodate
-
-                    error_log("cannot accommodate"."\n", 3, "bios.log");
 
                     $sql3 = "UPDATE bids SET result = 'in' WHERE result NOT IN ('cart') AND course = :courseCode AND section = :section AND round = 2 AND amount > :clearingPrice;";
                     $query3 = $db->prepare($sql3);
