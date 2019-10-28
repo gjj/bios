@@ -668,16 +668,19 @@ class BidDAO
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId";
+        $sql = "SELECT amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round";
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
 
         $currentAmount = $query->fetch(PDO::FETCH_ASSOC);
+
+        error_log(print_r($currentAmount) . "\n", 3, "bios.txt");
 
         if ($query->rowCount()) {
             $sql = "UPDATE bids SET amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND round = :round";
@@ -692,6 +695,9 @@ class BidDAO
             $query->execute();
 
             $difference = $amount - $currentAmount['amount']; // DIRECTION MATTERS HERE!
+
+            error_log("difference: " . ($difference) . "\n", 3, "bios.txt");
+
 
             $sql = "UPDATE users SET edollar = edollar - (:amount) WHERE user_id = :userId"; // Because it will affect this.
 
@@ -810,21 +816,22 @@ class BidDAO
 ***REMOVED***
 
 
-    public function refundbidamount($userId, $courseCode, $section = null)
+    public function refundbidamount($userId, $courseCode, $section = null, $round = 1)
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
         if ($section) {
-            $sql = "SELECT section, amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId"; // AND result = '-'
+            $sql = "SELECT section, amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round AND result NOT IN ('out', 'cart')"; // AND result = '-'
     ***REMOVED*** else {
-            $sql = "SELECT section, amount FROM bids WHERE course = :courseCode AND user_id = :userId"; // AND result = '-'
+            $sql = "SELECT section, amount FROM bids WHERE course = :courseCode AND user_id = :userId AND round = :round AND result NOT IN ('out', 'cart')"; // AND result = '-'
     ***REMOVED***
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
 
         if ($section) {
             $query->bindParam(':section', $section, PDO::PARAM_STR);
@@ -843,14 +850,15 @@ class BidDAO
             $query->execute();
 
             if ($section) {
-                $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId"; // AND result = '-'
+                $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round"; // AND result = '-'
         ***REMOVED*** else {
-                $sql = "DELETE FROM bids WHERE course = :courseCode AND user_id = :userId"; // AND result = '-'
+                $sql = "DELETE FROM bids WHERE course = :courseCode AND user_id = :userId AND round = :round"; // AND result = '-'
         ***REMOVED***
 
             $query = $db->prepare($sql);
             $query->bindParam(':userId', $userId, PDO::PARAM_STR);
             $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+            $query->bindParam(':round', $round, PDO::PARAM_STR);
             if ($section) $query->bindParam(':section', $section, PDO::PARAM_STR);
             $query->execute();
 
