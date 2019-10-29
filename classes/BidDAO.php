@@ -1212,7 +1212,7 @@ class BidDAO
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
-        $sql = "SELECT (ROW_NUMBER() OVER(ORDER BY user_id)) AS 'row', user_id AS userid, amount, CASE WHEN result = '-' THEN 'unconfirmed' ELSE result END AS result FROM bids WHERE course = :course AND section = :section AND round=:round ORDER BY amount ASC, user_id ASC";
+        $sql = "SELECT (ROW_NUMBER() OVER(ORDER BY user_id)) AS 'row', user_id AS userid, amount, result FROM bids WHERE course = :course AND section = :section AND round=:round ORDER BY amount ASC, user_id ASC";
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':course', $course, PDO::PARAM_STR);
