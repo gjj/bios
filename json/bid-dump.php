@@ -32,13 +32,8 @@ if (!$errors) {
         $roundDAO = new RoundDAO();
         $bidDAO = new BidDAO();
         $currentRound = $roundDAO->getCurrentRound();
-        
-        if ($roundDAO->roundIsActive()) {
-            $bids = $bidDAO->retrieveAllBids($currentRound['round']);
-    ***REMOVED***
-        else {
-            $bids = $bidDAO->retrieveAllBids($currentRound['round'], true);
-    ***REMOVED***
+
+        $bids = $bidDAO->retrieveAllBidsBySection($course, $section);
 ***REMOVED***
 }
 if (!$errors) {
