@@ -254,6 +254,55 @@ class BidDAO
         return $result;
     }
 
+    // For /app/json/bid-dump
+    public function retrieveAllBidsBySection($courseCode, $section)
+    {
+        $roundDAO = new RoundDAO();
+        $round = $roundDAO->getCurrentRound()['round'];
+        $status = $roundDAO->getCurrentRound()['status'];
+
+        if ($round == 1 and $status == "started") {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";            
+        }
+        else {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+        }
+
+        if ($round == 2) {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+        }
+        
+        $sql .= " ORDER BY amount DESC, userid";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+        $query->execute();
+
+        $result = [];
+
+        $rowNum = 1;
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            // reorder them as row num needs to be at FRONT of array as order matters
+            $result[] = [
+                'row' => $rowNum,
+                'userid' => $row['userid'],
+                'amount' => (float)$row['amount'],
+                'result' => $row['result']
+            ];
+
+            $rowNum++;
+        }
+
+        return $result;
+    }
+
     public function getSuccessfulBid($userId, $course, $round = 0)
     {
         $sql = "SELECT * FROM bids WHERE result = 'in' AND course = :course AND user_id = :userId";
