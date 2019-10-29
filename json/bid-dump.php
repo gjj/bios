@@ -32,15 +32,19 @@ if (!$errors) {
         $roundDAO = new RoundDAO();
         $bidDAO = new BidDAO();
         $currentRound = $roundDAO->getCurrentRound();
-        $round = 1;
-        if ($currentRound['round'] == 2 and $currentRound['status'] == 'stopped') $round = 2;
-        $bidDump = $bidDAO->retrieveBidsDump($section, $course, $round);
+        
+        if ($roundDAO->roundIsActive()) {
+            $bids = $bidDAO->retrieveAllBids($currentRound['round']);
+        }
+        else {
+            $bids = $bidDAO->retrieveAllBids($currentRound['round'], true);
+        }
     }
 }
 if (!$errors) {
     $result = [
         "status" => "success",
-        "bids" => $bidDump
+        "bids" => $bids
     ];
 } else {
     $result = [
