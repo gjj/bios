@@ -98,6 +98,19 @@
 			return "blank $name";
 		}
 	}
+
+	// Added new function to check amount only because empty()
+	function checkAmount($name, $json) {
+		if (!$json or !array_key_exists($name, $json)) {
+			return "missing $name";
+		}
+		
+		// Client did send the value over, but is blank (and this is different from a missing field).
+		$value = $json[$name];
+		if ($value == "") {
+			return "blank $name";
+		}
+	}
 	
 	# check if an int input is an int and non-negative
 	function isNonNegativeInt($var) {
