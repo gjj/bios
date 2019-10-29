@@ -144,13 +144,16 @@
             // Skip the first character.
             if ($i != 0) {
                 $section_num .= $section[$i];
+
+                if (!is_numeric($section[$i])) {
+                    return false;
+                }
             }
         }
-
         
         //$section_num = intval($section_num);
 
-        if ($section_num < 1 or $section_num > 99 or !is_int($section_num)) {
+        if ($section_num < 1 or $section_num > 99) {
             return false;
         }
 
@@ -192,7 +195,7 @@
             if (strlen($venue) > 100) {
                 $errors[] = "invalid venue";
             }
-            if (!is_int($size) or $size < 1) {
+            if (!ctype_digit(strval($size)) or $size < 1) {
                 $errors[] = "invalid size";
             }
         }
@@ -354,7 +357,7 @@
 
                 // Validation 2/7 class timetable clash: The class timeslot for the section clashes with that of a previously bidded section.
                 if ($bidDAO->checkTimetableConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
-                $errors[] = "class timetable clash";
+                    $errors[] = "class timetable clash";
                 }
                 
                 // Validation 3/7 exam timetable clash: The exam timeslot for this section clashes with that of a previously bidded section.
@@ -462,9 +465,3 @@
 
 
     }
-    
-
-
-
-
-?>
