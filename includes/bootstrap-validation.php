@@ -180,7 +180,7 @@
             if ($section[0] != "S" or !checkSectionFormat($section)) {
                 $errors[] = "invalid section";
         ***REMOVED***
-            if ($day < 1 or $day > 7) {
+            if ($day < 1 or $day > 7 or !ctype_digit(strval($day))) {
                 $errors[] = "invalid day";
         ***REMOVED***
             if ($start != date("G:i", strtotime($start))) {
