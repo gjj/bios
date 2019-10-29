@@ -18,7 +18,7 @@
         $json = json_decode($request, true);
         
         $errors = [
-            isMissingOrEmptyJson('amount', $json),
+            checkAmount('amount', $json), //
             isMissingOrEmptyJson('course', $json),
             isMissingOrEmptyJson('section', $json),
             isMissingOrEmptyJson('userid', $json),
