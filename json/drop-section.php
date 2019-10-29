@@ -71,4 +71,4 @@ if (!$errors) {
     ];
 }
 
-echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK);
+echo json_encode($result, JSON_PRETTY_PRINT);
