@@ -1,8 +1,0 @@
-{
-    "status": "success",
-    "userid": "mesin.2017",
-    "password": "mesin.2017",
-    "name": "Sin Myeong Eun",
-    "school": "SIS",
-    "edollar": 150.0
-}
