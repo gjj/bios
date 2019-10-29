@@ -12,16 +12,8 @@ $bidDAO = new BidDAO();
 
 $currentRound = $roundDAO->getCurrentRound();
 $user = currentUser();
-if ($_POST) {
-    if ($roundDAO->roundIsActive()) {
-        if (isset($_POST['checkoutForm']) and isset($_POST['drop'])) {
-            foreach ($_POST['drop'] as $drop) {
-                $bidDAO->dropBid($drop, $user['userid']);
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***
-}
 $bids = $bidDAO->retrieveResults($user['userid']);
+
 
 include 'includes/views/header.php';
 ?>
@@ -39,7 +31,6 @@ include 'includes/views/header.php';
                                 <table class="table">
                                     <thead class="thead-dark">
                                     <tr>
-                                        <th scope="col"></th>
                                         <th scope="col">Bid (e$)</th>
                                         <th scope="col">Course Code</th>
                                         <th scope="col">Section</th>
@@ -54,23 +45,16 @@ include 'includes/views/header.php';
                                         foreach ($bids as $bid) {
                                             ?>
                                             <tr>
-                                                <!-- This is just one way of passing data over, using hidden fields. Because our design is like that... -->
-                                                <td>
-                                                    <input class="dropCheck" type="checkbox" name="drop[]"
-                                                           value="***REMOVED*** echo $bid['id']; ?>" ***REMOVED*** if ($bid['result'] == "out" and $bid['round'] == 1) {
-                                                        echo "disabled";
-                                                ***REMOVED*** ?>/>
-                                                </td>
                                                 <td>***REMOVED*** echo $bid['amount']; ?></td>
                                                 <td>***REMOVED*** echo $bid['course']; ?></td>
                                                 <td>***REMOVED*** echo $bid['section']; ?></td>
                                                 <td>
                                                     ***REMOVED***
-                                                    $result = $bid['result'];
+                                                        $result = $bid['result'];
 
-                                                    if ($result == '-') echo 'Pending';
-                                                    if ($result == 'in') echo 'Success';
-                                                    if ($result == 'out') echo 'Fail';
+                                                        if ($result == '-') echo 'Pending';
+                                                        if ($result == 'in') echo 'Success';
+                                                        if ($result == 'out') echo 'Fail';
 
                                                     ?>
                                                 </td>
@@ -89,11 +73,6 @@ include 'includes/views/header.php';
                                     ?>
                                     </tbody>
                                 </table>
-                                <p>
-                                    <input type="submit" name="checkoutForm" id="dropBid"
-                                           class="btn btn-info" ***REMOVED*** if (!$bids or !$roundDAO->roundIsActive()) echo " disabled"; ?>
-                                           value="Drop"/>
-                                </p>
                             </form>
                         </section>
                     </div>
