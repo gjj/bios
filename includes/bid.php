@@ -105,11 +105,11 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section)
 
         if ($existingBid) {
             $previousAmount = $existingBid['amount'];
-            $newAmount = $amount - $previousAmount;
+            $difference = $amount - $previousAmount;
             //$bidDAO->refundbidamount($userId, $course);
 
             $userEDollar = $bidDAO->getEDollar($userId)['edollar'];
-            if ($newAmount > $userEDollar) {
+            if ($difference > $userEDollar) {
                 $errors[] = "insufficient e$";
         ***REMOVED***
     ***REMOVED*** else {
