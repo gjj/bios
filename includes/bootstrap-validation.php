@@ -141,21 +141,35 @@
     function checkSectionFormat($section) {
         $section_num = "";
         for ($i = 0; $i < strlen($section); $i++) {
+            if ($i == 0) {
+                if ($section[$i] != 'S') {
+                    return "false";
+                }
+            }
+
             // Skip the first character.
             if ($i != 0) {
                 $section_num .= $section[$i];
             }
-        }
 
+            if (ctype_space($section[$i])) {
+                return "false";
+            }
+        }
         
         //$section_num = intval($section_num);
 
-        if ($section_num < 1 or $section_num > 99 or !is_numeric($section_num)) {
-            return false;
+        if (trim($section_num) != $section_num) {
+            return "false";
         }
 
-        return true;
+        if ($section_num < 1 or $section_num > 99 or !is_numeric($section_num)) {
+            return "false";
+        }
+
+        return "true";
     }
+
     function validateSection($data) {
         global $dataCourses, $dataSections;
 
