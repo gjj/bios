@@ -141,35 +141,21 @@
     function checkSectionFormat($section) {
         $section_num = "";
         for ($i = 0; $i < strlen($section); $i++) {
-            if ($i == 0) {
-                if ($section[$i] != 'S') {
-                    return "false";
-            ***REMOVED***
-        ***REMOVED***
-
             // Skip the first character.
             if ($i != 0) {
                 $section_num .= $section[$i];
         ***REMOVED***
-
-            if (ctype_space($section[$i])) {
-                return "false";
-        ***REMOVED***
     ***REMOVED***
+
         
         //$section_num = intval($section_num);
 
-        if (trim($section_num) != $section_num) {
-            return "false";
+        if ($section_num < 1 or $section_num > 99 or !is_int($section_num)) {
+            return false;
     ***REMOVED***
 
-        if ($section_num < 1 or $section_num > 99 or !is_numeric($section_num)) {
-            return "false";
-    ***REMOVED***
-
-        return "true";
+        return true;
 ***REMOVED***
-
     function validateSection($data) {
         global $dataCourses, $dataSections;
 
@@ -206,7 +192,7 @@
             if (strlen($venue) > 100) {
                 $errors[] = "invalid venue";
         ***REMOVED***
-            if (!is_numeric($size) or $size < 1) {
+            if (!is_int($size) or $size < 1) {
                 $errors[] = "invalid size";
         ***REMOVED***
     ***REMOVED***
