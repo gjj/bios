@@ -15,7 +15,6 @@ if (!$errors) {
         isMissingOrEmptyJson('course', $json),
         isMissingOrEmptyJson('section', $json),
     ];
-
     $errors = array_filter($errors);
     // If pass input validation...
     if (!$errors) {
@@ -33,16 +32,14 @@ if (!$errors) {
         $roundDAO = new RoundDAO();
         $bidDAO = new BidDAO();
         $currentRound = $roundDAO->getCurrentRound();
-        $round = 1;
-        if ($currentRound['round'] == 2 and $currentRound['status'] == 'stopped') $round = 2;
-        $bidDump = $bidDAO->retrieveBidsDump($section, $course, $round);
 
+        $bids = $bidDAO->retrieveAllBidsBySection($course, $section);
 ***REMOVED***
 }
 if (!$errors) {
     $result = [
         "status" => "success",
-        "bids" => $bidDump
+        "bids" => $bids
     ];
 } else {
     $result = [
@@ -52,4 +49,4 @@ if (!$errors) {
 }
 echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK);
 
-
+?>

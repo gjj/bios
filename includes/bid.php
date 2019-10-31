@@ -53,15 +53,15 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section)
             if ($amount < $minBid) {
                 $errors[] = "bid too low";
         ***REMOVED***
+    ***REMOVED***
+
+        if (!$existingBid) {
+            $user = $userDAO->retrieveById($userId);
 
             // course enrolled: Student has already won a bid for a section in this course in a previous round.
             if ($bidDAO->getSuccessfulBid($userId, $course['course'], 1)) {
                 $errors[] = "course enrolled";
         ***REMOVED***
-    ***REMOVED***
-
-        if (!$existingBid) {
-            $user = $userDAO->retrieveById($userId);
             
 
             // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
@@ -105,11 +105,11 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section)
 
         if ($existingBid) {
             $previousAmount = $existingBid['amount'];
-            $newAmount = $amount - $previousAmount;
+            $difference = $amount - $previousAmount;
             //$bidDAO->refundbidamount($userId, $course);
 
             $userEDollar = $bidDAO->getEDollar($userId)['edollar'];
-            if ($newAmount > $userEDollar) {
+            if ($difference > $userEDollar) {
                 $errors[] = "insufficient e$";
         ***REMOVED***
     ***REMOVED*** else {
@@ -127,8 +127,10 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section)
 
             $bidDAO->addBid($userId, $courseCode, $section, $amount, $currentRound); // [EDIT: Added] Last param pls add round
     ***REMOVED***
-***REMOVED***
 
+        sort($errors); // Fucking important!!! Can only be placed here. Why? Read wiki.
+***REMOVED***
+    
     return $errors;
 }
 

@@ -254,6 +254,55 @@ class BidDAO
         return $result;
 ***REMOVED***
 
+    // For /app/json/bid-dump
+    public function retrieveAllBidsBySection($courseCode, $section)
+    {
+        $roundDAO = new RoundDAO();
+        $round = $roundDAO->getCurrentRound()['round'];
+        $status = $roundDAO->getCurrentRound()['status'];
+
+        if ($round == 1 and $status == "started") {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";            
+    ***REMOVED***
+        else {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+    ***REMOVED***
+
+        if ($round == 2) {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+    ***REMOVED***
+        
+        $sql .= " ORDER BY amount DESC, userid";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+        $query->execute();
+
+        $result = [];
+
+        $rowNum = 1;
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            // reorder them as row num needs to be at FRONT of array as order matters
+            $result[] = [
+                'row' => $rowNum,
+                'userid' => $row['userid'],
+                'amount' => (float)$row['amount'],
+                'result' => $row['result']
+            ];
+
+            $rowNum++;
+    ***REMOVED***
+
+        return $result;
+***REMOVED***
+
     public function getSuccessfulBid($userId, $course, $round = 0)
     {
         $sql = "SELECT * FROM bids WHERE result = 'in' AND course = :course AND user_id = :userId";
@@ -383,7 +432,7 @@ class BidDAO
     ***REMOVED***
 
         $sql = "SELECT course, day, start, end FROM sections WHERE (course, section) IN (" . $inClauseBuilder . ") ";
-        $sql .= "UNION SELECT course, day, start, end FROM sections WHERE (course, section) IN (SELECT course, section FROM bids WHERE user_id = :userId AND ((round = :round AND result = '-') OR result = 'in')) ";
+        $sql .= "UNION ALL SELECT course, day, start, end FROM sections WHERE (course, section) IN (SELECT course, section FROM bids WHERE user_id = :userId AND ((round = :round AND result = '-') OR result = 'in')) ";
         $sql .= "ORDER BY day, start";
 
         // sort by Day, then search
@@ -430,7 +479,7 @@ class BidDAO
     ***REMOVED***
 
         $sql = "SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (\"" . implode("\", \"", $courses) . "\") ";
-        $sql .= "UNION SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (SELECT course FROM bids WHERE user_id = :userId AND ((round = :round AND result = '-') OR result = 'in')) ";
+        $sql .= "UNION ALL SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (SELECT course FROM bids WHERE user_id = :userId AND ((round = :round AND result = '-') OR result = 'in')) ";
         $sql .= "ORDER BY exam_date, exam_start";
 
         // sort by Day, then search
@@ -1098,116 +1147,7 @@ class BidDAO
 
         return $result;
 ***REMOVED***
-
-    public function getMinBidWithCourseCode($courseCode, $section)
-    {
-        $sql = "SELECT MIN(amount) AS  minAmount FROM bids WHERE course =:courseCode AND result = 'in'  AND round = 2 AND section = :section";
-        $connMgr = new ConnectionManager();
-        $conn = $connMgr->getConnection();
-        $query = $conn->prepare($sql);
-        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-        $query->bindParam(':section', $section, PDO::PARAM_STR);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        if ($result['minAmount'] != "") {
-            $val = floatval($result['minAmount']) + 1.00;
-            return $val;
-    ***REMOVED***
-        return 10;
-
-
-***REMOVED***
-
-    //This functions Retrieve ID of min Bid User
-    public function getIdofMinBidUser($courseCode, $section, $minVal)
-    {
-        $minVal = (int)$minVal - 1;
-        // Call DB Connection
-        $connMgr = new ConnectionManager();
-        $conn = $connMgr->getConnection();
-        //Set SQL Command
-        $sql = "SELECT * FROM `bids` AS bd WHERE bd.course = :courseCode AND section = :section AND round = 2 AND amount = :amt AND result = 'in'";
-        $query = $conn->prepare($sql);
-        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-        $query->bindParam(':section', $section, PDO::PARAM_STR);
-        $query->bindParam(':amt', $minVal, PDO::PARAM_STR);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        return $result;
-
-***REMOVED***
-
-    //This functions Update user's Bid for Round 2 Clearing
-    public function updateUserBid($userId, $courseCode, $section)
-    {
-        $connMgr = new ConnectionManager();
-        $db = $connMgr->getConnection();
-        try {
-            // We start our transaction.
-            $db->beginTransaction();
-            $sql = "UPDATE bids SET result = 'out' WHERE course = :courseCode AND section = :section AND result = 'in' AND round = 2 AND user_id = :userId";
-            $query = $db->prepare($sql);
-            $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
-            $query->bindParam(':section', $section, PDO::PARAM_STR);
-            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-            $query->execute();
-            // We've got this far without an exception, so commit the changes.
-            $db->commit();
-            return true;
-    ***REMOVED*** catch (Exception $e) {
-            $db->rollback();
-
-            return false;
-
-    ***REMOVED***
-
-***REMOVED***
-
-    public function refundBidUser($minVal, $userId)
-    {
-        $minVal = (int)$minVal - 1;
-        $connMgr = new ConnectionManager();
-        $db = $connMgr->getConnection();
-        $sql = "UPDATE users SET edollar = edollar + :amount WHERE user_id = :userId";
-        $query = $db->prepare($sql);
-        $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-        $query->bindParam(':amount', $minVal, PDO::PARAM_STR);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        return $result;
-
-***REMOVED***
-
-    public function dropBid($bidId, $userId)
-    {
-        $connMgr = new ConnectionManager();
-        $db = $connMgr->getConnection();
-        try {
-            // We start our transaction.
-            $db->beginTransaction();
-            $sql = "SELECT * from bids WHERE id = :bidId";
-            $query = $db->prepare($sql);
-            $query->bindParam(':bidId', $bidId, PDO::PARAM_STR);
-            $query->execute();
-            $result = $query->fetch(PDO::FETCH_ASSOC);
-            $sql = "DELETE FROM bids WHERE id = :bidId";
-            $query = $db->prepare($sql);
-            $query->bindParam(':bidId', $bidId, PDO::PARAM_STR);
-            $query->execute();
-            $sql = "UPDATE users SET edollar = edollar + (:amount) WHERE user_id = :userId";
-            $query = $db->prepare($sql);
-            $query->bindParam(':amount', $result['amount'], PDO::PARAM_STR);
-            $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-            $query->execute();
-            // We've got this far without an exception, so commit the changes.
-            $db->commit();
-            return true;
-    ***REMOVED*** catch (Exception $e) {
-            $db->rollBack();
-    ***REMOVED***
-
-***REMOVED***
-
+    
     public function retrieveBidsDump($section, $course, $round)
     {
         $connMgr = new ConnectionManager();
