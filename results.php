@@ -27,6 +27,23 @@ include 'includes/views/header.php';
                 <div class="row pb-5">
                     <div class="col-md-12">
                         <section>
+                        ***REMOVED***
+                            if (isset($_SESSION['errors'])) {
+                                ?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    You are unable to drop your section because:
+                                    ***REMOVED***
+                                    printErrors();
+                                    ?>
+
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                ***REMOVED***
+                        ***REMOVED***
+                        ?>
                             <form action="" method="post">
                                 <table class="table">
                                     <thead class="thead-dark">
@@ -36,6 +53,7 @@ include 'includes/views/header.php';
                                         <th scope="col">Section</th>
                                         <th scope="col">Result</th>
                                         <th scope="col">Round</th>
+                                        <th scope="col"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -59,6 +77,13 @@ include 'includes/views/header.php';
                                                     ?>
                                                 </td>
                                                 <td>***REMOVED*** echo $bid['round']; ?></td>
+                                                <td>
+                                                    ***REMOVED***
+                                                        if ($roundDAO->roundIsActive() and $result == 'in' and $bid['round'] == 1) {
+                                                            echo '<a href="drop_section?course=' . $bid['course'] . '&section=' . $bid['section'] . '">Drop Section</a>';
+                                                    ***REMOVED***
+                                                    ?>
+                                                </td>
                                             </tr>
                                             ***REMOVED***
                                             $i++;
