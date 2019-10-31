@@ -354,41 +354,24 @@ if (isset($_GET['course'])) {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                     $vacancy = (int)$section['size'] - (int)$row;
                                                     echo $vacancy;
-                                    
+
                                             ***REMOVED***
                                                 ?></td>
-                                            ***REMOVED***
-                                            if ($currentRound['round'] == 2) {
-                                                // // More Vacancies than Bids
-                                                echo "<td>";
-                                                if ($row < $section['size']) {
-                                                    $minBid = 10;
-                                                    echo $minBid;
-                                            ***REMOVED*** // More Bids than Vacancies
-                                                else {
-                                                    // Need to retrieve minBid from minBid table, not minbid from all bids
-                                                    // $minBid = $bidDAO->getMinBidWithCourseCode($cartItems['course'], $cartItems['section']);
-                                                    // $minBidDetails = $bidDAO -> getMinBidfromMinBidTable($course['course'], $section['section']);
-                                                    // foreach($minBidDetails as $minBidDetail) {
-                                                    //     $minBid = floatval($minBidDetail['bidAmount']);
-                                                    //     var_dump($minBid);
-                                                    //     echo $minBid;
-                                                    // }
-                                                    // var_dump($minBidDetails);
-                                                    // var_dump($minBid);
-                                                    if(isset($_SESSION['minBid'])){
-                                                        $minBid = $_SESSION['minBid'];
-                                                        echo $minBid;
+                                            <td>
+                                                ***REMOVED***
+                                                $minBid = 10;
+                                                if ($currentRound['round'] == 2) {
+                                                    $vacancy = (int)$section['size'] - (int)$row;
+                                                    $numberOfBids = $bidDAO->getBidsCountByCourseSection($section['course'], $section['section'], 2);
+                                                    if ($numberOfBids >= $vacancy) {
+                                                        // More Bids than Vacancies
+                                                        $minBid = $bidDAO->getMinBid($section['course'], $section['section'])['bidAmount'];
                                                 ***REMOVED***
                                             ***REMOVED***
-                                                
-                                                // echo "<td>$$minBid</td>";
-                                                echo "</td>";
+                                                echo number_format($minBid, 2);
+
                                                 ?>
-                                                
-                                                ***REMOVED***
-                                        ***REMOVED***
-                                            ?>
+                                            </td>
                                             <td>
                                                 <form action="" method="post">
                                                     <input type="hidden" name="course"
@@ -410,7 +393,7 @@ if (isset($_GET['course'])) {
                                                                 $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                                 $size = $bidDAO->getCourseByCodeAndSection($course['course'], $section['section'])['size'];
                                                                 $vacancy = (int)$size - (int)$allSuccessfulBids;
-                                                
+
                                                                 if ($vacancy == 0) {
                                                                     $error = 'No vacancy';
                                                             ***REMOVED***
