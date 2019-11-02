@@ -62,7 +62,7 @@ if (!$errors) {
                     $minbid = $bidDAO -> getSuccessfulMinBidAmount($course, $section, $round = 1);
             ***REMOVED***
         ***REMOVED***
-            $reports = $bidDAO -> retrieveBidsReport($courseCode, $section);
+            $reports = $bidDAO -> retrieveBidsReport($course, $section);
     ***REMOVED***
 
 ***REMOVED***
