@@ -34,12 +34,45 @@ if (!$errors) {
         $currentRound = $roundDAO->getCurrentRound();
 
         $bids = $bidDAO->retrieveAllBidsBySection($course, $section);
+        $size = $sectionDAO -> retrieveSizeByCodeAndSection($course, $section);
+        $size = $size[0]['size'];
+        if(!$errors) {
+            // During Round 1
+            if($currentRound == "1" && $roundDAO -> roundIsActive()) {
+                $vacancy = $size;
+                $numBidsBySection = count($bids);
+                if($numBidsBySection < $vacancy) {
+                    $minbid = min(array_column($bids, 'amount'));
+            ***REMOVED***
+                elseif($numBidsBySection >= $vacancy) {
+                    $minbid = $bids[$vacancy-1]['amount'];
+            ***REMOVED***
+                elseif($numBidsBySection == 0) {
+                    $minbid = 10.0;
+            ***REMOVED***
+        ***REMOVED***
+            // After Round 1 Ended
+            elseif($round == 1 && $roundDAO -> roundIsActive() == false) {
+                $numOfSuccessful = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 1);
+                $vacancy = $size  - $numOfSuccessful;
+                if($numOfSuccessful == 0) {
+                    $minbid = 10.0;
+            ***REMOVED***
+                else {
+                    $minbid = $bidDAO -> getSuccessfulMinBidAmount($course, $section, $round = 1);
+            ***REMOVED***
+        ***REMOVED***
+            $reports = $bidDAO -> retrieveBidsReport($courseCode, $section);
+    ***REMOVED***
+
 ***REMOVED***
 }
 if (!$errors) {
     $result = [
         "status" => "success",
-        "bids" => $bids
+        "vacancy" => $vacancy,
+        "min-bid-amount" => $minbid,
+        "students " => $reports
     ];
 } else {
     $result = [
