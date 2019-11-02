@@ -291,9 +291,9 @@ class BidDAO
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             // reorder them as row num needs to be at FRONT of array as order matters
 
-            if ($round == 2 and $status == "started") {
-                $row['result'] = "-";
-            }
+            // if ($round == 2 and $status == "started") {
+            //     $row['result'] = "-";
+            // }
             
             $result[] = [
                 'row' => $rowNum,
