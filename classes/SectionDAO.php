@@ -135,6 +135,23 @@ class SectionDAO {
         return $isAddOK;
     }
 
+    public function retrieveSizeByCodeAndSection($courseCode, $section) {
+		$sql = "SELECT size FROM sections WHERE sections.course = :courseCode AND sections.section = :section";
+
+		$connMgr = new ConnectionManager();
+		$db = $connMgr->getConnection();
+
+		$query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+
+		$query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+		return $result;
+    }
+
 
 
 }

@@ -1172,4 +1172,106 @@ class BidDAO
         }
         return $result;
     }
+
+    // For /app/json/bid-status
+    public function retrieveBidsReport($courseCode, $section)
+    {
+        $roundDAO = new RoundDAO();
+        $round = $roundDAO->getCurrentRound()['round'];
+        $status = $roundDAO->getCurrentRound()['status'];
+
+        if ($round == 1 and $status == "started") {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = 'in' ";            
+        }
+        else {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+        }
+
+        // if ($round == 2) {
+        //     $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+        // }
+        
+        $sql .= " ORDER BY amount DESC, userid";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->bindParam(':round', $round, PDO::PARAM_STR);
+
+        $query->execute();
+
+        $result = [];
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            // reorder them as row num needs to be at FRONT of array as order matters
+
+            // if ($round == 2 and $status == "started") {
+            //     $row['result'] = "-";
+            // }
+            $userId = $row['userid'];
+            $edollar = $this -> getEDollar($userId);
+            $amount = (float)$row['amount'];
+            if($round == 1 && $roundDAO -> roundIsActive()) {
+                $result[] = [
+                    'userid' => $row['userid'],
+                    'amount' => (float)$row['amount'],
+                    'balance' => bcsub($edollar['edollar'],$amount,2),
+                    'status' => "pending"
+                ];
+            }
+            elseif($round == 1 && $roundDAO -> roundIsActive() == false) {
+                $status = $row['result'];
+                if($status == "in") {
+                    $balance = bcsub($edollar['edollar'],$amount,2);
+                }
+                else {
+                    $balance = $edollar['edollar'];
+                }
+                $result[] = [
+                    'userid' => $row['userid'],
+                    'amount' => (float)$row['amount'],
+                    'balance' => $balance,
+                    'status' => $status
+                ];
+            }
+            elseif($round == 2 && $roundDAO -> roundIsActive()) {
+                $result[] = [
+                ];
+            }
+            elseif($round == 2 && $roundDAO -> roundIsActive() == false) {
+                $result[] = [
+                ];  
+            }
+
+
+        }
+
+        return $result;
+    }
+
+    public function getSuccessfulMinBidAmount($courseCode, $section, $round = 0)
+    {
+        //$sql = "SELECT * FROM bids AS bd INNER JOIN sections as sc ON bd.course = sc.course AND bd.section = sc.section  WHERE result = 'in' and bd.course = :courseCode and bd.section = :sectionRQ";
+        $sql = "SELECT min(amount) AS amount FROM bids WHERE course = :courseCode AND section = :section AND result = 'in'";
+
+        if ($round) {
+            $sql .= " AND round = :round";
+        }
+
+        // Edited on 24 Oct.
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        $query = $db->prepare($sql);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $result; 
+    }
 }
