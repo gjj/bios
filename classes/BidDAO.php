@@ -1187,9 +1187,9 @@ class BidDAO
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
         }
 
-        // if ($round == 2) {
-        //     $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
-        // }
+        if ($round == 2) {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+        }
         
         $sql .= " ORDER BY amount DESC, userid";
 
@@ -1215,21 +1215,27 @@ class BidDAO
             $userId = $row['userid'];
             $edollar = $this -> getEDollar($userId);
             $amount = (float)$row['amount'];
+
+            // Round 1 started
             if($round == 1 && $roundDAO -> roundIsActive()) {
                 $result[] = [
                     'userid' => $row['userid'],
                     'amount' => (float)$row['amount'],
-                    'balance' => bcsub($edollar['edollar'],$amount,2),
+                    'balance' => $edollar['edollar'],
                     'status' => "pending"
                 ];
             }
+
+            // Round 1 stopped, need to refund
             elseif($round == 1 && $roundDAO -> roundIsActive() == false) {
+                $balance = $edollar['edollar'];
                 $status = $row['result'];
                 if($status == "in") {
-                    $balance = bcsub($edollar['edollar'],$amount,2);
+                    $status = "success";
                 }
                 else {
-                    $balance = $edollar['edollar'];
+                    $balance = floatval($balance) + $amount;
+                    $status = "fail";
                 }
                 $result[] = [
                     'userid' => $row['userid'],
@@ -1238,13 +1244,41 @@ class BidDAO
                     'status' => $status
                 ];
             }
+
+            // Round 2 started 
             elseif($round == 2 && $roundDAO -> roundIsActive()) {
+                $balance = $edollar['edollar'];
+                $status = $row['result'];
+                if($status == "in") {
+                    $status = "success";
+                }
+                else {
+                    $status = "fail";
+                }
                 $result[] = [
+                    'userid' => $row['userid'],
+                    'amount' => (float)$row['amount'],
+                    'balance' => $balance,
+                    'status' => $status
                 ];
             }
+
+            // Round 2 stopped, need to refund 
             elseif($round == 2 && $roundDAO -> roundIsActive() == false) {
-                $result[] = [
-                ];  
+                $balance = $edollar['edollar'];
+                $status = $row['result'];
+                // Only include successful result in report
+                if($status == "in") {
+                    $status = "success";
+                    $balance = floatval($balance) + $amount;
+                    $result[] = [
+                        'userid' => $row['userid'],
+                        'amount' => (float)$row['amount'],
+                        'balance' => $balance,
+                        'status' => $status
+                    ];
+                }
+  
             }
 
 
