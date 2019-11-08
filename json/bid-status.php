@@ -62,6 +62,34 @@ if (!$errors) {
                     $minbid = $bidDAO -> getSuccessfulMinBidAmount($course, $section, $round = 1);
                 }
             }
+            // During Round 2
+            elseif($round == 2 && $roundDAO -> roundIsActive() == True) {
+                $round1 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 1);
+                $round2 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 2);
+                $vacancy = $size - ($round1 + $round2);
+
+                if ($round2 >= $vacancy) {
+                    // More Bids than Vacancies
+                    $minbid = $bidDAO->getMinBid($course, $section)['bidAmount'];
+                }
+                else {
+                    $minbid = 10;
+                }
+            }
+
+            // After Round 2 Ended
+            else {
+                $round1 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 1);
+                $round2 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 2);  
+                $vacancy = $size - ($round1 + $round2);
+
+                if ($round2 > 0) {
+                    $minbid = $bidDAO->getMinBid($course, $section)['bidAmount'];
+                }
+                else {
+                    $minbid = 10;
+                }
+            }
             $reports = $bidDAO -> retrieveBidsReport($course, $section);
         }
 
