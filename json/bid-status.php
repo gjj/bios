@@ -52,20 +52,20 @@ if (!$errors) {
             ***REMOVED***
         ***REMOVED***
             // After Round 1 Ended
-            elseif($round == 1 && $roundDAO -> roundIsActive() == false) {
-                $numOfSuccessful = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 1);
+            elseif($currentRound == 1 && $roundDAO -> roundIsActive() == false) {
+                $numOfSuccessful = $bidDAO -> getSuccessfulByCourseCode($course, $section, $currentRound = 1);
                 $vacancy = $size  - $numOfSuccessful;
                 if($numOfSuccessful == 0) {
                     $minbid = 10.0;
             ***REMOVED***
                 else {
-                    $minbid = $bidDAO -> getSuccessfulMinBidAmount($course, $section, $round = 1);
+                    $minbid = $bidDAO -> getSuccessfulMinBidAmount($course, $section, $currentRound = 1);
             ***REMOVED***
         ***REMOVED***
             // During Round 2
-            elseif($round == 2 && $roundDAO -> roundIsActive() == True) {
-                $round1 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 1);
-                $round2 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 2);
+            elseif($currentRound == 2 && $roundDAO -> roundIsActive() == True) {
+                $round1 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $currentRound = 1);
+                $round2 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $currentRound = 2);
                 $vacancy = $size - ($round1 + $round2);
 
                 if ($round2 >= $vacancy) {
@@ -79,8 +79,8 @@ if (!$errors) {
 
             // After Round 2 Ended
             else {
-                $round1 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 1);
-                $round2 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $round = 2);  
+                $round1 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $currentRound = 1);
+                $round2 = $bidDAO -> getSuccessfulByCourseCode($course, $section, $currentRound = 2);  
                 $vacancy = $size - ($round1 + $round2);
 
                 if ($round2 > 0) {
