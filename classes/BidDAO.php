@@ -1181,7 +1181,7 @@ class BidDAO
         $status = $roundDAO->getCurrentRound()['status'];
 
         if ($round == 1 and $status == "started") {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = 'in' ";            
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";            
     ***REMOVED***
         else {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
