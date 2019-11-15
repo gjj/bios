@@ -143,6 +143,11 @@
         for ($i = 0; $i < strlen($section); $i++) {
             // Skip the first character.
             if ($i != 0) {
+                // https://elearn.smu.edu.sg/d2l/le/news/247852/38655/view
+                if ($i == 1 and $section[$i] == 0) {
+                    return false;
+                }
+
                 $section_num .= $section[$i];
 
                 if (!is_numeric($section[$i])) {
