@@ -357,21 +357,24 @@ if (isset($_GET['course'])) {
 
                                                 }
                                                 ?></td>
-                                            <td>
+                                            
                                                 <?php
-                                                $minBid = 10;
+                                                
                                                 if ($currentRound['round'] == 2) {
-                                                    $vacancy = (int)$section['size'] - (int)$row;
-                                                    $numberOfBids = $bidDAO->getBidsCountByCourseSection($section['course'], $section['section'], 2);
-                                                    if ($numberOfBids >= $vacancy) {
-                                                        // More Bids than Vacancies
-                                                        $minBid = $bidDAO->getMinBid($section['course'], $section['section'])['bidAmount'];
+                                                    echo "<td>";
+
+                                                    $minBid = $bidDAO->getMinBid($section['course'], $section['section'])['bidAmount'];
+
+                                                    if (!$minBid) {
+                                                        $minBid = 10; // in case is empty.
                                                     }
+
+                                                    echo number_format($minBid, 2);
+
+                                                    echo "</td>";
                                                 }
-                                                echo number_format($minBid, 2);
 
                                                 ?>
-                                            </td>
                                             <td>
                                                 <form action="" method="post">
                                                     <input type="hidden" name="course"
