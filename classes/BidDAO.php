@@ -247,7 +247,7 @@ class BidDAO
         $result = [];
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-            $row['amount'] = (float)$row['amount'];
+            $row['amount'] = (float) $row['amount'];
             $result[] = $row;
     ***REMOVED***
 
@@ -262,16 +262,15 @@ class BidDAO
         $status = $roundDAO->getCurrentRound()['status'];
 
         if ($round == 1 and $status == "started") {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";            
-    ***REMOVED***
-        else {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";
+    ***REMOVED*** else {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
     ***REMOVED***
 
         if ($round == 2) {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
     ***REMOVED***
-        
+
         $sql .= " ORDER BY amount DESC, userid";
 
         $connMgr = new ConnectionManager();
@@ -294,11 +293,11 @@ class BidDAO
             if ($round == 2 and $status == "started") {
                 $row['result'] = "-";
         ***REMOVED***
-            
+
             $result[] = [
                 'row' => $rowNum,
                 'userid' => $row['userid'],
-                'amount' => (float)$row['amount'],
+                'amount' => (float) $row['amount'],
                 'result' => $row['result']
             ];
 
@@ -356,7 +355,7 @@ class BidDAO
         $result = [];
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-            $row['amount'] = (float)$row['amount'];
+            $row['amount'] = (float) $row['amount'];
             $result[] = $row;
     ***REMOVED***
 
@@ -1152,7 +1151,7 @@ class BidDAO
 
         return $result;
 ***REMOVED***
-    
+
     public function retrieveBidsDump($section, $course, $round)
     {
         $connMgr = new ConnectionManager();
@@ -1167,7 +1166,7 @@ class BidDAO
         $result = [];
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-            $row['amount'] = (float)$row['amount'];
+            $row['amount'] = (float) $row['amount'];
             $result[] = $row;
     ***REMOVED***
         return $result;
@@ -1181,16 +1180,15 @@ class BidDAO
         $status = $roundDAO->getCurrentRound()['status'];
 
         if ($round == 1 and $status == "started") {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";            
-    ***REMOVED***
-        else {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";
+    ***REMOVED*** else {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
     ***REMOVED***
 
         if ($round == 2) {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";            
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
     ***REMOVED***
-        
+
         $sql .= " ORDER BY amount DESC, userid";
 
         $connMgr = new ConnectionManager();
@@ -1213,75 +1211,70 @@ class BidDAO
             //     $row['result'] = "-";
             // }
             $userId = $row['userid'];
-            $edollar = $this -> getEDollar($userId);
-            $amount = (float)$row['amount'];
+            $edollar = $this->getEDollar($userId);
+            $amount = (float) $row['amount'];
 
             // Round 1 started
-            if($round == 1 && $roundDAO -> roundIsActive()) {
+            if ($round == 1 && $roundDAO->roundIsActive()) {
                 $result[] = [
                     'userid' => $row['userid'],
-                    'amount' => (float)$row['amount'],
-                    'balance' => $edollar['edollar'],
+                    'amount' => (float) $row['amount'],
+                    'balance' => (float) $edollar['edollar'],
                     'status' => "pending"
                 ];
         ***REMOVED***
 
             // Round 1 stopped, need to refund
-            elseif($round == 1 && $roundDAO -> roundIsActive() == false) {
+            elseif ($round == 1 && $roundDAO->roundIsActive() == false) {
                 $balance = $edollar['edollar'];
                 $status = $row['result'];
-                if($status == "in") {
+                if ($status == "in") {
                     $status = "success";
-            ***REMOVED***
-                else {
+            ***REMOVED*** else {
                     $balance = floatval($balance) + $amount;
                     $status = "fail";
             ***REMOVED***
                 $result[] = [
                     'userid' => $row['userid'],
-                    'amount' => (float)$row['amount'],
-                    'balance' => $balance,
+                    'amount' => (float) $row['amount'],
+                    'balance' => (float) $balance,
                     'status' => $status
                 ];
         ***REMOVED***
 
             // Round 2 started 
-            elseif($round == 2 && $roundDAO -> roundIsActive()) {
+            elseif ($round == 2 && $roundDAO->roundIsActive()) {
                 $balance = $edollar['edollar'];
                 $status = $row['result'];
-                if($status == "in") {
+                if ($status == "in") {
                     $status = "success";
-            ***REMOVED***
-                else {
+            ***REMOVED*** else {
                     $status = "fail";
             ***REMOVED***
                 $result[] = [
                     'userid' => $row['userid'],
-                    'amount' => (float)$row['amount'],
-                    'balance' => $balance,
+                    'amount' => (float) $row['amount'],
+                    'balance' => (float) $balance,
                     'status' => $status
                 ];
         ***REMOVED***
 
             // Round 2 stopped, need to refund 
-            elseif($round == 2 && $roundDAO -> roundIsActive() == false) {
+            elseif ($round == 2 && $roundDAO->roundIsActive() == false) {
                 $balance = $edollar['edollar'];
                 $status = $row['result'];
                 // Only include successful result in report
-                if($status == "in") {
+                if ($status == "in") {
                     $status = "success";
                     $balance = floatval($balance) + $amount;
                     $result[] = [
                         'userid' => $row['userid'],
-                        'amount' => (float)$row['amount'],
-                        'balance' => $balance,
+                        'amount' => (float) $row['amount'],
+                        'balance' => (float) $balance,
                         'status' => $status
                     ];
             ***REMOVED***
-  
         ***REMOVED***
-
-
     ***REMOVED***
 
         return $result;
@@ -1306,6 +1299,6 @@ class BidDAO
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
-        return $result; 
+        return $result;
 ***REMOVED***
 }
