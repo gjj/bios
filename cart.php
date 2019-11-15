@@ -185,6 +185,10 @@ include 'includes/views/header.php';
                                                     if ($numberOfBids >= $vacancy) {
                                                         // More Bids than Vacancies
                                                         $minBid = $bidDAO->getMinBid($cartItem['course'], $cartItem['section'])['bidAmount'];
+                                                        
+                                                        if (!$minBid) {
+                                                            $minBid = 10; // in case is empty.
+                                                    ***REMOVED***
                                                 ***REMOVED***
                                             ***REMOVED***
 

@@ -120,7 +120,11 @@ if ($roundDAO->roundIsActive()) {
                             
                         ?>
                             <b>Status:</b> ***REMOVED*** echo $result['status']; ?><br/>
-                            ***REMOVED*** if ($result['status'] == "error") { ?>
+                            ***REMOVED*** if ($result['status'] == "success") { ?>
+                                <b>All bids are now cleared and confirmed.</b>
+                            ***REMOVED***
+                            ***REMOVED***
+                                else if ($result['status'] == "error") { ?>
                                 <b>Error Message(s): </b>***REMOVED*** echo implode(", ", $result['message']); ?><br/>
                             ***REMOVED***
                                     
