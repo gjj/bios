@@ -1053,7 +1053,7 @@ class BidDAO
 
     public function getBidsCountByCourseSection($courseCode, $section, $round = 0)
     {
-        $sql = "SELECT COUNT(*) AS bids FROM bids WHERE course = :courseCode AND section = :section";
+        $sql = "SELECT COUNT(*) AS bids FROM bids WHERE course = :courseCode AND section = :section AND result NOT IN ('cart')";
 
         if ($round) {
             $sql .= " AND round = :round";
