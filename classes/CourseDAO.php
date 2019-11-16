@@ -2,9 +2,46 @@
 
 class CourseDAO
 {
-    public function retrieveAll()
+    public function retrieveAll($school = "", $search = "")
     {
         $sql = "SELECT course, school, title, description, DATE_FORMAT(exam_date, '%Y%m%d') AS 'exam date', TIME_FORMAT(exam_start, '%k%i') AS 'exam start', TIME_FORMAT(exam_end, '%k%i') AS 'exam end' FROM courses";
+
+        if ($school == "all") $school = "";
+
+        if ($school or $search) {
+            $sql .= " WHERE ";
+        }
+
+        if ($school) {
+            $sql .= " school = :school";
+        }
+
+        if ($search) {
+            if ($school) {
+                $sql .= " AND ";
+            }
+            $search = "%" . $search . "%";
+            $sql .= " title LIKE :search";
+        }
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+        
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        if ($school) $query->bindParam(':school', $school, PDO::PARAM_STR);
+        if ($search) $query->bindParam(':search', $search, PDO::PARAM_STR);
+
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Returns my result set on success.
+        return $result;
+    }
+
+    public function retrieveAllSchools()
+    {
+        $sql = "SELECT DISTINCT school FROM courses";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
