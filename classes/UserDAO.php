@@ -76,7 +76,7 @@ class UserDAO
 
     public function retrieveAllStudents()
     {
-        $sql = "SELECT user_id AS userid, password, name, school, FORMAT(edollar, 1) AS edollar FROM users WHERE role = 0 ";
+        $sql = "SELECT user_id AS userid, password, name, school, FORMAT(edollar, 2) AS edollar FROM users WHERE role = 0 ";
         $sql .= "ORDER BY userid";
 
         $connMgr = new ConnectionManager();
