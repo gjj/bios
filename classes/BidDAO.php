@@ -363,7 +363,7 @@ class BidDAO
 ***REMOVED***
 
     // For /app/json/bid-status
-    public function getBidsCountInRound2($courseCode, $section) {
+    public function getBidsInRound2($courseCode, $section) {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
@@ -375,7 +375,7 @@ class BidDAO
         $query->execute();
         $bids = $query->fetchAll(PDO::FETCH_ASSOC);
         
-        return $query->rowCount();
+        return $bids;
 ***REMOVED***
 
     public function checkDuplicates($userId, $courseSections, $round)
