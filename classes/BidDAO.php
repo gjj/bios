@@ -388,11 +388,11 @@ class BidDAO
         $status = $roundDAO->getCurrentRound()['status'];
         
         if ($round == 1) {
-            $sql = "SELECT user_id AS userid, amount FROM bids WHERE result = 'in' AND round = 1 ";
+            $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = 1 ";
     ***REMOVED*** elseif ($round == 2 and $status == "started") {
-            $sql = "SELECT user_id AS userid, amount FROM bids WHERE result = 'in' AND round = 1 ";
+            $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = 1 ";
     ***REMOVED*** else {
-            $sql = "SELECT user_id AS userid, amount FROM bids WHERE result = 'in' AND round = 2 ";
+            $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = 2 ";
     ***REMOVED***
 
         $sql .= "ORDER BY course, userid";
