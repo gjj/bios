@@ -350,11 +350,24 @@ if (isset($_GET['course'])) {
                                             <td>***REMOVED***
                                                 if ($currentRound['round'] == 1 and $currentRound['status'] == 'started') {
                                                     echo $section['size'];
-                                            ***REMOVED*** else {
+                                            ***REMOVED***
+                                                elseif ($currentRound['round'] == 1 and $currentRound['status'] == 'stopped') {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                     $vacancy = (int)$section['size'] - (int)$row;
                                                     echo $vacancy;
 
+                                            ***REMOVED***
+                                                elseif ($currentRound['round'] == 2 and $currentRound['status'] == 'started') {
+                                                    $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
+                                                    $vacancy = (int)$section['size'] - (int)$row;
+                                                    echo $vacancy;
+
+                                            ***REMOVED***
+                                                else {
+                                                    $round1 = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
+                                                    $round2 = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 2);
+                                                    $vacancy = $section['size'] - ($round1 + $round2);
+                                                    echo $vacancy;
                                             ***REMOVED***
                                                 ?></td>
                                             
