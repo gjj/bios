@@ -16,7 +16,7 @@
             "message" => array_values($errors)
         ];
 
-        echo $result;
+        echo json_encode($result, JSON_PRETTY_PRINT);
     }
     else {
         echo doBootstrap();

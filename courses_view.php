@@ -285,7 +285,7 @@ if (isset($_GET['course'])) {
                         <section>
                             <span><b>Exam</b></span>
                             <p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?>
-                                - <?php echo $course['exam end']; ?> • X hours</p>
+                                - <?php echo $course['exam end']; ?></p>
                         </section>
 
                         <section>
@@ -350,11 +350,24 @@ if (isset($_GET['course'])) {
                                             <td><?php
                                                 if ($currentRound['round'] == 1 and $currentRound['status'] == 'started') {
                                                     echo $section['size'];
-                                                } else {
+                                                }
+                                                elseif ($currentRound['round'] == 1 and $currentRound['status'] == 'stopped') {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                     $vacancy = (int)$section['size'] - (int)$row;
                                                     echo $vacancy;
 
+                                                }
+                                                elseif ($currentRound['round'] == 2 and $currentRound['status'] == 'started') {
+                                                    $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
+                                                    $vacancy = (int)$section['size'] - (int)$row;
+                                                    echo $vacancy;
+
+                                                }
+                                                else {
+                                                    $round1 = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
+                                                    $round2 = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 2);
+                                                    $vacancy = $section['size'] - ($round1 + $round2);
+                                                    echo $vacancy;
                                                 }
                                                 ?></td>
                                             
