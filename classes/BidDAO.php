@@ -226,21 +226,39 @@ class BidDAO
     }
 
     // For /app/json/dump
-    public function retrieveAllBids($round = 1, $retrieveAll = false)
+    public function retrieveAllBids()
     {
-        if ($retrieveAll) {
-            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = :round ";
-        } else {
-            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = :round AND result = '-' ";
+
+        // Only the bid details for the current round should be shown in the bid records.
+        // If the current round is round 2, list the last bid made by each user in each section.
+        // If there is no active round, the bids (whether successful or unsuccessful)
+        // for the most recently concluded round should be shown.
+        // The system does not need to maintain a history of bidding results
+        // from previous bidding rounds.
+        $roundDAO = new RoundDAO();
+        $round = $roundDAO->getCurrentRound()['round'];
+        $status = $roundDAO->getCurrentRound()['status'];
+        
+        if ($round == 1 and $status == "started") {
+            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 1 AND result = '-' ";
         }
-        $sql .= "ORDER BY course, section, amount DESC, userid";
+        else if ($round == 1 and $status == "stopped") {
+            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 1 AND result IN ('in', 'out') ";
+        }
+        else if ($round == 2 and $status == "started") {
+            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 2 AND result IN ('in', 'out') ";
+        }
+        else if ($round == 2 and $status == "stopped") {
+            $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 2 AND result IN ('in', 'out') ";
+        }
+        
+        $sql .= " ORDER BY course, section, amount DESC, userid";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
 
         $query->execute();
 
@@ -326,7 +344,7 @@ class BidDAO
         return $result;
     }
 
-    // For /app/json/dump
+    // For /app/json/bid-dump (DIFFERENT FROM BELOW)
     public function retrieveAllSuccessfulBids($round = 0, $course = null, $section = null)
     {
         // See https://wiki.smu.edu.sg/is212/Project#Dump_.28Section.29
@@ -351,6 +369,39 @@ class BidDAO
         //if ($round) $query->bindParam(':round', $round, PDO::PARAM_STR);
         if ($course) $query->bindParam(':course', $course, PDO::PARAM_STR);
         if ($section) $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+        $result = [];
+
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $row['amount'] = (float) $row['amount'];
+            $result[] = $row;
+        }
+
+        return $result;
+    }
+
+    // For /app/json/dump
+    public function retrieveAllSuccessfulBidsForDump()
+    {
+        $roundDAO = new RoundDAO();
+        $round = $roundDAO->getCurrentRound()['round'];
+        $status = $roundDAO->getCurrentRound()['status'];
+        
+        if ($round == 1) {
+            $sql = "SELECT user_id AS userid, amount FROM bids WHERE result = 'in' AND round = 1 ";
+        } elseif ($round == 2 and $status == "started") {
+            $sql = "SELECT user_id AS userid, amount FROM bids WHERE result = 'in' AND round = 1 ";
+        } else {
+            $sql = "SELECT user_id AS userid, amount FROM bids WHERE result = 'in' AND round = 2 ";
+        }
+
+        $sql .= "ORDER BY course, userid";
+
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->execute();
         $result = [];
 
