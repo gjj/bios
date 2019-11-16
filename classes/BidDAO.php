@@ -362,6 +362,22 @@ class BidDAO
         return $result;
     }
 
+    // For /app/json/bid-status
+    public function getBidsCountInRound2($courseCode, $section) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $sql = "SELECT * FROM bids WHERE round = 2 AND result IN ('-', 'in', 'out') AND course = :courseCode AND section = :section ORDER BY amount DESC";
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+        $bids = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $query->rowCount();
+    }
+
     public function checkDuplicates($userId, $courseSections, $round)
     {
         $selectedCourses = array_column($courseSections, 'course');
@@ -1180,13 +1196,16 @@ class BidDAO
         $status = $roundDAO->getCurrentRound()['status'];
 
         if ($round == 1 and $status == "started") {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";
-        } else {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = 1 AND course = :courseCode AND section = :section AND result = '-' ";
         }
-
-        if ($round == 2) {
-            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
+        elseif ($round == 1 and $status == "stopped") {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = 1 AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
+        }
+        elseif ($round == 2 and $status == "started") {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = 2 AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
+        }
+        elseif ($round == 2 and $status == "stopped") {
+            $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE course = :courseCode AND section = :section AND result IN ('in')";
         }
 
         $sql .= " ORDER BY amount DESC, userid";
@@ -1198,7 +1217,6 @@ class BidDAO
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':section', $section, PDO::PARAM_STR);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
 
         $query->execute();
 
@@ -1211,27 +1229,27 @@ class BidDAO
             //     $row['result'] = "-";
             // }
             $userId = $row['userid'];
-            $edollar = $this->getEDollar($userId);
-            $amount = (float) $row['amount'];
+            $balance = $this->getEDollar($userId)['edollar'];
 
-            // Round 1 started
-            if ($round == 1 && $roundDAO->roundIsActive()) {
+            
+            if ($round == 1 and $roundDAO->roundIsActive()) {
+                // Round 1 started
+
                 $result[] = [
                     'userid' => $row['userid'],
                     'amount' => (float) $row['amount'],
-                    'balance' => (float) $edollar['edollar'],
+                    'balance' => (float) $balance,
                     'status' => "pending"
                 ];
             }
-
-            // Round 1 stopped, need to refund
-            elseif ($round == 1 && $roundDAO->roundIsActive() == false) {
-                $balance = $edollar['edollar'];
+            elseif ($round == 1 and !$roundDAO->roundIsActive()) {
+                // Round 1 stopped, but before round 2 started
+                
                 $status = $row['result'];
                 if ($status == "in") {
                     $status = "success";
                 } else {
-                    $balance = floatval($balance) + $amount;
+                    //$balance = floatval($balance) + $amount;
                     $status = "fail";
                 }
                 $result[] = [
@@ -1241,10 +1259,9 @@ class BidDAO
                     'status' => $status
                 ];
             }
-
-            // Round 2 started 
-            elseif ($round == 2 && $roundDAO->roundIsActive()) {
-                $balance = $edollar['edollar'];
+            elseif ($round == 2 and $roundDAO->roundIsActive()) {
+                // Round 2 started 
+                
                 $status = $row['result'];
                 if ($status == "in") {
                     $status = "success";
@@ -1258,15 +1275,14 @@ class BidDAO
                     'status' => $status
                 ];
             }
-
-            // Round 2 stopped, need to refund 
-            elseif ($round == 2 && $roundDAO->roundIsActive() == false) {
-                $balance = $edollar['edollar'];
+            elseif ($round == 2 and !$roundDAO->roundIsActive()) {
+                // Round 2 stopped, need to refund 
+                
                 $status = $row['result'];
                 // Only include successful result in report
                 if ($status == "in") {
                     $status = "success";
-                    $balance = floatval($balance) + $amount;
+                    //$balance = floatval($balance) + $amount;
                     $result[] = [
                         'userid' => $row['userid'],
                         'amount' => (float) $row['amount'],
