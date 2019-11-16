@@ -26,7 +26,7 @@
                     <div class="col-md-8">
                         <header>
                             <h5><a href="courses_view?course=***REMOVED*** echo $course['course']; ?>">***REMOVED*** echo $course['course'] . " " . $course['title']; ?></a></h5>
-                            <span>***REMOVED*** echo $course['school']; ?> • 1 Credit Unit</span>
+                            <span>***REMOVED*** echo $course['school']; ?></span>
                         </header>
                         
                         <p class="pt-2">
@@ -59,7 +59,7 @@
                     <div class="col-md-4">
                         <section>
                             <span><b>Exam</b></span>
-                            <p>***REMOVED*** echo $course['exam date']; ?> ***REMOVED*** echo $course['exam start']; ?> - ***REMOVED*** echo $course['exam end']; ?> • 3 hours</p>
+                            <p>***REMOVED*** echo $course['exam date']; ?> ***REMOVED*** echo $course['exam start']; ?> - ***REMOVED*** echo $course['exam end']; ?></p>
                         </section>
                     </div>
                 </div>
