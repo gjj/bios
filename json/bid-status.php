@@ -99,12 +99,21 @@ if (!$errors) {
                 $numberOfSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($course, $section, 1);
                 $vacancy = $size - $numberOfSuccessfulBids; // Remaining vacancies after round 1.
                 
-                if ($bidsInRound2 >= $vacancy) {
+                $minbid = $bidDAO->getMinBid($course, $section);
+
+                if ($minbid) {
+                    $minbid = $minbid['bidAmount'];
+                }
+                else {
+                    $minbid = 10.0;
+                }
+
+                /*if ($bidsInRound2 >= $vacancy) {
                     // More Bids than Vacancies
                     $minbid = $bidDAO->getMinBid($course, $section)['bidAmount'];
                 } else {
                     $minbid = 10.0;
-                }
+                }*/
             }
 
             // After Round 2 Ended
