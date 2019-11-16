@@ -34,13 +34,9 @@
         // for the most recently concluded round should be shown.
         // The system does not need to maintain a history of bidding results
         // from previous bidding rounds.
-        if ($roundDAO->roundIsActive()) {
-            $bids = $bidDAO->retrieveAllBids($currentRound['round']);
-    ***REMOVED***
-        else {
-            $bids = $bidDAO->retrieveAllBids($currentRound['round'], true);
-    ***REMOVED***
-        $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids(0);
+        $bids = $bidDAO->retrieveAllBids();
+
+        $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBidsForDump();
 ***REMOVED***
     
     if (!$errors) {
