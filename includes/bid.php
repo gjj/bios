@@ -53,6 +53,15 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section)
             if ($amount < $minBid) {
                 $errors[] = "bid too low";
             }
+
+            // round 2 must check vacancy left
+            $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($courseCode, $section, 1);
+            $size = $bidDAO->getCourseByCodeAndSection($courseCode, $section)['size'];
+            $vacancy = (int)$size - (int)$allSuccessfulBids;
+
+            if ($vacancy == 0) {
+                $error = 'No vacancy';
+            }
         }
 
         if (!$existingBid) {
