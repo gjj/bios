@@ -114,7 +114,7 @@ if (!$errors) {
                 $round2 = $bidDAO->getSuccessfulByCourseCode($course, $section, 2);
                 $vacancy = $size - ($round1 + $round2);
 
-                $bidsInRound2 = $bidDAO->getBidsInRound2($course, $section);
+                $bidsInRound2 = $bidDAO->getSuccessfulBidsInRound2($course, $section);
 
                 if ($round2 > 0) {
                     //$minbid = $bidDAO->getMinBid($course, $section)['bidAmount'];
