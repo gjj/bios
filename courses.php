@@ -26,7 +26,7 @@
                     <div class="col-md-8">
                         <header>
                             <h5><a href="courses_view?course=<?php echo $course['course']; ?>"><?php echo $course['course'] . " " . $course['title']; ?></a></h5>
-                            <span><?php echo $course['school']; ?> • 1 Credit Unit</span>
+                            <span><?php echo $course['school']; ?></span>
                         </header>
                         
                         <p class="pt-2">
@@ -59,7 +59,7 @@
                     <div class="col-md-4">
                         <section>
                             <span><b>Exam</b></span>
-                            <p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?> - <?php echo $course['exam end']; ?> • 3 hours</p>
+                            <p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?> - <?php echo $course['exam end']; ?></p>
                         </section>
                     </div>
                 </div>

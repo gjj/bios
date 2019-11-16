@@ -285,7 +285,7 @@ if (isset($_GET['course'])) {
                         <section>
                             <span><b>Exam</b></span>
                             <p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?>
-                                - <?php echo $course['exam end']; ?> • X hours</p>
+                                - <?php echo $course['exam end']; ?></p>
                         </section>
 
                         <section>
