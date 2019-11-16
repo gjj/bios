@@ -60,7 +60,7 @@ function addOrUpdateBid($userId, $amount, $courseCode, $section)
             $vacancy = (int)$size - (int)$allSuccessfulBids;
 
             if ($vacancy == 0) {
-                $error = 'No vacancy';
+                $errors[] = "no vacancy";
         ***REMOVED***
     ***REMOVED***
 
