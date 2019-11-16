@@ -378,6 +378,21 @@ class BidDAO
         return $bids;
 ***REMOVED***
 
+    public function getSuccessfulBidsInRound2($courseCode, $section) {
+        $connMgr = new ConnectionManager();
+        $db = $connMgr->getConnection();
+
+        $sql = "SELECT * FROM bids WHERE round = 2 AND result IN ('in') AND course = :courseCode AND section = :section ORDER BY amount DESC";
+        $query = $db->prepare($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
+        $query->bindParam(':section', $section, PDO::PARAM_STR);
+        $query->execute();
+        $bids = $query->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $bids;
+***REMOVED***
+
     public function checkDuplicates($userId, $courseSections, $round)
     {
         $selectedCourses = array_column($courseSections, 'course');
