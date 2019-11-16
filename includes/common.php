@@ -107,7 +107,7 @@
 		
 		// Client did send the value over, but is blank (and this is different from a missing field).
 		$value = $json[$name];
-		if ($value == "") {
+		if ($value == "" and $value != 0) {
 			return "blank $name";
 		}
 	}
