@@ -425,46 +425,6 @@
                 }
             }
         }
-        
-        /*$userSchool = $userDAO -> getSchoolbyID($userId);
-        $checkOwnSchoolCourse = $bidDAO -> checkOwnSchoolCourse($userSchool, $course);
-        // $checkTimetableConflicts = $bidDAO -> checkTimetableConflicts($userId, $courseSections, $round);
-        // $checkExamConflicts = $bidDAO -> checkExamConflicts($userId, $courseSections, $round);
-        $hasPrerequisites = $bidDAO -> hasPrerequisites($course);
-        $hasCompletedCourse = $bidDAO ->hasCompletedCourse($userId, $course);
-        $countBids = $bidDAO -> countBids($userId, $round);
-        // $getEDollar = $bidDAO -> getEDollar($userId);
-
-            if(!$checkOwnSchoolCourse){
-                $error = "not own school course";
-                $errors[] = $error;
-            }
-            // if(!$checkTimetableConflicts){
-            //     $error = "class timetable clash";
-            //     $errors[] = $error;
-            // }
-            // if(!$checkExamConflicts){
-            //     $error = "exam timetable clash";
-            //     $errors[] = $error;
-            // }
-            // if course has prerequisites, check if prerequisites were completed 
-            if($hasPrerequisites){
-                $completedPrerequisites = $bidDAO -> hasCompletedPrerequisites($userId, $course);
-                // if student hasn't completed prerequisites, error out
-                if($completedPrerequisites == False){
-                    $error = "invalid course completed";
-                    $errors[] = $error; 
-                }
-            }
-            if($hasCompletedCourse){
-                $error = "course completed";
-                $errors[] = $error;
-            }
-            if($countBids > 5){
-                $error = "section limit reached";
-                $errors[] = $error;
-            }
-            // if($getEDollar)*/
 
         return $errors;
 

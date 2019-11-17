@@ -1009,7 +1009,7 @@ class BidDAO
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $existingBid = $this->findExistingBid($userId, $courseCode, $round);
+        $existingBid = $this->findExistingBid($userId, $courseCode);
 
         //$sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2";
         $sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2, result = '-'";
@@ -1051,16 +1051,32 @@ class BidDAO
         return $query->rowCount();
     }
 
-    public function findExistingBid($userId, $courseCode, $round = 1)
+    public function findExistingBid($userId, $courseCode)
     {
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
 
-        $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND ((round = :round AND result = '-') OR (round = 2 AND result = 'in'))";
+        $roundDAO = new RoundDAO();
+        $round = $roundDAO->getCurrentRound()['round'];
+        $status = $roundDAO->getCurrentRound()['status'];
+
+        // $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND ((round = :round AND result = '-') OR (round = 2 AND result IN ('in', 'out')))";
+        $sql = "";
+
+        // Cannot have started here
+        if ($round == 1) {
+            $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND round = 1 AND result = '-'";
+        }
+        else if ($round == 2 and $status == "started") {
+            $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND round = 2 AND result IN ('in', 'out')";
+        }
+        else {
+            return [];
+        }
+
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
