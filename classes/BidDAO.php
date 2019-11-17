@@ -687,7 +687,7 @@ class BidDAO
 ***REMOVED***
     public function countBids($userId, $round)
     {
-        $sql = "SELECT * FROM bids WHERE user_id = :userId AND  ((round = :round AND result = '-') OR result = 'in')";
+        $sql = "SELECT * FROM bids WHERE user_id = :userId AND  ((round = 1 AND result IN ('-', 'in')) OR (round = 2 AND result IN ('in', 'out')))";
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -695,7 +695,7 @@ class BidDAO
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $query->bindParam(':userId', $userId, PDO::PARAM_STR);
-        $query->bindParam(':round', $round, PDO::PARAM_STR);
+        //$query->bindParam(':round', $round, PDO::PARAM_STR);
 
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
