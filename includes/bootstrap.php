@@ -96,6 +96,9 @@ function doBootstrap()
                 $userDAO->truncateAllTable();
                 $roundDAO->removeAllMinBid();
 
+                // Start round.
+                $roundDAO->startRound();
+
                 // Begin importing student.csv.
                 $header = fgetcsv($students); // Skip first row.
                 $student_row = 2;
@@ -333,7 +336,7 @@ function doBootstrap()
                 fclose($students);
                 @unlink($students_path);
 
-                $roundDAO->startRound();
+                
 
 
             }
