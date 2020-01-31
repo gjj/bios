@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once 'includes/common.php';
 
 $viewData['title'] = "Cart";
@@ -30,36 +30,36 @@ if ($_POST) {
                 );
 
                 array_push($courseSections, $courseSection);
-        ***REMOVED***
+            }
 
             if ($bidDAO->checkDuplicates($user['userid'], $courseSections, $currentRound['round'])) {
                 addError("You can only bid for one section per course!");
-        ***REMOVED***
+            }
 
             if ($bidDAO->checkTimetableConflicts($user['userid'], $courseSections, $currentRound['round'])) {
                 addError("Timetable conflict with either your bidded courses or your confirmed courses! [error: class timetable clash]");
-        ***REMOVED***
+            }
 
             if ($bidDAO->checkExamConflicts($user['userid'], $courseSections, $currentRound['round'])) {
                 addError("Exam conflict with either your bidded courses or your confirmed courses! [error: exam timetable clash]");
-        ***REMOVED***
+            }
 
             $count = count($_POST['checkout']);
             $countBiddedMods = $bidDAO->countBids($user['userid'], $currentRound['round']);
 
             if (($count + $countBiddedMods) > 5) {
                 addError("You can only bid for up to 5 sections! You currently have {$countBiddedMods} bidded/confirmed courses, and you're bidding for {$count} more. [error: section limit reached]");
-        ***REMOVED***
+            }
 
             // If no errors, then we redirect to cart_checkout.php.
             if (!isset($_SESSION['errors'])) {
                 $_SESSION['courseSections'] = $courseSections;
                 header("Location: cart_checkout");
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED*** else {
+            }
+        }
+    } else {
         addError("Round is not active.");
-***REMOVED***
+    }
 }
 
 $viewData['styles'] = "
@@ -78,20 +78,20 @@ $viewData['scripts'] = "
                         url: 'json/misc/calendar_sections',
                         type: 'GET',
                         textColor: 'white'
-                ***REMOVED***,
+                    },
                     error: function() {
                         alert('API error.');
-                ***REMOVED***,
+                    },
                     header: {
                         left: 'prev,next today myCustomButton',
                         center: 'title',
                         right: 'month,agendaWeek,agendaDay'
-                ***REMOVED***,
+                    },
                     height: 'auto',
                     minTime: '08:00:00',
                     maxTime: '22:30:00'
-            ***REMOVED***);
-        ***REMOVED***);
+                });
+            });
         </script>
     ";
 
@@ -102,16 +102,16 @@ include 'includes/views/header.php';
             <h1 class="h2">Cart</h1>
         </div>
         <p class="lead">
-            You currently have <code>e$***REMOVED*** echo $user['edollar']; ?></code>.
+            You currently have <code>e$<?php echo $user['edollar']; ?></code>.
         </p>
         <div class="row pb-5">
             <div class="col-md-12">
                 <h5>My Cart</h5>
-                ***REMOVED***
+                <?php
                 if (isset($_SESSION['errors'])) {
                     ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        ***REMOVED***
+                        <?php
                         printErrors();
                         ?>
 
@@ -120,8 +120,8 @@ include 'includes/views/header.php';
                         </button>
                     </div>
 
-                    ***REMOVED***
-            ***REMOVED***
+                    <?php
+                }
                 ?>
 
                 <section>
@@ -143,7 +143,7 @@ include 'includes/views/header.php';
                             </tr>
                             </thead>
                             <tbody>
-                            ***REMOVED***
+                            <?php
 
                             $i = 0;
 
@@ -156,26 +156,26 @@ include 'includes/views/header.php';
                                         <tr>
                                             <!-- This is just one way of passing data over, using hidden fields. Because our design is like that... -->
                                             <td>
-                                                <input type="checkbox" name="checkout[]" value="***REMOVED*** echo $i; ?>"/>
+                                                <input type="checkbox" name="checkout[]" value="<?php echo $i; ?>"/>
                                             </td>
-                                            <td>***REMOVED*** echo $cartItem['course']; ?></td>
-                                            <td>***REMOVED*** echo $cartItem['section']; ?></td>
-                                            <td>***REMOVED*** echo $cartItem['day']; ?></td>
-                                            <td>***REMOVED*** echo $cartItem['start']; ?></td>
-                                            <td>***REMOVED*** echo $cartItem['end']; ?></td>
-                                            <td>***REMOVED*** echo $cartItem['instructor']; ?></td>
-                                            <td>***REMOVED*** echo $cartItem['venue']; ?></td>
-                                            <td>***REMOVED***
+                                            <td><?php echo $cartItem['course']; ?></td>
+                                            <td><?php echo $cartItem['section']; ?></td>
+                                            <td><?php echo $cartItem['day']; ?></td>
+                                            <td><?php echo $cartItem['start']; ?></td>
+                                            <td><?php echo $cartItem['end']; ?></td>
+                                            <td><?php echo $cartItem['instructor']; ?></td>
+                                            <td><?php echo $cartItem['venue']; ?></td>
+                                            <td><?php
                                                 if ($currentRound['round'] == 2) {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($cartItem['course'], $cartItem['section'], 1);
                                                     $vacancy = (int)$cartItem['size'] - (int)$row;
                                                     echo $vacancy;
                                                     
-                                            ***REMOVED*** else {
+                                                } else {
                                                     echo $cartItem['size'];
-                                            ***REMOVED*** ?></td>
+                                                } ?></td>
                                             <td>
-                                            ***REMOVED***
+                                            <?php
                                                 $minBid = 10;
                                                 if ($currentRound['round'] == 2) {
                                                     $vacancy = (int)$cartItem['size'] - (int)$row;
@@ -188,21 +188,21 @@ include 'includes/views/header.php';
                                                         
                                                         if (!$minBid) {
                                                             $minBid = 10; // in case is empty.
-                                                    ***REMOVED***
-                                                ***REMOVED***
-                                            ***REMOVED***
+                                                        }
+                                                    }
+                                                }
 
                                                 echo number_format($minBid, 2);
                                             ?>
                                             </td>
                                             <td>
-                                                <a href="cart_delete?course=***REMOVED*** echo $cartItem['course']; ?>&section=***REMOVED*** echo $cartItem['section']; ?>">Delete</a>
+                                                <a href="cart_delete?course=<?php echo $cartItem['course']; ?>&section=<?php echo $cartItem['section']; ?>">Delete</a>
                                             </td>
                                         </tr>
-                                        ***REMOVED***
+                                        <?php
                                         $i++;
-                                ***REMOVED***
-                            ***REMOVED*** else {
+                                    }
+                                } else {
                                     ?>
 
                                     <tr>
@@ -211,21 +211,21 @@ include 'includes/views/header.php';
                                         </td>
                                     </tr>
 
-                                    ***REMOVED***
-                            ***REMOVED***
-                        ***REMOVED*** else {
+                                    <?php
+                                }
+                            } else {
                                 ?>
                                 <tr>
                                     <td colspan="10">Round is not active.</td>
                                 </tr>
-                                ***REMOVED***
-                        ***REMOVED***
+                                <?php
+                            }
                             ?>
                             </tbody>
                         </table>
                         <p>
                             <input type="submit" name="checkoutForm"
-                                   class="btn btn-info"***REMOVED*** if (!$cartItems or !$roundDAO->roundIsActive()) echo " disabled"; ?>
+                                   class="btn btn-info"<?php if (!$cartItems or !$roundDAO->roundIsActive()) echo " disabled"; ?>
                                    value="Checkout"/>
                         </p>
                     </form>
@@ -257,7 +257,7 @@ include 'includes/views/header.php';
                             </tr>
                             </thead>
                             <tbody>
-                            ***REMOVED***
+                            <?php
                             $i = 0;
 
                             if ($roundDAO->roundIsActive()) {
@@ -266,9 +266,9 @@ include 'includes/views/header.php';
                                         $row = $bidDAO->getSuccessfulByCourseCode($bid['course'], $bid['section'], 1);
                             ?>
                                         <tr>
-                                            <td>***REMOVED*** echo $bid['amount']; ?></td>
+                                            <td><?php echo $bid['amount']; ?></td>
                                             <td>
-                                                ***REMOVED***
+                                                <?php
                                                     $minBid = 10;
                                                     if ($currentRound['round'] == 2) {
                                                         $vacancy = (int)$bid['size'] - (int)$row;
@@ -278,59 +278,59 @@ include 'includes/views/header.php';
                                                         if ($numberOfBids >= $vacancy) {
                                                             // More Bids than Vacancies
                                                             $minBid = $bidDAO->getMinBid($bid['course'], $bid['section'])['bidAmount'];
-                                                    ***REMOVED***
-                                                ***REMOVED***
+                                                        }
+                                                    }
 
                                                     echo number_format($minBid, 2);
                                                 ?>
                                             </td>
-                                            ***REMOVED***
+                                            <?php
                                                 if ($bid['result'] == '-') echo '<td>Pendiing</td>';
                                                 else if ($bid['result'] == 'in') echo '<td class="bg-success text-white">Success</td>';
                                                 else if ($bid['result'] == 'out') echo '<td class="bg-danger text-white">Fail</td>';
                                                 else echo '<td>Error</td>';                                                   
                                             ?>
-                                            <td>***REMOVED*** echo $bid['course']; ?></td>
-                                            <td>***REMOVED*** echo $bid['section']; ?></td>
-                                            <td>***REMOVED*** echo $bid['day']; ?></td>
-                                            <td>***REMOVED*** echo $bid['start']; ?></td>
-                                            <td>***REMOVED*** echo $bid['end']; ?></td>
-                                            <!--<td>***REMOVED*** echo $bid['instructor']; ?></td>
-                                            <td>***REMOVED*** echo $bid['venue']; ?></td>-->
+                                            <td><?php echo $bid['course']; ?></td>
+                                            <td><?php echo $bid['section']; ?></td>
+                                            <td><?php echo $bid['day']; ?></td>
+                                            <td><?php echo $bid['start']; ?></td>
+                                            <td><?php echo $bid['end']; ?></td>
+                                            <!--<td><?php echo $bid['instructor']; ?></td>
+                                            <td><?php echo $bid['venue']; ?></td>-->
                                             <td>
-                                                ***REMOVED***
+                                                <?php
                                                     if ($currentRound['round'] == 2) {
                                                         $vacancy = (int)$bid['size'] - (int)$row;
                                                         echo $vacancy;
                                                         
-                                                ***REMOVED*** else {
+                                                    } else {
                                                         echo $bid['size'];
-                                                ***REMOVED***
+                                                    }
                                                 ?>
                                             </td>
                                             <td>
-                                                <a href="bid_update?course=***REMOVED*** echo $bid['course']; ?>&section=***REMOVED*** echo $bid['section']; ?>">Update</a>
+                                                <a href="bid_update?course=<?php echo $bid['course']; ?>&section=<?php echo $bid['section']; ?>">Update</a>
                                                 |
-                                                <a href="bid_delete?course=***REMOVED*** echo $bid['course']; ?>&section=***REMOVED*** echo $bid['section']; ?>">Delete</a>
+                                                <a href="bid_delete?course=<?php echo $bid['course']; ?>&section=<?php echo $bid['section']; ?>">Delete</a>
                                             </td>
                                         </tr>
-                                        ***REMOVED***
+                                        <?php
                                         $i++;
-                                ***REMOVED***
-                            ***REMOVED*** else {
+                                    }
+                                } else {
                                     ?>
                                     <tr>
                                         <td colspan="10">No bids currently.</td>
                                     </tr>
-                                    ***REMOVED***
-                            ***REMOVED***
-                        ***REMOVED*** else {
+                                    <?php
+                                }
+                            } else {
                                 ?>
                                 <tr>
                                     <td colspan="10">Round is not active.</td>
                                 </tr>
-                                ***REMOVED***
-                        ***REMOVED***
+                                <?php
+                            }
                             ?>
                             </tbody>
                         </table>
@@ -347,6 +347,6 @@ include 'includes/views/header.php';
             </div>
         </div>
     </main>
-***REMOVED***
+<?php
 include 'includes/views/footer.php';
 ?>

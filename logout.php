@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 	require_once 'includes/common.php';
 
 	// Clear current session.

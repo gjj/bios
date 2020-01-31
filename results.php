@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once 'includes/common.php';
 
 $viewData['title'] = "Results";
@@ -27,12 +27,12 @@ include 'includes/views/header.php';
                 <div class="row pb-5">
                     <div class="col-md-12">
                         <section>
-                        ***REMOVED***
+                        <?php
                             if (isset($_SESSION['errors'])) {
                                 ?>
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                     You are unable to drop your section because:
-                                    ***REMOVED***
+                                    <?php
                                     printErrors();
                                     ?>
 
@@ -41,8 +41,8 @@ include 'includes/views/header.php';
                                     </button>
                                 </div>
 
-                                ***REMOVED***
-                        ***REMOVED***
+                                <?php
+                            }
                         ?>
                             <form action="" method="post">
                                 <table class="table">
@@ -57,17 +57,17 @@ include 'includes/views/header.php';
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    ***REMOVED***
+                                    <?php
                                     $i = 0;
                                     if ($bids) {
                                         foreach ($bids as $bid) {
                                             ?>
                                             <tr>
-                                                <td>***REMOVED*** echo $bid['amount']; ?></td>
-                                                <td>***REMOVED*** echo $bid['course']; ?></td>
-                                                <td>***REMOVED*** echo $bid['section']; ?></td>
+                                                <td><?php echo $bid['amount']; ?></td>
+                                                <td><?php echo $bid['course']; ?></td>
+                                                <td><?php echo $bid['section']; ?></td>
                                                 <td>
-                                                    ***REMOVED***
+                                                    <?php
                                                         $result = $bid['result'];
 
                                                         if ($result == '-') echo 'Pending';
@@ -76,25 +76,25 @@ include 'includes/views/header.php';
 
                                                     ?>
                                                 </td>
-                                                <td>***REMOVED*** echo $bid['round']; ?></td>
+                                                <td><?php echo $bid['round']; ?></td>
                                                 <td>
-                                                    ***REMOVED***
+                                                    <?php
                                                         if ($roundDAO->roundIsActive() and $result == 'in' and $bid['round'] == 1) {
                                                             echo '<a href="drop_section?course=' . $bid['course'] . '&section=' . $bid['section'] . '">Drop Section</a>';
-                                                    ***REMOVED***
+                                                        }
                                                     ?>
                                                 </td>
                                             </tr>
-                                            ***REMOVED***
+                                            <?php
                                             $i++;
-                                    ***REMOVED***
-                                ***REMOVED*** else {
+                                        }
+                                    } else {
                                         ?>
                                         <tr>
                                             <td colspan="10">No bids currently.</td>
                                         </tr>
-                                        ***REMOVED***
-                                ***REMOVED***
+                                        <?php
+                                    }
                                     ?>
                                     </tbody>
                                 </table>
@@ -103,6 +103,6 @@ include 'includes/views/header.php';
                     </div>
                 </div>
     </main>
-***REMOVED***
+<?php
 include 'includes/views/footer.php';
 ?>

@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 class RoundDAO {
     public function getCurrentRound() {

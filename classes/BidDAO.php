@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 class BidDAO
 {
@@ -9,12 +9,12 @@ class BidDAO
        After round proc status = {in, out}
     */
 
-***REMOVED***
-***REMOVED***This methods returns all BIDS by user.
-***REMOVED***@params $userId The user ID to search for.
-***REMOVED***@params $round The current round.
-***REMOVED***@return All BIDS that matches the search params.
-***REMOVED***
+    /**
+     * This methods returns all BIDS by user.
+     * @params $userId The user ID to search for.
+     * @params $round The current round.
+     * @return All BIDS that matches the search params.
+     */
     public function retrieveAllBidsByUser($userId, $round)
     {
 
@@ -35,15 +35,15 @@ class BidDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
 
-***REMOVED***
-***REMOVED***This methods returns all cart items by user of a given round
-***REMOVED***@params $userId The user ID to search for.
-***REMOVED***@params $round The current round.
-***REMOVED***@return All cart items that matches the search params.
-***REMOVED***
+    /**
+     * This methods returns all cart items by user of a given round
+     * @params $userId The user ID to search for.
+     * @params $round The current round.
+     * @return All cart items that matches the search params.
+     */
     public function retrieveAllCartItemsByUser($userId, $round)
     {
         $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND round = :round AND result = 'cart'";
@@ -63,16 +63,16 @@ class BidDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
-***REMOVED***
-***REMOVED***This methods returns all cart items by a user given the code and section.
-***REMOVED***@params $userId The user ID to search for.
-***REMOVED***@params $coursecode The course code.
-***REMOVED***@params $section The section.
-***REMOVED***@params $round The current round.
-***REMOVED***@return All cart items that matches the search params.
-***REMOVED***
+    /**
+     * This methods returns all cart items by a user given the code and section.
+     * @params $userId The user ID to search for.
+     * @params $coursecode The course code.
+     * @params $section The section.
+     * @params $round The current round.
+     * @return All cart items that matches the search params.
+     */
     public function retrieveCartItemsByCodeAndSection($userId, $courseCode, $section, $round)
     {
         $sql = "SELECT user_id, amount, bids.course, bids.section, result, round, courses.school, courses.title, sections.day, sections.start, sections.end, sections.instructor, sections.venue, sections.size FROM bids, courses, sections WHERE bids.course = courses.course AND bids.course = sections.course AND bids.section = sections.section AND user_id = :userId AND bids.course = :courseCode AND bids.section = :section AND round = :round AND result = 'cart'";
@@ -94,7 +94,7 @@ class BidDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveBidsByCodeAndSection($userId, $courseCode, $section, $round)
     {
@@ -118,7 +118,7 @@ class BidDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveCompletedCourses()
     {
@@ -136,16 +136,16 @@ class BidDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
-***REMOVED***
-***REMOVED***Check if the course and section pair has already been added to cart.
-***REMOVED***@params $userId The user ID to search for.
-***REMOVED***@params $coursecode The course code.
-***REMOVED***@params $section The section.
-***REMOVED***@params $round The current round.
-***REMOVED***@return true if already added to cart, false if not in the cart.
-***REMOVED***
+    /**
+     * Check if the course and section pair has already been added to cart.
+     * @params $userId The user ID to search for.
+     * @params $coursecode The course code.
+     * @params $section The section.
+     * @params $round The current round.
+     * @return true if already added to cart, false if not in the cart.
+     */
     public function checkIfAddedToCart($userId, $courseCode, $section, $round)
     {
         $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND section = :section AND ((round = :round AND (result = 'cart' OR result = '-')) OR result = 'in')";
@@ -167,19 +167,19 @@ class BidDAO
 
         if (count($result)) {
             return true;
-    ***REMOVED***
+        }
 
         return false;
-***REMOVED***
+    }
 
-***REMOVED***
-***REMOVED***Delete cart item.
-***REMOVED***@params $userId The user ID to search for.
-***REMOVED***@params $coursecode The course code.
-***REMOVED***@params $section The section.
-***REMOVED***@params $round The current round.
-***REMOVED***@return true if successfully deleted, false if not.
-***REMOVED***
+    /**
+     * Delete cart item.
+     * @params $userId The user ID to search for.
+     * @params $coursecode The course code.
+     * @params $section The section.
+     * @params $round The current round.
+     * @return true if successfully deleted, false if not.
+     */
     public function deleteCartItemByCodeAndSection($userId, $courseCode, $section, $round)
     {
         $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round AND result = 'cart'";
@@ -201,10 +201,10 @@ class BidDAO
 
         if ($query->execute()) {
             $isDeleteOK = true;
-    ***REMOVED***
+        }
 
         return $isDeleteOK;
-***REMOVED***
+    }
 
     // For /app/json/dump
     public function retrieveAllPrerequisites()
@@ -223,7 +223,7 @@ class BidDAO
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
     // For /app/json/dump
     public function retrieveAllBids()
@@ -241,16 +241,16 @@ class BidDAO
         
         if ($round == 1 and $status == "started") {
             $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 1 AND result = '-' ";
-    ***REMOVED***
+        }
         else if ($round == 1 and $status == "stopped") {
             $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 1 AND result IN ('in', 'out') ";
-    ***REMOVED***
+        }
         else if ($round == 2 and $status == "started") {
             $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 2 AND result IN ('in', 'out') ";
-    ***REMOVED***
+        }
         else if ($round == 2 and $status == "stopped") {
             $sql = "SELECT user_id AS userid, amount, course, section FROM bids WHERE round = 2 AND result IN ('in', 'out') ";
-    ***REMOVED***
+        }
         
         $sql .= " ORDER BY course, section, amount DESC, userid";
 
@@ -267,10 +267,10 @@ class BidDAO
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $row['amount'] = (float) $row['amount'];
             $result[] = $row;
-    ***REMOVED***
+        }
 
         return $result;
-***REMOVED***
+    }
 
     // For /app/json/bid-dump
     public function retrieveAllBidsBySection($courseCode, $section)
@@ -281,13 +281,13 @@ class BidDAO
 
         if ($round == 1 and $status == "started") {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result = '-' ";
-    ***REMOVED*** else {
+        } else {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
-    ***REMOVED***
+        }
 
         if ($round == 2) {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = :round AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
-    ***REMOVED***
+        }
 
         $sql .= " ORDER BY amount DESC, userid";
 
@@ -310,7 +310,7 @@ class BidDAO
 
             if ($round == 2 and $status == "started") {
                 $row['result'] = "-";
-        ***REMOVED***
+            }
 
             $result[] = [
                 'row' => $rowNum,
@@ -320,10 +320,10 @@ class BidDAO
             ];
 
             $rowNum++;
-    ***REMOVED***
+        }
 
         return $result;
-***REMOVED***
+    }
 
     public function getSuccessfulBid($userId, $course, $round = 0)
     {
@@ -342,7 +342,7 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
     // For /app/json/bid-dump (DIFFERENT FROM BELOW)
     public function retrieveAllSuccessfulBids($round = 0, $course = null, $section = null)
@@ -352,11 +352,11 @@ class BidDAO
         if ($course and $section) $text = "";
         if ($round == 1) {
             $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' AND round = 1 ";
-    ***REMOVED*** elseif ($round == 2) {
+        } elseif ($round == 2) {
             $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' AND round IN (1, 2) ";
-    ***REMOVED*** else {
+        } else {
             $sql = "SELECT user_id AS userid, $text amount FROM bids WHERE result = 'in' ";
-    ***REMOVED***
+        }
         if ($course) $sql .= " AND course = :course ";
         if ($section) $sql .= " AND section = :section ";
         $sql .= "ORDER BY course, userid";
@@ -375,10 +375,10 @@ class BidDAO
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $row['amount'] = (float) $row['amount'];
             $result[] = $row;
-    ***REMOVED***
+        }
 
         return $result;
-***REMOVED***
+    }
 
     // For /app/json/dump
     public function retrieveAllSuccessfulBidsForDump()
@@ -389,11 +389,11 @@ class BidDAO
         
         if ($round == 1) {
             $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = 1 ";
-    ***REMOVED*** elseif ($round == 2 and $status == "started") {
+        } elseif ($round == 2 and $status == "started") {
             $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = 1 ";
-    ***REMOVED*** else {
+        } else {
             $sql = "SELECT user_id AS userid, course, section, amount FROM bids WHERE result = 'in' AND round = 2 ";
-    ***REMOVED***
+        }
 
         $sql .= "ORDER BY course, userid";
 
@@ -408,10 +408,10 @@ class BidDAO
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $row['amount'] = (float) $row['amount'];
             $result[] = $row;
-    ***REMOVED***
+        }
 
         return $result;
-***REMOVED***
+    }
 
     // For /app/json/bid-status
     public function getBidsInRound2($courseCode, $section) {
@@ -427,7 +427,7 @@ class BidDAO
         $bids = $query->fetchAll(PDO::FETCH_ASSOC);
         
         return $bids;
-***REMOVED***
+    }
 
     public function getSuccessfulBidsInRound2($courseCode, $section) {
         $connMgr = new ConnectionManager();
@@ -442,7 +442,7 @@ class BidDAO
         $bids = $query->fetchAll(PDO::FETCH_ASSOC);
         
         return $bids;
-***REMOVED***
+    }
 
     public function checkDuplicates($userId, $courseSections, $round)
     {
@@ -451,7 +451,7 @@ class BidDAO
 
         if (count($duplicates)) {
             return true;
-    ***REMOVED***
+        }
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -469,16 +469,16 @@ class BidDAO
         // Meaning it already exists in our bids.
         if ($query->rowCount()) {
             return true;
-    ***REMOVED***
+        }
 
         return false;
-***REMOVED***
+    }
 
     /*
-***REMOVED***Check if bidded course is same as user's current school, only used in Round 1.
-***REMOVED***"not own school course"	This only happens in round 1 where students are allowed to bid for modules from their own school.
-***REMOVED***bid.csv validation 1/7
-***REMOVED***
+     * Check if bidded course is same as user's current school, only used in Round 1.
+     * "not own school course"	This only happens in round 1 where students are allowed to bid for modules from their own school.
+     * bid.csv validation 1/7
+     */
     public function checkOwnSchoolCourse($userSchool, $courseCode)
     {
         $sql = "SELECT course, school FROM courses WHERE course = :courseCode";
@@ -495,16 +495,16 @@ class BidDAO
 
         if ($result['school'] == $userSchool) {
             return true;
-    ***REMOVED***
+        }
 
         return false;
-***REMOVED***
+    }
 
     /*
-***REMOVED***Check for existing cart bids (passed as $coursesections) WITH existing records (i.e. got into the course/submitted bids) for timetable conflicts.
-***REMOVED***"class timetable clash"	The class timeslot for the section clashes with that of a previously bidded section.
-***REMOVED***bid.csv validation 2/7
-***REMOVED***
+     * Check for existing cart bids (passed as $coursesections) WITH existing records (i.e. got into the course/submitted bids) for timetable conflicts.
+     * "class timetable clash"	The class timeslot for the section clashes with that of a previously bidded section.
+     * bid.csv validation 2/7
+     */
     public function checkTimetableConflicts($userId, $courseSections, $round)
     {
         $inClauseBuilder = "";
@@ -514,8 +514,8 @@ class BidDAO
 
             if ($i != (count($courseSections) - 1)) {
                 $inClauseBuilder .= ", ";
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
         $sql = "SELECT course, day, start, end FROM sections WHERE (course, section) IN (" . $inClauseBuilder . ") ";
         $sql .= "UNION ALL SELECT course, day, start, end FROM sections WHERE (course, section) IN (SELECT course, section FROM bids WHERE user_id = :userId AND ((round = :round AND result = '-') OR result = 'in')) ";
@@ -544,25 +544,25 @@ class BidDAO
                 if ($timeslot1['day'] == $timeslot2['day']) {
                     if ($timeslot1['end'] > $timeslot2['start']) {
                         return true;
-                ***REMOVED***
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                    }
+                }
+            }
+        }
 
         return false;
-***REMOVED***
+    }
 
     /*
-***REMOVED***Check for existing cart bids (passed as $courseSections) WITH existing records (i.e. got into the course/submitted bids) for exam conflicts.
-***REMOVED***"exam timetable clash"	The exam timeslot for this section clashes with that of a previously bidded section.
-***REMOVED***bid.csv validation 3/7
-***REMOVED***
+     * Check for existing cart bids (passed as $courseSections) WITH existing records (i.e. got into the course/submitted bids) for exam conflicts.
+     * "exam timetable clash"	The exam timeslot for this section clashes with that of a previously bidded section.
+     * bid.csv validation 3/7
+     */
     public function checkExamConflicts($userId, $courseSections, $round)
     {
         $courses = array();
         for ($i = 0; $i < count($courseSections); $i++) {
             array_push($courses, $courseSections[$i]['course']);
-    ***REMOVED***
+        }
 
         $sql = "SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (\"" . implode("\", \"", $courses) . "\") ";
         $sql .= "UNION ALL SELECT course, exam_date, exam_start, exam_end FROM courses WHERE course IN (SELECT course FROM bids WHERE user_id = :userId AND ((round = :round AND result = '-') OR result = 'in')) ";
@@ -591,19 +591,19 @@ class BidDAO
                 if ($timeslot1['exam_date'] == $timeslot2['exam_date']) {
                     if ($timeslot1['exam_end'] > $timeslot2['exam_start']) {
                         return true;
-                ***REMOVED***
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                    }
+                }
+            }
+        }
 
         return false;
-***REMOVED***
+    }
 
     /*
-***REMOVED***Check if user has completed the prerequisites.
-***REMOVED***"incomplete prerequisites"	student has not completed the prerequisites for this course.
-***REMOVED***bid.csv validation 4/7
-***REMOVED***
+     * Check if user has completed the prerequisites.
+     * "incomplete prerequisites"	student has not completed the prerequisites for this course.
+     * bid.csv validation 4/7
+     */
     public function hasPrerequisites($courseCode)
     {
         $sql = "SELECT prerequisite FROM prerequisites WHERE course = :courseCode;";
@@ -620,10 +620,10 @@ class BidDAO
 
         if (count($result)) {
             return true;
-    ***REMOVED***
+        }
 
         return false;
-***REMOVED***
+    }
 
     /* Only use when you know that the course has prerequisites. */
     public function hasCompletedPrerequisites($userId, $courseCode)
@@ -648,16 +648,16 @@ class BidDAO
 
         if ($query->rowCount() == $query2->rowCount()) {
             return true;
-    ***REMOVED***
+        }
 
         return false;
-***REMOVED***
+    }
 
     /*
-***REMOVED***Check if course has already been completed. Why do you want to take the same course again, right?
-***REMOVED***"course completed"	student has already completed this course.
-***REMOVED***bid.csv validation 5/7
-***REMOVED***
+     * Check if course has already been completed. Why do you want to take the same course again, right?
+     * "course completed"	student has already completed this course.
+     * bid.csv validation 5/7
+     */
     public function hasCompletedCourse($userId, $courseCode)
     {
         $sql = "SELECT * FROM courses_completed WHERE user_id = :userId AND course = :courseCode";
@@ -675,16 +675,16 @@ class BidDAO
 
         if (count($result)) {
             return true;
-    ***REMOVED***
+        }
 
         return false;
-***REMOVED***
+    }
 
     /*
-***REMOVED***Return count(confirmed mods + submitted bids).
-***REMOVED***"section limit reached"	student has already bidded for 5 sections.
-***REMOVED***bid.csv validation 6/7
-***REMOVED***
+     * Return count(confirmed mods + submitted bids).
+     * "section limit reached"	student has already bidded for 5 sections.
+     * bid.csv validation 6/7
+     */
     public function countBids($userId, $round)
     {
         $sql = "SELECT * FROM bids WHERE user_id = :userId AND  ((round = 1 AND result IN ('-', 'in')) OR (round = 2 AND result IN ('in', 'out')))";
@@ -702,13 +702,13 @@ class BidDAO
 
         // Returns my result set on success.
         return count($result);
-***REMOVED***
+    }
 
     /*
-***REMOVED***Get user's edollar.
-***REMOVED***"not enough e-dollar"	student has not enough e-dollars to place the bid. If it is an update of a previous bid for the same course, account for the e$ gained back from the cancellation
-***REMOVED***bid.csv validation 7/7
-***REMOVED***
+     * Get user's edollar.
+     * "not enough e-dollar"	student has not enough e-dollars to place the bid. If it is an update of a previous bid for the same course, account for the e$ gained back from the cancellation
+     * bid.csv validation 7/7
+     */
     public function getEDollar($userId)
     {
         $sql = "SELECT edollar FROM users WHERE user_id = :userId";
@@ -725,7 +725,7 @@ class BidDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function addToCart($userId, $courseCode, $section, $round)
     {
@@ -745,10 +745,10 @@ class BidDAO
 
         if ($stmt->execute()) {
             $isAddOK = true;
-    ***REMOVED***
+        }
 
         return $isAddOK;
-***REMOVED***
+    }
 
     /*public function addBidViaCart($userId, $courseCode, $section, $amount, $round)
     {
@@ -764,11 +764,11 @@ class BidDAO
                 $sql = "UPDATE bids SET result = '-', amount = :amount WHERE user_id = :userId AND course = :courseCode AND section = :section AND result = 'cart' AND round = :round";
                 //$sql = "INSERT INTO bids (user_id, course, section, amount, round) VALUES (:userId, :courseCode, :section, :amount, :round) ON DUPLICATE KEY UPDATE amount = :amount2, result = '-'";
 
-        ***REMOVED*** elseif ($round == 2) {
+            } elseif ($round == 2) {
                 // Edited 24 Oct.
                 $this->addBid($userId, $courseCode, $section, $amount, $round);
                 return true;
-        ***REMOVED***
+            }
             $query = $db->prepare($sql);
             $query->bindParam(':amount', $amount, PDO::PARAM_STR);
             $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
@@ -790,12 +790,12 @@ class BidDAO
             // We've got this far without an exception, so commit the changes.
             $db->commit();
             return true;
-    ***REMOVED*** catch (Exception $e) {
+        } catch (Exception $e) {
             $db->rollback();
 
             return false;
-    ***REMOVED***
-***REMOVED****/
+        }
+    }*/
 
     public function updateBid($userId, $courseCode, $section, $amount, $round)
     {
@@ -840,16 +840,16 @@ class BidDAO
             if ($currentRound == 2) {
                 $roundClearingDAO = new RoundClearingDAO();
                 $roundClearingDAO->clearCourseSection($courseCode, $section);
-        ***REMOVED***
+            }
 
             $isUpdateOk = False;
             if ($query->execute()) {
                 $isUpdateOk = True;
-        ***REMOVED***
+            }
 
             return $isUpdateOk;
-    ***REMOVED***
-***REMOVED***
+        }
+    }
 
 
     public function getCompletedCourses($userId)
@@ -868,7 +868,7 @@ class BidDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function updateDayOfWeek($query)
     {
@@ -885,16 +885,16 @@ class BidDAO
         if (isset($query['day'])) {
             $query['day'] = $dayOfWeek[$query['day']];
             return $query;
-    ***REMOVED***
+        }
 
         if (count($query)) {
             for ($i = 0; $i < count($query); $i++) {
                 $query[$i]['day'] = $dayOfWeek[$query[$i]['day']];
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
         return $query;
-***REMOVED***
+    }
 
     public function retrieveResults($userId)
     {
@@ -911,7 +911,7 @@ class BidDAO
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
     public function removeAll()
     {
@@ -924,7 +924,7 @@ class BidDAO
 
         $stmt->execute();
         $count = $stmt->rowCount();
-***REMOVED***
+    }
 
     public function getAllBidsForCalendar($userId, $round)
     {
@@ -942,7 +942,7 @@ class BidDAO
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
 
     public function refundbidamount($userId, $courseCode, $section = null, $round = 1)
@@ -952,9 +952,9 @@ class BidDAO
 
         if ($section) {
             $sql = "SELECT section, amount FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round AND result NOT IN ('out', 'cart')"; // AND result = '-'
-    ***REMOVED*** else {
+        } else {
             $sql = "SELECT section, amount FROM bids WHERE course = :courseCode AND user_id = :userId AND round = :round AND result NOT IN ('out', 'cart')"; // AND result = '-'
-    ***REMOVED***
+        }
 
         $query = $db->prepare($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
@@ -964,7 +964,7 @@ class BidDAO
 
         if ($section) {
             $query->bindParam(':section', $section, PDO::PARAM_STR);
-    ***REMOVED***
+        }
 
         $query->execute();
 
@@ -980,9 +980,9 @@ class BidDAO
 
             if ($section) {
                 $sql = "DELETE FROM bids WHERE course = :courseCode AND section = :section AND user_id = :userId AND round = :round"; // AND result = '-'
-        ***REMOVED*** else {
+            } else {
                 $sql = "DELETE FROM bids WHERE course = :courseCode AND user_id = :userId AND round = :round"; // AND result = '-'
-        ***REMOVED***
+            }
 
             $query = $db->prepare($sql);
             $query->bindParam(':userId', $userId, PDO::PARAM_STR);
@@ -996,13 +996,13 @@ class BidDAO
             if ($currentRound == 2) {
                 $roundClearingDAO = new RoundClearingDAO();
                 $roundClearingDAO->clearCourseSection($courseCode, $result['section']);
-        ***REMOVED***
+            }
 
             return true;
-    ***REMOVED*** else {
+        } else {
             return false;
-    ***REMOVED***
-***REMOVED***
+        }
+    }
 
     public function addBid($userId, $courseCode, $section, $amount, $round = 1)
     {
@@ -1030,7 +1030,7 @@ class BidDAO
         if ($existingBid) {
             $previousAmount = $existingBid['amount'];
             $amountToDebit = $amount - $previousAmount;
-    ***REMOVED***
+        }
 
         $sql = "UPDATE users SET edollar = edollar - (:amount) WHERE user_id = :userId";
 
@@ -1046,10 +1046,10 @@ class BidDAO
         if ($round == 2) {
             $roundClearingDAO = new RoundClearingDAO();
             $roundClearingDAO->clearCourseSection($courseCode, $section);
-    ***REMOVED***
+        }
 
         return $query->rowCount();
-***REMOVED***
+    }
 
     public function findExistingBid($userId, $courseCode)
     {
@@ -1066,13 +1066,13 @@ class BidDAO
         // Cannot have started here
         if ($round == 1) {
             $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND round = 1 AND result = '-'";
-    ***REMOVED***
+        }
         else if ($round == 2 and $status == "started") {
             $sql = "SELECT * FROM bids WHERE user_id = :userId AND course = :courseCode AND round = 2 AND result IN ('in', 'out')";
-    ***REMOVED***
+        }
         else {
             return [];
-    ***REMOVED***
+        }
 
         $query = $db->prepare($sql);
         $query->bindParam(':courseCode', $courseCode, PDO::PARAM_STR);
@@ -1081,7 +1081,7 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
     public function getCourseByCode($userId, $courseCode, $round = 1)
     {
@@ -1098,7 +1098,7 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
     public function getCourseByCodeAndSection($courseCode, $section)
     {
@@ -1113,7 +1113,7 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
     public function insertOrUpdateMinBid($courseCode, $section, $amount)
     {
@@ -1124,12 +1124,12 @@ class BidDAO
 
         if ($minBidRecord) {
             $minBid = $minBidRecord['bidAmount'];
-    ***REMOVED***
+        }
 
         // Min bid will never be lower. If it's lower, remain the same.
         if ($amount < $minBid) {
             $amount = $minBid;
-    ***REMOVED***
+        }
 
         $connMgr = new ConnectionManager();
         $conn = $connMgr->getConnection();
@@ -1144,9 +1144,9 @@ class BidDAO
 
         if ($stmt->execute()) {
             $result = true;
-    ***REMOVED***
+        }
         return $result;
-***REMOVED***
+    }
 
     public function getBidsCountByCourseSection($courseCode, $section, $round = 0)
     {
@@ -1154,7 +1154,7 @@ class BidDAO
 
         if ($round) {
             $sql .= " AND round = :round";
-    ***REMOVED***
+        }
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -1166,7 +1166,7 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         return $result['bids']; // CANNOT do $query->rowCount();
-***REMOVED***
+    }
 
     //Retrieve number of Successful bids of all user of a particular course code
     public function getSuccessfulByCourseCode($courseCode, $section, $round = 0)
@@ -1176,7 +1176,7 @@ class BidDAO
 
         if ($round) {
             $sql .= " AND round = :round";
-    ***REMOVED***
+        }
 
         // Edited on 24 Oct.
         $connMgr = new ConnectionManager();
@@ -1189,7 +1189,7 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         return $result['bids']; // CANNOT do $query->rowCount();
-***REMOVED***
+    }
 
     public function insertMinBidforAllCourses($courseCode, $section, $minbid, $user_id)
     {
@@ -1208,9 +1208,9 @@ class BidDAO
 
         if ($stmt->execute()) {
             $result = True;
-    ***REMOVED***
+        }
         return $result;
-***REMOVED***
+    }
 
     public function updateMinBidforAllCourses($courseCode, $section, $minbid, $user_id)
     {
@@ -1230,9 +1230,9 @@ class BidDAO
 
         if ($stmt->execute()) {
             $result = True;
-    ***REMOVED***
+        }
         return $result;
-***REMOVED***
+    }
 
     public function getMinBid($courseCode, $section)
     {
@@ -1248,7 +1248,7 @@ class BidDAO
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 
     public function retrieveBidsDump($section, $course, $round)
     {
@@ -1266,9 +1266,9 @@ class BidDAO
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $row['amount'] = (float) $row['amount'];
             $result[] = $row;
-    ***REMOVED***
+        }
         return $result;
-***REMOVED***
+    }
 
     // For /app/json/bid-status
     public function retrieveBidsReport($courseCode, $section)
@@ -1279,16 +1279,16 @@ class BidDAO
 
         if ($round == 1 and $status == "started") {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = 1 AND course = :courseCode AND section = :section AND result = '-' ";
-    ***REMOVED***
+        }
         elseif ($round == 1 and $status == "stopped") {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = 1 AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
-    ***REMOVED***
+        }
         elseif ($round == 2 and $status == "started") {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE round = 2 AND course = :courseCode AND section = :section AND result IN ('in', 'out')";
-    ***REMOVED***
+        }
         elseif ($round == 2 and $status == "stopped") {
             $sql = "SELECT user_id AS userid, amount, result FROM bids WHERE course = :courseCode AND section = :section AND result IN ('in')";
-    ***REMOVED***
+        }
 
         $sql .= " ORDER BY amount DESC, userid";
 
@@ -1323,40 +1323,40 @@ class BidDAO
                     'balance' => (float) $balance,
                     'status' => "pending"
                 ];
-        ***REMOVED***
+            }
             elseif ($round == 1 and !$roundDAO->roundIsActive()) {
                 // Round 1 stopped, but before round 2 started
                 
                 $status = $row['result'];
                 if ($status == "in") {
                     $status = "success";
-            ***REMOVED*** else {
+                } else {
                     //$balance = floatval($balance) + $amount;
                     $status = "fail";
-            ***REMOVED***
+                }
                 $result[] = [
                     'userid' => $row['userid'],
                     'amount' => (float) $row['amount'],
                     'balance' => (float) $balance,
                     'status' => $status
                 ];
-        ***REMOVED***
+            }
             elseif ($round == 2 and $roundDAO->roundIsActive()) {
                 // Round 2 started 
                 
                 $status = $row['result'];
                 if ($status == "in") {
                     $status = "success";
-            ***REMOVED*** else {
+                } else {
                     $status = "fail";
-            ***REMOVED***
+                }
                 $result[] = [
                     'userid' => $row['userid'],
                     'amount' => (float) $row['amount'],
                     'balance' => (float) $balance,
                     'status' => $status
                 ];
-        ***REMOVED***
+            }
             elseif ($round == 2 and !$roundDAO->roundIsActive()) {
                 // Round 2 stopped, need to refund 
                 
@@ -1371,12 +1371,12 @@ class BidDAO
                         'balance' => (float) $balance,
                         'status' => $status
                     ];
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                }
+            }
+        }
 
         return $result;
-***REMOVED***
+    }
 
     public function getSuccessfulMinBidAmount($courseCode, $section, $round = 0)
     {
@@ -1385,7 +1385,7 @@ class BidDAO
 
         if ($round) {
             $sql .= " AND round = :round";
-    ***REMOVED***
+        }
 
         // Edited on 24 Oct.
         $connMgr = new ConnectionManager();
@@ -1398,5 +1398,5 @@ class BidDAO
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
         return $result;
-***REMOVED***
+    }
 }

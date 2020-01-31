@@ -1,11 +1,11 @@
-***REMOVED***
+<?php
     require_once '../../includes/common.php';
 
     header("Content-Type: application/json");
 
     if (!isLoggedIn()) {
 		header("Location: ../../");
-***REMOVED***
+    }
 
     $courseDAO = new CourseDAO();
 	$roundDAO = new RoundDAO();
@@ -32,7 +32,7 @@
         );
 
         array_push($result, $item);
-***REMOVED***
+    }
 
     echo json_encode($result, JSON_PRETTY_PRINT);
 
@@ -50,4 +50,4 @@
         $query = $dayOfWeek[$query];
 
         return $query;
-***REMOVED***
+    }

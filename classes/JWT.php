@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 /* 
 Reference: 
 https://coderwall.com/p/8wrxfw/goodbye-php-sessions-hello-json-web-tokens

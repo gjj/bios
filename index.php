@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 	require_once 'includes/common.php';
 
 	if (isLoggedIn()) {
@@ -41,11 +41,11 @@
 						<div class="card-body">
 							<h4 class="card-title">Login</h4>
 
-							***REMOVED***
+							<?php
 								if (isset($_SESSION['errors'])) {
 							?>
 							<div class="alert alert-danger alert-dismissible fade show" role="alert">
-								***REMOVED***
+								<?php
 									printErrors();
 								?>
 								
@@ -54,7 +54,7 @@
 								</button>
 							</div>
 
-							***REMOVED***
+							<?php
 								}
 							?>
 

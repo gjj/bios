@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
     require_once '../includes/common.php';
 
     header("Content-Type: application/json");
@@ -33,31 +33,31 @@
                 if ($role == 1) {
                     // If admin, then I issue JWT token.
                     $token = generate_token($username);
-            ***REMOVED***
+                }
                 else {
                     $errors[] = "invalid username";
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             else {
                 $errors[] = "invalid password";
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
         else {
             $errors[] = "invalid username";
-    ***REMOVED***
-***REMOVED***
+        }
+    }
 
     if (!$errors) {
         $result = [
             "status" => "success",
             "token" => $token
         ];
-***REMOVED***
+    }
     else {
         $result = [
             "status" => "error",
             "message" => array_values($errors)
         ];
-***REMOVED***
+    }
 
     echo json_encode($result, JSON_PRETTY_PRINT);

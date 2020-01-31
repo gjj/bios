@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
     require_once 'common.php';
 
@@ -10,11 +10,11 @@
             // Make sure that the key exists, isn't null or an empty string
             if (!isset($data[$i]) or $data[$i] == "") {
                 $result[] = $i;
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
         return $result; // position of columns with missing values 
-***REMOVED***
+    }
 
     function commonValidation($data, $header) {
         $validationErrors = [];
@@ -22,11 +22,11 @@
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i] == "") {
                 $validationErrors[] = "blank $header[$i]";
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
         
         return $validationErrors;
-***REMOVED***
+    }
     
     // incomplete
     // function commonValidation($file){
@@ -39,12 +39,12 @@
     //         if (!empty($columnpos_arr)) {
     //             foreach($columnpos as $columnpos_arr){
 
-    //         ***REMOVED***
+    //             }
     //              $errors[] = "Empty field is in row: $counter cell $column_error";
-    //     ***REMOVED***
+    //         }
 
 
-    // ***REMOVED***
+    //     }
 
         // echo $errors;
 
@@ -70,19 +70,19 @@
 
         if (strlen($userId) > 128) {
             $errors[] = "invalid userid"; 
-    ***REMOVED***
+        }
         if (array_key_exists($userId, $dataStudents)) {
             $errors[] = "duplicate userid";
-    ***REMOVED***
+        }
         if (is_numeric($edollar) == false or $edollar < 0.0 or $edollar != round($edollar, 2)) {
             $errors[] = "invalid e-dollar";
-    ***REMOVED***
+        }
         if (strlen($password) > 128) {
             $errors[] = "invalid password";
-    ***REMOVED***
+        }
         if (strlen($name) > 100) {
             $errors[] = "invalid name";
-    ***REMOVED***
+        }
 
         // Store in array for checking.
         if (!$errors) {
@@ -90,10 +90,10 @@
                 'school' => $school,
                 'edollar' => $edollar
             ];
-    ***REMOVED***
+        }
         
         return $errors;
-***REMOVED***
+    }
 
     
     function validateCourse($data) {
@@ -111,19 +111,19 @@
         
         if ($examdate != date("Ymd", strtotime($examdate))) {
             $errors[] = "invalid exam date";
-    ***REMOVED***
+        }
         if ($examstart != date("G:i", strtotime($examstart))) {
             $errors[] = "invalid exam start";
-    ***REMOVED***
+        }
         if ($examend != date("G:i", strtotime($examend)) or strtotime($examstart) > strtotime($examend)) {
             $errors[] = "invalid exam end";
-    ***REMOVED***
+        }
         if (strlen($title) > 100) {
             $errors[] = "invalid title";
-    ***REMOVED***
+        }
         if (strlen($description) > 1000) {
             $errors[] = "invalid description";
-    ***REMOVED***
+        }
 
         // Store in array for checking.        
         if (!$errors) {
@@ -133,10 +133,10 @@
                 'exam start' => $examstart,
                 'exam end' => $examend
             ];
-    ***REMOVED***
+        }
 
         return $errors;
-***REMOVED***
+    }
     
     function checkSectionFormat($section) {
         $section_num = "";
@@ -146,24 +146,24 @@
                 // https://elearn.smu.edu.sg/d2l/le/news/247852/38655/view
                 if ($i == 1 and $section[$i] == 0) {
                     return false;
-            ***REMOVED***
+                }
 
                 $section_num .= $section[$i];
 
                 if (!is_numeric($section[$i])) {
                     return false;
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                }
+            }
+        }
         
         //$section_num = intval($section_num);
 
         if ($section_num < 1 or $section_num > 99) {
             return false;
-    ***REMOVED***
+        }
 
         return true;
-***REMOVED***
+    }
     function validateSection($data) {
         global $dataCourses, $dataSections;
 
@@ -180,30 +180,30 @@
 
         if (!array_key_exists($course, $dataCourses)) {
             $errors[] = "invalid course";
-    ***REMOVED***
+        }
         else {
             if ($section[0] != "S" or !checkSectionFormat($section)) {
                 $errors[] = "invalid section";
-        ***REMOVED***
+            }
             if ($day < 1 or $day > 7 or !ctype_digit(strval($day))) {
                 $errors[] = "invalid day";
-        ***REMOVED***
+            }
             if ($start != date("G:i", strtotime($start))) {
                 $errors[] = "invalid start";
-        ***REMOVED***
+            }
             if ($end != date("G:i", strtotime($end)) or strtotime($start) > strtotime($end)) {
                 $errors[] = "invalid end";
-        ***REMOVED***
+            }
             if (strlen($instructor) > 100) {
                 $errors[] = "invalid instructor";
-        ***REMOVED***
+            }
             if (strlen($venue) > 100) {
                 $errors[] = "invalid venue";
-        ***REMOVED***
+            }
             if (!ctype_digit(strval($size)) or $size < 1) {
                 $errors[] = "invalid size";
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
         
         // Push to array for checks later.
         if (!$errors) {
@@ -214,20 +214,20 @@
             ];
             /*if (!array_key_exists($course, $dataSections)) {
                 // If doesn't exist as a key yet...
-                 // Create new key and array. Must be array, same reason as above.        ***REMOVED***
-        ***REMOVED***
+                 // Create new key and array. Must be array, same reason as above.            }
+            }
             else {
                 $dataSections[$course][$section] = [
                     'day' => $day,
                     'start' => $start,
                     'end' => $end
                 ]; // Push to existing array as each course can have multiple sections.
-        ***REMOVED****/
-    ***REMOVED***
+            }*/
+        }
 
 
         return $errors;
-***REMOVED***
+    }
 
     function validatePrerequisite($data) {
         global $dataCourses, $dataPrerequisites;
@@ -239,26 +239,26 @@
 
         if (!array_key_exists($course, $dataCourses)) {
             $errors[] = "invalid course";
-    ***REMOVED***
+        }
 
         if (!array_key_exists($prerequisite, $dataCourses)) {
             $errors[] = "invalid prerequisite";
-    ***REMOVED***
+        }
         
         // Push to array for checks later.
         if (!$errors) {
             if (!array_key_exists($course, $dataPrerequisites)) {
                 // If doesn't exist as a key yet...
                 $dataPrerequisites[$course] = [$prerequisite]; // Create new key and array. Must be array, same reason as above.
-        ***REMOVED***
+            }
             else {
                 $dataPrerequisites[$course][] = $prerequisite; // Push to existing array as each course can have multiple prerequisites.
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
         return $errors; 
 
-***REMOVED***
+    }
     
     function validateCourseCompletion($data) {
         global $dataStudents, $dataCourses, $dataPrerequisites, $dataCourseCompleted;
@@ -270,11 +270,11 @@
 
         if (!array_key_exists($userId, $dataStudents)) {
             $errors[] = "invalid userid";
-    ***REMOVED***
+        }
 
         if (!array_key_exists($course_completed, $dataCourses)) {
             $errors[] = "invalid course";
-    ***REMOVED***
+        }
         
         // If pass all basic validations...
         if (!$errors) {
@@ -291,15 +291,15 @@
 
                     if ($intersect == $prerequisites) {
                         $dataCourseCompleted[$userId][] = $course_completed; // Push to existing array as each user can complete multiple courses.
-                ***REMOVED***
+                    }
                     else {
                         $errors[] = "invalid course completed";
-                ***REMOVED***
-            ***REMOVED***
+                    }
+                }
                 else {
                     $errors[] = "invalid course completed";
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             else {
                 // Course has no prerequisites!
                 
@@ -307,15 +307,15 @@
                     // If doesn't exist as a key yet...
                     $dataCourseCompleted[$userId] = [$course_completed]; // Create new key and array. Must be array, same reason as above.
 
-            ***REMOVED***
+                }
                 else {
                     $dataCourseCompleted[$userId][] = $course_completed; // Push to existing array as each user can complete multiple courses.
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                }
+            }
+        }
 
         return $errors; 
-***REMOVED***
+    }
     
     function validateBid($data) {
         global $dataStudents, $dataCourses, $dataSections, $dataPrerequisites, $dataCourseCompleted, $dataBids;
@@ -331,24 +331,24 @@
 
         if (!array_key_exists($userId, $dataStudents)) {
             $errors[] = "invalid userid";
-    ***REMOVED***
+        }
         if (!is_numeric($amount) or $amount < 10 or $amount != round($amount, 2)) {
             $errors[] = "invalid amount";
-    ***REMOVED***
+        }
         if (!array_key_exists($course, $dataCourses)) {
             $errors[] = "invalid course";
-    ***REMOVED***
+        }
         else {
             if (array_key_exists($course, $dataSections)) {
                 $sections = $dataSections[$course];
                 if (!array_key_exists($section, $sections)) {
                     $errors[] = "invalid section";
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             else {
                 $errors[] = "invalid section";
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
         // If no errors so far, then we proceed for our second round of validation checks...
         if (!$errors) {
@@ -358,17 +358,17 @@
                 // Validation 1/7 not own school course: This only happens in round 1 where students are allowed to bid for modules from their own school.
                 if ($dataStudents[$userId]['school'] !== $dataCourses[$course]['school']) {
                     $errors[] = "not own school course";
-            ***REMOVED***
+                }
 
                 // Validation 2/7 class timetable clash: The class timeslot for the section clashes with that of a previously bidded section.
                 if ($bidDAO->checkTimetableConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
                     $errors[] = "class timetable clash";
-            ***REMOVED***
+                }
                 
                 // Validation 3/7 exam timetable clash: The exam timeslot for this section clashes with that of a previously bidded section.
                 if ($bidDAO->checkExamConflicts($userId, [['course' => $course, 'section' => $section]], 1)) {
                     $errors[] = "exam timetable clash";
-            ***REMOVED***
+                }
 
                 // Validation 4/7 incomplete prerequisites:	student has not completed the prerequisites for this course.
                 if (array_key_exists($course, $dataPrerequisites)) {
@@ -383,25 +383,25 @@
 
                         if ($intersect != $prerequisites) {
                             $errors[] = "incomplete prerequisites";
-                    ***REMOVED***
-                ***REMOVED***
+                        }
+                    }
                     else {
                         $errors[] = "incomplete prerequisites";
-                ***REMOVED***
-            ***REMOVED***
+                    }
+                }
 
                 // Validation 5/7 course completed: student has already completed this course.
                 if (array_key_exists($userId, $dataCourseCompleted)) {
                     if (in_array($course, $dataCourseCompleted[$userId])) {
                         $errors[] = "course completed";
-                ***REMOVED***
-            ***REMOVED***
+                    }
+                }
                 
                 // Validation 6/7 section limit reached: student has already bidded for 5 sections.
                 if ($bidDAO->countBids($userId, 1) >= 5) {
                     $errors[] = "section limit reached";
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             
             // Validation 7/7 "not enough e-dollar" student has not enough e-dollars to place the bid.
             // If it is an update of a previous bid for the same course, account for the e$ gained back
@@ -411,22 +411,22 @@
                 $previousAmount = $existingBid['amount'];
                 $amount = $amount - $previousAmount;
                 //$bidDAO->refundbidamount($userId, $course);
-        ***REMOVED***
+            }
 
             $userEDollar = $bidDAO->getEDollar($userId)['edollar'];
             if ($amount > $userEDollar) {
                 $errors[] = "not enough e-dollar";
-        ***REMOVED***
+            }
 
             // If still no errors
             if (!$errors) {
                 if ($existingBid) {
                     $bidDAO->refundbidamount($userId, $course); // Drop prev bid first.
-            ***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                }
+            }
+        }
 
         return $errors;
 
 
-***REMOVED***
+    }

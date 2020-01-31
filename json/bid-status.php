@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once '../includes/common.php';
 
 header("Content-Type: application/json");
@@ -33,10 +33,10 @@ if (!$errors) {
 
         if (!$courseDAO->retrieveByCode($course)) {
             $errors[] = "invalid course";
-    ***REMOVED*** else if (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
+        } else if (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
             $errors[] = "invalid section";
-    ***REMOVED***
-***REMOVED***
+        }
+    }
 
     // If pass input validation...
     if (!$errors) {
@@ -59,10 +59,10 @@ if (!$errors) {
                 // When there is no bid made, the minimum bid price will be 10.0 dollars.
                 if ($numberOfBids == 0) {
                     $minbid = 10.0;
-            ***REMOVED*** elseif ($numberOfBids < $vacancy) {
+                } elseif ($numberOfBids < $vacancy) {
                     // Case of n = 0 has to be before this as min() function will throw an error if $bids is empty!
                     $minbid = (float)min(array_column($bids, 'amount'));
-            ***REMOVED*** elseif ($numberOfBids >= $vacancy) {
+                } elseif ($numberOfBids >= $vacancy) {
 
                     // Derive the minimum clearing price based on the number of vacancies,
                     // (i.e. if the class has 35 vacancies, the 35th highest bid is the clearing price.)
@@ -70,8 +70,8 @@ if (!$errors) {
                     // section, where n is the number of vacancies.
                     // (added note: don't need care if can accommodate or not)
                     $minbid = $bids[$vacancy-1]['amount'];
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             // After Round 1 Ended
             elseif ($currentRound == 1 and !$roundDAO->roundIsActive()) {
                 // Vacancy: (the total available seats) - (number of successful bid during round 1).
@@ -83,10 +83,10 @@ if (!$errors) {
                 // the value will be 10.0 dollars.
                 if ($numberOfSuccessfulBids == 0) {
                     $minbid = 10.0;
-            ***REMOVED*** else {
+                } else {
                     $minbid = (float)$bidDAO->getSuccessfulMinBidAmount($course, $section, 1)['amount'];
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             // During Round 2
             elseif ($currentRound == 2 and $roundDAO->roundIsActive()) {
                 /*$round1 = $bidDAO->getSuccessfulByCourseCode($course, $section, 1);
@@ -103,18 +103,18 @@ if (!$errors) {
 
                 if ($minbid) {
                     $minbid = $minbid['bidAmount'];
-            ***REMOVED***
+                }
                 else {
                     $minbid = 10.0;
-            ***REMOVED***
+                }
 
                 /*if ($bidsInRound2 >= $vacancy) {
                     // More Bids than Vacancies
                     $minbid = $bidDAO->getMinBid($course, $section)['bidAmount'];
-            ***REMOVED*** else {
+                } else {
                     $minbid = 10.0;
-            ***REMOVED****/
-        ***REMOVED***
+                }*/
+            }
 
             // After Round 2 Ended
             else {
@@ -128,14 +128,14 @@ if (!$errors) {
                 if ($round2 > 0) {
                     //$minbid = $bidDAO->getMinBid($course, $section)['bidAmount'];
                     $minbid = (float)min(array_column($bidsInRound2, 'amount'));
-            ***REMOVED*** else {
+                } else {
                     $minbid = 10.0;
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
 
             $reports = $bidDAO->retrieveBidsReport($course, $section);
-    ***REMOVED***
-***REMOVED***
+        }
+    }
 }
 if (!$errors) {
     $result = [

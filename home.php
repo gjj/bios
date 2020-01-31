@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 	define("BIOS_STUDENT", true);
 	
 	require_once 'includes/common.php';
@@ -17,14 +17,14 @@
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 mt-3">
 	<div class="jumbotron">
 		<h2 class="display-4">
-			Hello, ***REMOVED*** echo $user['name']; ?>!
+			Hello, <?php echo $user['name']; ?>!
 		</h2>
 		<p class="lead">
-			You currently have <code>e$***REMOVED*** echo $user['edollar']; ?></code>.
+			You currently have <code>e$<?php echo $user['edollar']; ?></code>.
 		</p>
 		<hr class="my-4">
 		<p>
-			***REMOVED***
+			<?php
 				$roundDAO = new RoundDAO();
 				$round = $roundDAO->getCurrentRound()['round'];
 
@@ -46,6 +46,6 @@
 
 </main>
 
-***REMOVED***
+<?php
 	include 'includes/views/footer.php';
 ?>

@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 	define("BIOS_ADMIN", true);
 
     require_once '../includes/common.php';
@@ -6,7 +6,7 @@
 
 	if (!isset($_SESSION['userid'])) {
 		header("Location: .");
-***REMOVED***
+    }
     
     $result = doBootstrap();
     $result = json_decode($result, true);
@@ -64,14 +64,14 @@
 					</div>
                     <div class="row">
                         <div class="col-md-12">
-                            <b>Status:</b> ***REMOVED*** echo $result['status']; ?><br />
+                            <b>Status:</b> <?php echo $result['status']; ?><br />
                             <b>Number of Records Loaded by file</b><br />
-                            ***REMOVED***
+                            <?php
                                 foreach ($result['num-record-loaded'] as $record) {
                                     foreach ($record as $file => $row) {
                                         echo "Number of records loaded for <code>$file</code>: $row<br />";
-                                ***REMOVED***
-                            ***REMOVED***
+                                    }
+                                }
 
                                 if ($result['status'] == "error") {
                             ?>
@@ -85,25 +85,25 @@
                                 </thead>
                                 <tbody>
 
-                                    ***REMOVED***
+                                    <?php
                                         foreach ($result['error'] as $error) {
                                             echo "<tr>";
                                             foreach ($error as $key => $value) {
                                                 if (is_array($value)) {
                                                     echo "<td>" . implode(", ", $value) . "</td>";
-                                            ***REMOVED***
+                                                }
                                                 else {
                                                     echo "<td>$value</td>";
-                                            ***REMOVED***
-                                        ***REMOVED***
+                                                }
+                                            }
                                             echo "</tr>";
-                                    ***REMOVED***
+                                        }
                                     ?>
                                 </tbody>
                             </table>
 
-                            ***REMOVED***
-                            ***REMOVED***
+                            <?php
+                                }
                             ?>
                         </div>
                     </div>

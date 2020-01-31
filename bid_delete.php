@@ -1,11 +1,11 @@
-***REMOVED***
+<?php
     require_once 'includes/common.php';
     
     $viewData['title'] = "Cart";
 
 	if (!isLoggedIn()) {
 		header("Location: .");
-***REMOVED***
+    }
 
     $courseDAO = new CourseDAO();
 	$roundDAO = new RoundDAO();
@@ -23,14 +23,14 @@
 
         if ($bidDAO->refundbidamount($user['userid'], $code, $section, $currentRound['round'])) {
             header("Location: cart?deleted=1");
-    ***REMOVED***
+        }
         else {
             addError("Unable to drop bid for some reason.");
             header("Location: cart");
-    ***REMOVED***
-***REMOVED***
+        }
+    }
     else {
         addError("Unable to delete because no course code and section is provided.");
         header("Location: cart");
-***REMOVED***
+    }
 ?>

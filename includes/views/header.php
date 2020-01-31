@@ -8,13 +8,13 @@
 		<meta name="description" content="">
 		<meta name="author" content="">
 
-		<title>***REMOVED*** echo $viewData['title']; ?> | Merlion University</title>
+		<title><?php echo $viewData['title']; ?> | Merlion University</title>
 
 		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 		<link href="assets/css/fontawesome-all.min.css" rel="stylesheet" />
 		<link href="assets/css/bios.css" rel="stylesheet" />
 
-		***REMOVED***
+		<?php
 			if (isset($viewData['styles'])) {
 				echo $viewData['styles'];
 			}
@@ -31,6 +31,6 @@
 			</ul>
 		</nav>
 
-		***REMOVED***
+		<?php
 			include 'navbar.php';
 		?>

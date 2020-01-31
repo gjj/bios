@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
     require_once '../includes/common.php';
 
     header("Content-Type: application/json");
@@ -37,7 +37,7 @@
         $bids = $bidDAO->retrieveAllBids();
 
         $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBidsForDump();
-***REMOVED***
+    }
     
     if (!$errors) {
         $result = [
@@ -50,12 +50,12 @@
             "completed-course" => $coursesCompleted,
             "section-student" => $bidsSuccessful
         ];
-***REMOVED***
+    }
     else {
         $result = [
             "status" => "error",
             "message" => $errors
         ];
-***REMOVED***
+    }
 
     echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);

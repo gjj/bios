@@ -19,7 +19,7 @@
       descriptor.configurable = true;
       if ("value" in descriptor) descriptor.writable = true;
       Object.defineProperty(target, descriptor.key, descriptor);
-***REMOVED***
+    }
   }
 
   function _createClass(Constructor, protoProps, staticProps) {
@@ -35,10 +35,10 @@
         enumerable: true,
         configurable: true,
         writable: true
-  ***REMOVED***);
-***REMOVED*** else {
+      });
+    } else {
       obj[key] = value;
-***REMOVED***
+    }
 
     return obj;
   }
@@ -51,13 +51,13 @@
       if (typeof Object.getOwnPropertySymbols === 'function') {
         ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
           return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-    ***REMOVED***));
-  ***REMOVED***
+        }));
+      }
 
       ownKeys.forEach(function (key) {
         _defineProperty(target, key, source[key]);
-  ***REMOVED***);
-***REMOVED***
+      });
+    }
 
     return target;
   }
@@ -95,11 +95,11 @@
       handle: function handle(event) {
         if ($(event.target).is(this)) {
           return event.handleObj.handler.apply(this, arguments); // eslint-disable-line prefer-rest-params
-    ***REMOVED***
+        }
 
         return undefined; // eslint-disable-line no-undefined
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
   }
 
   function transitionEndEmulator(duration) {
@@ -108,12 +108,12 @@
     var called = false;
     $(this).one(Util.TRANSITION_END, function () {
       called = true;
-***REMOVED***);
+    });
     setTimeout(function () {
       if (!called) {
         Util.triggerTransitionEnd(_this);
-  ***REMOVED***
-***REMOVED***, duration);
+      }
+    }, duration);
     return this;
   }
 
@@ -134,28 +134,28 @@
       do {
         // eslint-disable-next-line no-bitwise
         prefix += ~~(Math.random() * MAX_UID); // "~~" acts like a faster Math.floor() here
-  ***REMOVED*** while (document.getElementById(prefix));
+      } while (document.getElementById(prefix));
 
       return prefix;
-***REMOVED***,
+    },
     getSelectorFromElement: function getSelectorFromElement(element) {
       var selector = element.getAttribute('data-target');
 
       if (!selector || selector === '#') {
         var hrefAttr = element.getAttribute('href');
         selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : '';
-  ***REMOVED***
+      }
 
       try {
         return document.querySelector(selector) ? selector : null;
-  ***REMOVED*** catch (err) {
+      } catch (err) {
         return null;
-  ***REMOVED***
-***REMOVED***,
+      }
+    },
     getTransitionDurationFromElement: function getTransitionDurationFromElement(element) {
       if (!element) {
         return 0;
-  ***REMOVED*** // Get transition-duration of the element
+      } // Get transition-duration of the element
 
 
       var transitionDuration = $(element).css('transition-duration');
@@ -165,26 +165,26 @@
 
       if (!floatTransitionDuration && !floatTransitionDelay) {
         return 0;
-  ***REMOVED*** // If multiple durations are defined, take the first
+      } // If multiple durations are defined, take the first
 
 
       transitionDuration = transitionDuration.split(',')[0];
       transitionDelay = transitionDelay.split(',')[0];
       return (parseFloat(transitionDuration) + parseFloat(transitionDelay)) * MILLISECONDS_MULTIPLIER;
-***REMOVED***,
+    },
     reflow: function reflow(element) {
       return element.offsetHeight;
-***REMOVED***,
+    },
     triggerTransitionEnd: function triggerTransitionEnd(element) {
       $(element).trigger(TRANSITION_END);
-***REMOVED***,
+    },
     // TODO: Remove in v5
     supportsTransitionEnd: function supportsTransitionEnd() {
       return Boolean(TRANSITION_END);
-***REMOVED***,
+    },
     isElement: function isElement(obj) {
       return (obj[0] || obj).nodeType;
-***REMOVED***,
+    },
     typeCheckConfig: function typeCheckConfig(componentName, config, configTypes) {
       for (var property in configTypes) {
         if (Object.prototype.hasOwnProperty.call(configTypes, property)) {
@@ -194,32 +194,32 @@
 
           if (!new RegExp(expectedTypes).test(valueType)) {
             throw new Error(componentName.toUpperCase() + ": " + ("Option \"" + property + "\" provided type \"" + valueType + "\" ") + ("but expected type \"" + expectedTypes + "\"."));
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***,
+          }
+        }
+      }
+    },
     findShadowRoot: function findShadowRoot(element) {
       if (!document.documentElement.attachShadow) {
         return null;
-  ***REMOVED*** // Can find the shadow root otherwise it'll return the document
+      } // Can find the shadow root otherwise it'll return the document
 
 
       if (typeof element.getRootNode === 'function') {
         var root = element.getRootNode();
         return root instanceof ShadowRoot ? root : null;
-  ***REMOVED***
+      }
 
       if (element instanceof ShadowRoot) {
         return element;
-  ***REMOVED*** // when we don't find a shadow root
+      } // when we don't find a shadow root
 
 
       if (!element.parentNode) {
         return null;
-  ***REMOVED***
+      }
 
       return Util.findShadowRoot(element.parentNode);
-***REMOVED***
+    }
   };
   setTransitionEndSupport();
 
@@ -247,11 +247,11 @@
     ALERT: 'alert',
     FADE: 'fade',
     SHOW: 'show'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -260,7 +260,7 @@
   function () {
     function Alert(element) {
       this._element = element;
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Alert.prototype;
@@ -271,21 +271,21 @@
 
       if (element) {
         rootElement = this._getRootElement(element);
-  ***REMOVED***
+      }
 
       var customEvent = this._triggerCloseEvent(rootElement);
 
       if (customEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       this._removeElement(rootElement);
-***REMOVED***;
+    };
 
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY);
       this._element = null;
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getRootElement = function _getRootElement(element) {
@@ -294,20 +294,20 @@
 
       if (selector) {
         parent = document.querySelector(selector);
-  ***REMOVED***
+      }
 
       if (!parent) {
         parent = $(element).closest("." + ClassName.ALERT)[0];
-  ***REMOVED***
+      }
 
       return parent;
-***REMOVED***;
+    };
 
     _proto._triggerCloseEvent = function _triggerCloseEvent(element) {
       var closeEvent = $.Event(Event.CLOSE);
       $(element).trigger(closeEvent);
       return closeEvent;
-***REMOVED***;
+    };
 
     _proto._removeElement = function _removeElement(element) {
       var _this = this;
@@ -318,17 +318,17 @@
         this._destroyElement(element);
 
         return;
-  ***REMOVED***
+      }
 
       var transitionDuration = Util.getTransitionDurationFromElement(element);
       $(element).one(Util.TRANSITION_END, function (event) {
         return _this._destroyElement(element, event);
-  ***REMOVED***).emulateTransitionEnd(transitionDuration);
-***REMOVED***;
+      }).emulateTransitionEnd(transitionDuration);
+    };
 
     _proto._destroyElement = function _destroyElement(element) {
       $(element).detach().trigger(Event.CLOSED).remove();
-***REMOVED*** // Static
+    } // Static
     ;
 
     Alert._jQueryInterface = function _jQueryInterface(config) {
@@ -339,30 +339,30 @@
         if (!data) {
           data = new Alert(this);
           $element.data(DATA_KEY, data);
-    ***REMOVED***
+        }
 
         if (config === 'close') {
           data[config](this);
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     Alert._handleDismiss = function _handleDismiss(alertInstance) {
       return function (event) {
         if (event) {
           event.preventDefault();
-    ***REMOVED***
+        }
 
         alertInstance.close(this);
-  ***REMOVED***;
-***REMOVED***;
+      };
+    };
 
     _createClass(Alert, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Alert;
   }();
@@ -415,11 +415,11 @@
   var Event$1 = {
     CLICK_DATA_API: "click" + EVENT_KEY$1 + DATA_API_KEY$1,
     FOCUS_BLUR_DATA_API: "focus" + EVENT_KEY$1 + DATA_API_KEY$1 + " " + ("blur" + EVENT_KEY$1 + DATA_API_KEY$1)
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -428,7 +428,7 @@
   function () {
     function Button(element) {
       this._element = element;
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Button.prototype;
@@ -446,42 +446,42 @@
           if (input.type === 'radio') {
             if (input.checked && this._element.classList.contains(ClassName$1.ACTIVE)) {
               triggerChangeEvent = false;
-        ***REMOVED*** else {
+            } else {
               var activeElement = rootElement.querySelector(Selector$1.ACTIVE);
 
               if (activeElement) {
                 $(activeElement).removeClass(ClassName$1.ACTIVE);
-          ***REMOVED***
-        ***REMOVED***
-      ***REMOVED***
+              }
+            }
+          }
 
           if (triggerChangeEvent) {
             if (input.hasAttribute('disabled') || rootElement.hasAttribute('disabled') || input.classList.contains('disabled') || rootElement.classList.contains('disabled')) {
               return;
-        ***REMOVED***
+            }
 
             input.checked = !this._element.classList.contains(ClassName$1.ACTIVE);
             $(input).trigger('change');
-      ***REMOVED***
+          }
 
           input.focus();
           addAriaPressed = false;
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       if (addAriaPressed) {
         this._element.setAttribute('aria-pressed', !this._element.classList.contains(ClassName$1.ACTIVE));
-  ***REMOVED***
+      }
 
       if (triggerChangeEvent) {
         $(this._element).toggleClass(ClassName$1.ACTIVE);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY$1);
       this._element = null;
-***REMOVED*** // Static
+    } // Static
     ;
 
     Button._jQueryInterface = function _jQueryInterface(config) {
@@ -491,20 +491,20 @@
         if (!data) {
           data = new Button(this);
           $(this).data(DATA_KEY$1, data);
-    ***REMOVED***
+        }
 
         if (config === 'toggle') {
           data[config]();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(Button, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$1;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Button;
   }();
@@ -521,7 +521,7 @@
 
     if (!$(button).hasClass(ClassName$1.BUTTON)) {
       button = $(button).closest(Selector$1.BUTTON);
-***REMOVED***
+    }
 
     Button._jQueryInterface.call($(button), 'toggle');
   }).on(Event$1.FOCUS_BLUR_DATA_API, Selector$1.DATA_TOGGLE_CARROT, function (event) {
@@ -622,11 +622,11 @@
   var PointerType = {
     TOUCH: 'touch',
     PEN: 'pen'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -649,7 +649,7 @@
       this._pointerEvent = Boolean(window.PointerEvent || window.MSPointerEvent);
 
       this._addEventListeners();
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Carousel.prototype;
@@ -658,51 +658,51 @@
     _proto.next = function next() {
       if (!this._isSliding) {
         this._slide(Direction.NEXT);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.nextWhenVisible = function nextWhenVisible() {
       // Don't call next when the page isn't visible
       // or the carousel or its parent isn't visible
       if (!document.hidden && $(this._element).is(':visible') && $(this._element).css('visibility') !== 'hidden') {
         this.next();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.prev = function prev() {
       if (!this._isSliding) {
         this._slide(Direction.PREV);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.pause = function pause(event) {
       if (!event) {
         this._isPaused = true;
-  ***REMOVED***
+      }
 
       if (this._element.querySelector(Selector$2.NEXT_PREV)) {
         Util.triggerTransitionEnd(this._element);
         this.cycle(true);
-  ***REMOVED***
+      }
 
       clearInterval(this._interval);
       this._interval = null;
-***REMOVED***;
+    };
 
     _proto.cycle = function cycle(event) {
       if (!event) {
         this._isPaused = false;
-  ***REMOVED***
+      }
 
       if (this._interval) {
         clearInterval(this._interval);
         this._interval = null;
-  ***REMOVED***
+      }
 
       if (this._config.interval && !this._isPaused) {
         this._interval = setInterval((document.visibilityState ? this.nextWhenVisible : this.next).bind(this), this._config.interval);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.to = function to(index) {
       var _this = this;
@@ -713,25 +713,25 @@
 
       if (index > this._items.length - 1 || index < 0) {
         return;
-  ***REMOVED***
+      }
 
       if (this._isSliding) {
         $(this._element).one(Event$2.SLID, function () {
           return _this.to(index);
-    ***REMOVED***);
+        });
         return;
-  ***REMOVED***
+      }
 
       if (activeIndex === index) {
         this.pause();
         this.cycle();
         return;
-  ***REMOVED***
+      }
 
       var direction = index > activeIndex ? Direction.NEXT : Direction.PREV;
 
       this._slide(direction, this._items[index]);
-***REMOVED***;
+    };
 
     _proto.dispose = function dispose() {
       $(this._element).off(EVENT_KEY$2);
@@ -744,33 +744,33 @@
       this._isSliding = null;
       this._activeElement = null;
       this._indicatorsElement = null;
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default, config);
       Util.typeCheckConfig(NAME$2, config, DefaultType);
       return config;
-***REMOVED***;
+    };
 
     _proto._handleSwipe = function _handleSwipe() {
       var absDeltax = Math.abs(this.touchDeltaX);
 
       if (absDeltax <= SWIPE_THRESHOLD) {
         return;
-  ***REMOVED***
+      }
 
       var direction = absDeltax / this.touchDeltaX; // swipe left
 
       if (direction > 0) {
         this.prev();
-  ***REMOVED*** // swipe right
+      } // swipe right
 
 
       if (direction < 0) {
         this.next();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._addEventListeners = function _addEventListeners() {
       var _this2 = this;
@@ -778,50 +778,50 @@
       if (this._config.keyboard) {
         $(this._element).on(Event$2.KEYDOWN, function (event) {
           return _this2._keydown(event);
-    ***REMOVED***);
-  ***REMOVED***
+        });
+      }
 
       if (this._config.pause === 'hover') {
         $(this._element).on(Event$2.MOUSEENTER, function (event) {
           return _this2.pause(event);
-    ***REMOVED***).on(Event$2.MOUSELEAVE, function (event) {
+        }).on(Event$2.MOUSELEAVE, function (event) {
           return _this2.cycle(event);
-    ***REMOVED***);
-  ***REMOVED***
+        });
+      }
 
       if (this._config.touch) {
         this._addTouchEventListeners();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._addTouchEventListeners = function _addTouchEventListeners() {
       var _this3 = this;
 
       if (!this._touchSupported) {
         return;
-  ***REMOVED***
+      }
 
       var start = function start(event) {
         if (_this3._pointerEvent && PointerType[event.originalEvent.pointerType.toUpperCase()]) {
           _this3.touchStartX = event.originalEvent.clientX;
-    ***REMOVED*** else if (!_this3._pointerEvent) {
+        } else if (!_this3._pointerEvent) {
           _this3.touchStartX = event.originalEvent.touches[0].clientX;
-    ***REMOVED***
-  ***REMOVED***;
+        }
+      };
 
       var move = function move(event) {
         // ensure swiping with one touch and not pinching
         if (event.originalEvent.touches && event.originalEvent.touches.length > 1) {
           _this3.touchDeltaX = 0;
-    ***REMOVED*** else {
+        } else {
           _this3.touchDeltaX = event.originalEvent.touches[0].clientX - _this3.touchStartX;
-    ***REMOVED***
-  ***REMOVED***;
+        }
+      };
 
       var end = function end(event) {
         if (_this3._pointerEvent && PointerType[event.originalEvent.pointerType.toUpperCase()]) {
           _this3.touchDeltaX = event.originalEvent.clientX - _this3.touchStartX;
-    ***REMOVED***
+        }
 
         _this3._handleSwipe();
 
@@ -837,44 +837,44 @@
 
           if (_this3.touchTimeout) {
             clearTimeout(_this3.touchTimeout);
-      ***REMOVED***
+          }
 
           _this3.touchTimeout = setTimeout(function (event) {
             return _this3.cycle(event);
-      ***REMOVED***, TOUCHEVENT_COMPAT_WAIT + _this3._config.interval);
-    ***REMOVED***
-  ***REMOVED***;
+          }, TOUCHEVENT_COMPAT_WAIT + _this3._config.interval);
+        }
+      };
 
       $(this._element.querySelectorAll(Selector$2.ITEM_IMG)).on(Event$2.DRAG_START, function (e) {
         return e.preventDefault();
-  ***REMOVED***);
+      });
 
       if (this._pointerEvent) {
         $(this._element).on(Event$2.POINTERDOWN, function (event) {
           return start(event);
-    ***REMOVED***);
+        });
         $(this._element).on(Event$2.POINTERUP, function (event) {
           return end(event);
-    ***REMOVED***);
+        });
 
         this._element.classList.add(ClassName$2.POINTER_EVENT);
-  ***REMOVED*** else {
+      } else {
         $(this._element).on(Event$2.TOUCHSTART, function (event) {
           return start(event);
-    ***REMOVED***);
+        });
         $(this._element).on(Event$2.TOUCHMOVE, function (event) {
           return move(event);
-    ***REMOVED***);
+        });
         $(this._element).on(Event$2.TOUCHEND, function (event) {
           return end(event);
-    ***REMOVED***);
-  ***REMOVED***
-***REMOVED***;
+        });
+      }
+    };
 
     _proto._keydown = function _keydown(event) {
       if (/input|textarea/i.test(event.target.tagName)) {
         return;
-  ***REMOVED***
+      }
 
       switch (event.which) {
         case ARROW_LEFT_KEYCODE:
@@ -888,13 +888,13 @@
           break;
 
         default:
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._getItemIndex = function _getItemIndex(element) {
       this._items = element && element.parentNode ? [].slice.call(element.parentNode.querySelectorAll(Selector$2.ITEM)) : [];
       return this._items.indexOf(element);
-***REMOVED***;
+    };
 
     _proto._getItemByDirection = function _getItemByDirection(direction, activeElement) {
       var isNextDirection = direction === Direction.NEXT;
@@ -907,12 +907,12 @@
 
       if (isGoingToWrap && !this._config.wrap) {
         return activeElement;
-  ***REMOVED***
+      }
 
       var delta = direction === Direction.PREV ? -1 : 1;
       var itemIndex = (activeIndex + delta) % this._items.length;
       return itemIndex === -1 ? this._items[this._items.length - 1] : this._items[itemIndex];
-***REMOVED***;
+    };
 
     _proto._triggerSlideEvent = function _triggerSlideEvent(relatedTarget, eventDirectionName) {
       var targetIndex = this._getItemIndex(relatedTarget);
@@ -924,10 +924,10 @@
         direction: eventDirectionName,
         from: fromIndex,
         to: targetIndex
-  ***REMOVED***);
+      });
       $(this._element).trigger(slideEvent);
       return slideEvent;
-***REMOVED***;
+    };
 
     _proto._setActiveIndicatorElement = function _setActiveIndicatorElement(element) {
       if (this._indicatorsElement) {
@@ -938,9 +938,9 @@
 
         if (nextIndicator) {
           $(nextIndicator).addClass(ClassName$2.ACTIVE);
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***;
+        }
+      }
+    };
 
     _proto._slide = function _slide(direction, element) {
       var _this4 = this;
@@ -962,33 +962,33 @@
         directionalClassName = ClassName$2.LEFT;
         orderClassName = ClassName$2.NEXT;
         eventDirectionName = Direction.LEFT;
-  ***REMOVED*** else {
+      } else {
         directionalClassName = ClassName$2.RIGHT;
         orderClassName = ClassName$2.PREV;
         eventDirectionName = Direction.RIGHT;
-  ***REMOVED***
+      }
 
       if (nextElement && $(nextElement).hasClass(ClassName$2.ACTIVE)) {
         this._isSliding = false;
         return;
-  ***REMOVED***
+      }
 
       var slideEvent = this._triggerSlideEvent(nextElement, eventDirectionName);
 
       if (slideEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       if (!activeElement || !nextElement) {
         // Some weirdness is happening, so we bail
         return;
-  ***REMOVED***
+      }
 
       this._isSliding = true;
 
       if (isCycling) {
         this.pause();
-  ***REMOVED***
+      }
 
       this._setActiveIndicatorElement(nextElement);
 
@@ -997,7 +997,7 @@
         direction: eventDirectionName,
         from: activeElementIndex,
         to: nextElementIndex
-  ***REMOVED***);
+      });
 
       if ($(this._element).hasClass(ClassName$2.SLIDE)) {
         $(nextElement).addClass(orderClassName);
@@ -1009,9 +1009,9 @@
         if (nextElementInterval) {
           this._config.defaultInterval = this._config.defaultInterval || this._config.interval;
           this._config.interval = nextElementInterval;
-    ***REMOVED*** else {
+        } else {
           this._config.interval = this._config.defaultInterval || this._config.interval;
-    ***REMOVED***
+        }
 
         var transitionDuration = Util.getTransitionDurationFromElement(activeElement);
         $(activeElement).one(Util.TRANSITION_END, function () {
@@ -1020,19 +1020,19 @@
           _this4._isSliding = false;
           setTimeout(function () {
             return $(_this4._element).trigger(slidEvent);
-      ***REMOVED***, 0);
-    ***REMOVED***).emulateTransitionEnd(transitionDuration);
-  ***REMOVED*** else {
+          }, 0);
+        }).emulateTransitionEnd(transitionDuration);
+      } else {
         $(activeElement).removeClass(ClassName$2.ACTIVE);
         $(nextElement).addClass(ClassName$2.ACTIVE);
         this._isSliding = false;
         $(this._element).trigger(slidEvent);
-  ***REMOVED***
+      }
 
       if (isCycling) {
         this.cycle();
-  ***REMOVED***
-***REMOVED*** // Static
+      }
+    } // Static
     ;
 
     Carousel._jQueryInterface = function _jQueryInterface(config) {
@@ -1043,42 +1043,42 @@
 
         if (typeof config === 'object') {
           _config = _objectSpread({}, _config, config);
-    ***REMOVED***
+        }
 
         var action = typeof config === 'string' ? config : _config.slide;
 
         if (!data) {
           data = new Carousel(this, _config);
           $(this).data(DATA_KEY$2, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'number') {
           data.to(config);
-    ***REMOVED*** else if (typeof action === 'string') {
+        } else if (typeof action === 'string') {
           if (typeof data[action] === 'undefined') {
             throw new TypeError("No method named \"" + action + "\"");
-      ***REMOVED***
+          }
 
           data[action]();
-    ***REMOVED*** else if (_config.interval && _config.ride) {
+        } else if (_config.interval && _config.ride) {
           data.pause();
           data.cycle();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     Carousel._dataApiClickHandler = function _dataApiClickHandler(event) {
       var selector = Util.getSelectorFromElement(this);
 
       if (!selector) {
         return;
-  ***REMOVED***
+      }
 
       var target = $(selector)[0];
 
       if (!target || !$(target).hasClass(ClassName$2.CAROUSEL)) {
         return;
-  ***REMOVED***
+      }
 
       var config = _objectSpread({}, $(target).data(), $(this).data());
 
@@ -1086,28 +1086,28 @@
 
       if (slideIndex) {
         config.interval = false;
-  ***REMOVED***
+      }
 
       Carousel._jQueryInterface.call($(target), config);
 
       if (slideIndex) {
         $(target).data(DATA_KEY$2).to(slideIndex);
-  ***REMOVED***
+      }
 
       event.preventDefault();
-***REMOVED***;
+    };
 
     _createClass(Carousel, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$2;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Carousel;
   }();
@@ -1126,7 +1126,7 @@
       var $carousel = $(carousels[i]);
 
       Carousel._jQueryInterface.call($carousel, $carousel.data());
-***REMOVED***
+    }
   });
   /**
    * ------------------------------------------------------------------------
@@ -1182,11 +1182,11 @@
   var Selector$3 = {
     ACTIVES: '.show, .collapsing',
     DATA_TOGGLE: '[data-toggle="collapse"]'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -1205,25 +1205,25 @@
         var selector = Util.getSelectorFromElement(elem);
         var filterElement = [].slice.call(document.querySelectorAll(selector)).filter(function (foundElem) {
           return foundElem === element;
-    ***REMOVED***);
+        });
 
         if (selector !== null && filterElement.length > 0) {
           this._selector = selector;
 
           this._triggerArray.push(elem);
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       this._parent = this._config.parent ? this._getParent() : null;
 
       if (!this._config.parent) {
         this._addAriaAndCollapsedClass(this._element, this._triggerArray);
-  ***REMOVED***
+      }
 
       if (this._config.toggle) {
         this.toggle();
-  ***REMOVED***
-***REMOVED*** // Getters
+      }
+    } // Getters
 
 
     var _proto = Collapse.prototype;
@@ -1232,17 +1232,17 @@
     _proto.toggle = function toggle() {
       if ($(this._element).hasClass(ClassName$3.SHOW)) {
         this.hide();
-  ***REMOVED*** else {
+      } else {
         this.show();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.show = function show() {
       var _this = this;
 
       if (this._isTransitioning || $(this._element).hasClass(ClassName$3.SHOW)) {
         return;
-  ***REMOVED***
+      }
 
       var actives;
       var activesData;
@@ -1251,38 +1251,38 @@
         actives = [].slice.call(this._parent.querySelectorAll(Selector$3.ACTIVES)).filter(function (elem) {
           if (typeof _this._config.parent === 'string') {
             return elem.getAttribute('data-parent') === _this._config.parent;
-      ***REMOVED***
+          }
 
           return elem.classList.contains(ClassName$3.COLLAPSE);
-    ***REMOVED***);
+        });
 
         if (actives.length === 0) {
           actives = null;
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       if (actives) {
         activesData = $(actives).not(this._selector).data(DATA_KEY$3);
 
         if (activesData && activesData._isTransitioning) {
           return;
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       var startEvent = $.Event(Event$3.SHOW);
       $(this._element).trigger(startEvent);
 
       if (startEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       if (actives) {
         Collapse._jQueryInterface.call($(actives).not(this._selector), 'hide');
 
         if (!activesData) {
           $(actives).data(DATA_KEY$3, null);
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       var dimension = this._getDimension();
 
@@ -1291,7 +1291,7 @@
 
       if (this._triggerArray.length) {
         $(this._triggerArray).removeClass(ClassName$3.COLLAPSED).attr('aria-expanded', true);
-  ***REMOVED***
+      }
 
       this.setTransitioning(true);
 
@@ -1302,28 +1302,28 @@
         _this.setTransitioning(false);
 
         $(_this._element).trigger(Event$3.SHOWN);
-  ***REMOVED***;
+      };
 
       var capitalizedDimension = dimension[0].toUpperCase() + dimension.slice(1);
       var scrollSize = "scroll" + capitalizedDimension;
       var transitionDuration = Util.getTransitionDurationFromElement(this._element);
       $(this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
       this._element.style[dimension] = this._element[scrollSize] + "px";
-***REMOVED***;
+    };
 
     _proto.hide = function hide() {
       var _this2 = this;
 
       if (this._isTransitioning || !$(this._element).hasClass(ClassName$3.SHOW)) {
         return;
-  ***REMOVED***
+      }
 
       var startEvent = $.Event(Event$3.HIDE);
       $(this._element).trigger(startEvent);
 
       if (startEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       var dimension = this._getDimension();
 
@@ -1342,10 +1342,10 @@
 
             if (!$elem.hasClass(ClassName$3.SHOW)) {
               $(trigger).addClass(ClassName$3.COLLAPSED).attr('aria-expanded', false);
-        ***REMOVED***
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
+            }
+          }
+        }
+      }
 
       this.setTransitioning(true);
 
@@ -1353,16 +1353,16 @@
         _this2.setTransitioning(false);
 
         $(_this2._element).removeClass(ClassName$3.COLLAPSING).addClass(ClassName$3.COLLAPSE).trigger(Event$3.HIDDEN);
-  ***REMOVED***;
+      };
 
       this._element.style[dimension] = '';
       var transitionDuration = Util.getTransitionDurationFromElement(this._element);
       $(this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-***REMOVED***;
+    };
 
     _proto.setTransitioning = function setTransitioning(isTransitioning) {
       this._isTransitioning = isTransitioning;
-***REMOVED***;
+    };
 
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY$3);
@@ -1371,7 +1371,7 @@
       this._element = null;
       this._triggerArray = null;
       this._isTransitioning = null;
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getConfig = function _getConfig(config) {
@@ -1380,12 +1380,12 @@
 
       Util.typeCheckConfig(NAME$3, config, DefaultType$1);
       return config;
-***REMOVED***;
+    };
 
     _proto._getDimension = function _getDimension() {
       var hasWidth = $(this._element).hasClass(Dimension.WIDTH);
       return hasWidth ? Dimension.WIDTH : Dimension.HEIGHT;
-***REMOVED***;
+    };
 
     _proto._getParent = function _getParent() {
       var _this3 = this;
@@ -1397,32 +1397,32 @@
 
         if (typeof this._config.parent.jquery !== 'undefined') {
           parent = this._config.parent[0];
-    ***REMOVED***
-  ***REMOVED*** else {
+        }
+      } else {
         parent = document.querySelector(this._config.parent);
-  ***REMOVED***
+      }
 
       var selector = "[data-toggle=\"collapse\"][data-parent=\"" + this._config.parent + "\"]";
       var children = [].slice.call(parent.querySelectorAll(selector));
       $(children).each(function (i, element) {
         _this3._addAriaAndCollapsedClass(Collapse._getTargetFromElement(element), [element]);
-  ***REMOVED***);
+      });
       return parent;
-***REMOVED***;
+    };
 
     _proto._addAriaAndCollapsedClass = function _addAriaAndCollapsedClass(element, triggerArray) {
       var isOpen = $(element).hasClass(ClassName$3.SHOW);
 
       if (triggerArray.length) {
         $(triggerArray).toggleClass(ClassName$3.COLLAPSED, !isOpen).attr('aria-expanded', isOpen);
-  ***REMOVED***
-***REMOVED*** // Static
+      }
+    } // Static
     ;
 
     Collapse._getTargetFromElement = function _getTargetFromElement(element) {
       var selector = Util.getSelectorFromElement(element);
       return selector ? document.querySelector(selector) : null;
-***REMOVED***;
+    };
 
     Collapse._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
@@ -1433,34 +1433,34 @@
 
         if (!data && _config.toggle && /show|hide/.test(config)) {
           _config.toggle = false;
-    ***REMOVED***
+        }
 
         if (!data) {
           data = new Collapse(this, _config);
           $this.data(DATA_KEY$3, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config]();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(Collapse, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$3;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default$1;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Collapse;
   }();
@@ -1475,7 +1475,7 @@
     // preventDefault only for <a> elements (which change the URL) not inside the collapsible element
     if (event.currentTarget.tagName === 'A') {
       event.preventDefault();
-***REMOVED***
+    }
 
     var $trigger = $(this);
     var selector = Util.getSelectorFromElement(this);
@@ -1486,7 +1486,7 @@
       var config = data ? 'toggle' : $trigger.data();
 
       Collapse._jQueryInterface.call($target, config);
-***REMOVED***);
+    });
   });
   /**
    * ------------------------------------------------------------------------
@@ -1577,11 +1577,11 @@
     boundary: '(string|element)',
     reference: '(string|element)',
     display: 'string'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -1596,7 +1596,7 @@
       this._inNavbar = this._detectNavbar();
 
       this._addEventListeners();
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Dropdown.prototype;
@@ -1605,7 +1605,7 @@
     _proto.toggle = function toggle() {
       if (this._element.disabled || $(this._element).hasClass(ClassName$4.DISABLED)) {
         return;
-  ***REMOVED***
+      }
 
       var parent = Dropdown._getParentFromElement(this._element);
 
@@ -1615,49 +1615,49 @@
 
       if (isActive) {
         return;
-  ***REMOVED***
+      }
 
       var relatedTarget = {
         relatedTarget: this._element
-  ***REMOVED***;
+      };
       var showEvent = $.Event(Event$4.SHOW, relatedTarget);
       $(parent).trigger(showEvent);
 
       if (showEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED*** // Disable totally Popper.js for Dropdown in Navbar
+      } // Disable totally Popper.js for Dropdown in Navbar
 
 
       if (!this._inNavbar) {
-    ***REMOVED***
-    ***REMOVED***Check for Popper dependency
-    ***REMOVED***Popper - https://popper.js.org
-    ***REMOVED***
+        /**
+         * Check for Popper dependency
+         * Popper - https://popper.js.org
+         */
         if (typeof Popper === 'undefined') {
           throw new TypeError('Bootstrap\'s dropdowns require Popper.js (https://popper.js.org/)');
-    ***REMOVED***
+        }
 
         var referenceElement = this._element;
 
         if (this._config.reference === 'parent') {
           referenceElement = parent;
-    ***REMOVED*** else if (Util.isElement(this._config.reference)) {
+        } else if (Util.isElement(this._config.reference)) {
           referenceElement = this._config.reference; // Check if it's jQuery element
 
           if (typeof this._config.reference.jquery !== 'undefined') {
             referenceElement = this._config.reference[0];
-      ***REMOVED***
-    ***REMOVED*** // If boundary is not `scrollParent`, then set position to `static`
+          }
+        } // If boundary is not `scrollParent`, then set position to `static`
         // to allow the menu to "escape" the scroll parent's boundaries
         // https://github.com/twbs/bootstrap/issues/24251
 
 
         if (this._config.boundary !== 'scrollParent') {
           $(parent).addClass(ClassName$4.POSITION_STATIC);
-    ***REMOVED***
+        }
 
         this._popper = new Popper(referenceElement, this._menu, this._getPopperConfig());
-  ***REMOVED*** // If this is a touch-enabled device we add extra
+      } // If this is a touch-enabled device we add extra
       // empty mouseover listeners to the body's immediate children;
       // only needed because of broken event delegation on iOS
       // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
@@ -1665,7 +1665,7 @@
 
       if ('ontouchstart' in document.documentElement && $(parent).closest(Selector$4.NAVBAR_NAV).length === 0) {
         $(document.body).children().on('mouseover', null, $.noop);
-  ***REMOVED***
+      }
 
       this._element.focus();
 
@@ -1673,16 +1673,16 @@
 
       $(this._menu).toggleClass(ClassName$4.SHOW);
       $(parent).toggleClass(ClassName$4.SHOW).trigger($.Event(Event$4.SHOWN, relatedTarget));
-***REMOVED***;
+    };
 
     _proto.show = function show() {
       if (this._element.disabled || $(this._element).hasClass(ClassName$4.DISABLED) || $(this._menu).hasClass(ClassName$4.SHOW)) {
         return;
-  ***REMOVED***
+      }
 
       var relatedTarget = {
         relatedTarget: this._element
-  ***REMOVED***;
+      };
       var showEvent = $.Event(Event$4.SHOW, relatedTarget);
 
       var parent = Dropdown._getParentFromElement(this._element);
@@ -1691,20 +1691,20 @@
 
       if (showEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       $(this._menu).toggleClass(ClassName$4.SHOW);
       $(parent).toggleClass(ClassName$4.SHOW).trigger($.Event(Event$4.SHOWN, relatedTarget));
-***REMOVED***;
+    };
 
     _proto.hide = function hide() {
       if (this._element.disabled || $(this._element).hasClass(ClassName$4.DISABLED) || !$(this._menu).hasClass(ClassName$4.SHOW)) {
         return;
-  ***REMOVED***
+      }
 
       var relatedTarget = {
         relatedTarget: this._element
-  ***REMOVED***;
+      };
       var hideEvent = $.Event(Event$4.HIDE, relatedTarget);
 
       var parent = Dropdown._getParentFromElement(this._element);
@@ -1713,11 +1713,11 @@
 
       if (hideEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       $(this._menu).toggleClass(ClassName$4.SHOW);
       $(parent).toggleClass(ClassName$4.SHOW).trigger($.Event(Event$4.HIDDEN, relatedTarget));
-***REMOVED***;
+    };
 
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY$4);
@@ -1729,16 +1729,16 @@
         this._popper.destroy();
 
         this._popper = null;
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.update = function update() {
       this._inNavbar = this._detectNavbar();
 
       if (this._popper !== null) {
         this._popper.scheduleUpdate();
-  ***REMOVED***
-***REMOVED*** // Private
+      }
+    } // Private
     ;
 
     _proto._addEventListeners = function _addEventListeners() {
@@ -1749,14 +1749,14 @@
         event.stopPropagation();
 
         _this.toggle();
-  ***REMOVED***);
-***REMOVED***;
+      });
+    };
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, this.constructor.Default, $(this._element).data(), config);
       Util.typeCheckConfig(NAME$4, config, this.constructor.DefaultType);
       return config;
-***REMOVED***;
+    };
 
     _proto._getMenuElement = function _getMenuElement() {
       if (!this._menu) {
@@ -1764,11 +1764,11 @@
 
         if (parent) {
           this._menu = parent.querySelector(Selector$4.MENU);
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       return this._menu;
-***REMOVED***;
+    };
 
     _proto._getPlacement = function _getPlacement() {
       var $parentDropdown = $(this._element.parentNode);
@@ -1779,21 +1779,21 @@
 
         if ($(this._menu).hasClass(ClassName$4.MENURIGHT)) {
           placement = AttachmentMap.TOPEND;
-    ***REMOVED***
-  ***REMOVED*** else if ($parentDropdown.hasClass(ClassName$4.DROPRIGHT)) {
+        }
+      } else if ($parentDropdown.hasClass(ClassName$4.DROPRIGHT)) {
         placement = AttachmentMap.RIGHT;
-  ***REMOVED*** else if ($parentDropdown.hasClass(ClassName$4.DROPLEFT)) {
+      } else if ($parentDropdown.hasClass(ClassName$4.DROPLEFT)) {
         placement = AttachmentMap.LEFT;
-  ***REMOVED*** else if ($(this._menu).hasClass(ClassName$4.MENURIGHT)) {
+      } else if ($(this._menu).hasClass(ClassName$4.MENURIGHT)) {
         placement = AttachmentMap.BOTTOMEND;
-  ***REMOVED***
+      }
 
       return placement;
-***REMOVED***;
+    };
 
     _proto._detectNavbar = function _detectNavbar() {
       return $(this._element).closest('.navbar').length > 0;
-***REMOVED***;
+    };
 
     _proto._getOffset = function _getOffset() {
       var _this2 = this;
@@ -1804,13 +1804,13 @@
         offset.fn = function (data) {
           data.offsets = _objectSpread({}, data.offsets, _this2._config.offset(data.offsets, _this2._element) || {});
           return data;
-    ***REMOVED***;
-  ***REMOVED*** else {
+        };
+      } else {
         offset.offset = this._config.offset;
-  ***REMOVED***
+      }
 
       return offset;
-***REMOVED***;
+    };
 
     _proto._getPopperConfig = function _getPopperConfig() {
       var popperConfig = {
@@ -1819,22 +1819,22 @@
           offset: this._getOffset(),
           flip: {
             enabled: this._config.flip
-      ***REMOVED***,
+          },
           preventOverflow: {
             boundariesElement: this._config.boundary
-      ***REMOVED***
-    ***REMOVED*** // Disable Popper.js if we have a static display
+          }
+        } // Disable Popper.js if we have a static display
 
-  ***REMOVED***;
+      };
 
       if (this._config.display === 'static') {
         popperConfig.modifiers.applyStyle = {
           enabled: false
-    ***REMOVED***;
-  ***REMOVED***
+        };
+      }
 
       return popperConfig;
-***REMOVED*** // Static
+    } // Static
     ;
 
     Dropdown._jQueryInterface = function _jQueryInterface(config) {
@@ -1846,22 +1846,22 @@
         if (!data) {
           data = new Dropdown(this, _config);
           $(this).data(DATA_KEY$4, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config]();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     Dropdown._clearMenus = function _clearMenus(event) {
       if (event && (event.which === RIGHT_MOUSE_BUTTON_WHICH || event.type === 'keyup' && event.which !== TAB_KEYCODE)) {
         return;
-  ***REMOVED***
+      }
 
       var toggles = [].slice.call(document.querySelectorAll(Selector$4.DATA_TOGGLE));
 
@@ -1871,44 +1871,44 @@
         var context = $(toggles[i]).data(DATA_KEY$4);
         var relatedTarget = {
           relatedTarget: toggles[i]
-    ***REMOVED***;
+        };
 
         if (event && event.type === 'click') {
           relatedTarget.clickEvent = event;
-    ***REMOVED***
+        }
 
         if (!context) {
           continue;
-    ***REMOVED***
+        }
 
         var dropdownMenu = context._menu;
 
         if (!$(parent).hasClass(ClassName$4.SHOW)) {
           continue;
-    ***REMOVED***
+        }
 
         if (event && (event.type === 'click' && /input|textarea/i.test(event.target.tagName) || event.type === 'keyup' && event.which === TAB_KEYCODE) && $.contains(parent, event.target)) {
           continue;
-    ***REMOVED***
+        }
 
         var hideEvent = $.Event(Event$4.HIDE, relatedTarget);
         $(parent).trigger(hideEvent);
 
         if (hideEvent.isDefaultPrevented()) {
           continue;
-    ***REMOVED*** // If this is a touch-enabled device we remove the extra
+        } // If this is a touch-enabled device we remove the extra
         // empty mouseover listeners we added for iOS support
 
 
         if ('ontouchstart' in document.documentElement) {
           $(document.body).children().off('mouseover', null, $.noop);
-    ***REMOVED***
+        }
 
         toggles[i].setAttribute('aria-expanded', 'false');
         $(dropdownMenu).removeClass(ClassName$4.SHOW);
         $(parent).removeClass(ClassName$4.SHOW).trigger($.Event(Event$4.HIDDEN, relatedTarget));
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     Dropdown._getParentFromElement = function _getParentFromElement(element) {
       var parent;
@@ -1916,10 +1916,10 @@
 
       if (selector) {
         parent = document.querySelector(selector);
-  ***REMOVED***
+      }
 
       return parent || element.parentNode;
-***REMOVED*** // eslint-disable-next-line complexity
+    } // eslint-disable-next-line complexity
     ;
 
     Dropdown._dataApiKeydownHandler = function _dataApiKeydownHandler(event) {
@@ -1932,14 +1932,14 @@
       //    - If trigger inside the menu => not a dropdown command
       if (/input|textarea/i.test(event.target.tagName) ? event.which === SPACE_KEYCODE || event.which !== ESCAPE_KEYCODE && (event.which !== ARROW_DOWN_KEYCODE && event.which !== ARROW_UP_KEYCODE || $(event.target).closest(Selector$4.MENU).length) : !REGEXP_KEYDOWN.test(event.which)) {
         return;
-  ***REMOVED***
+      }
 
       event.preventDefault();
       event.stopPropagation();
 
       if (this.disabled || $(this).hasClass(ClassName$4.DISABLED)) {
         return;
-  ***REMOVED***
+      }
 
       var parent = Dropdown._getParentFromElement(this);
 
@@ -1949,53 +1949,53 @@
         if (event.which === ESCAPE_KEYCODE) {
           var toggle = parent.querySelector(Selector$4.DATA_TOGGLE);
           $(toggle).trigger('focus');
-    ***REMOVED***
+        }
 
         $(this).trigger('click');
         return;
-  ***REMOVED***
+      }
 
       var items = [].slice.call(parent.querySelectorAll(Selector$4.VISIBLE_ITEMS));
 
       if (items.length === 0) {
         return;
-  ***REMOVED***
+      }
 
       var index = items.indexOf(event.target);
 
       if (event.which === ARROW_UP_KEYCODE && index > 0) {
         // Up
         index--;
-  ***REMOVED***
+      }
 
       if (event.which === ARROW_DOWN_KEYCODE && index < items.length - 1) {
         // Down
         index++;
-  ***REMOVED***
+      }
 
       if (index < 0) {
         index = 0;
-  ***REMOVED***
+      }
 
       items[index].focus();
-***REMOVED***;
+    };
 
     _createClass(Dropdown, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$4;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default$2;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "DefaultType",
       get: function get() {
         return DefaultType$2;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Dropdown;
   }();
@@ -2082,11 +2082,11 @@
     DATA_DISMISS: '[data-dismiss="modal"]',
     FIXED_CONTENT: '.fixed-top, .fixed-bottom, .is-fixed, .sticky-top',
     STICKY_CONTENT: '.sticky-top'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -2103,7 +2103,7 @@
       this._ignoreBackdropClick = false;
       this._isTransitioning = false;
       this._scrollbarWidth = 0;
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Modal.prototype;
@@ -2111,27 +2111,27 @@
     // Public
     _proto.toggle = function toggle(relatedTarget) {
       return this._isShown ? this.hide() : this.show(relatedTarget);
-***REMOVED***;
+    };
 
     _proto.show = function show(relatedTarget) {
       var _this = this;
 
       if (this._isShown || this._isTransitioning) {
         return;
-  ***REMOVED***
+      }
 
       if ($(this._element).hasClass(ClassName$5.FADE)) {
         this._isTransitioning = true;
-  ***REMOVED***
+      }
 
       var showEvent = $.Event(Event$5.SHOW, {
         relatedTarget: relatedTarget
-  ***REMOVED***);
+      });
       $(this._element).trigger(showEvent);
 
       if (this._isShown || showEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       this._isShown = true;
 
@@ -2147,44 +2147,44 @@
 
       $(this._element).on(Event$5.CLICK_DISMISS, Selector$5.DATA_DISMISS, function (event) {
         return _this.hide(event);
-  ***REMOVED***);
+      });
       $(this._dialog).on(Event$5.MOUSEDOWN_DISMISS, function () {
         $(_this._element).one(Event$5.MOUSEUP_DISMISS, function (event) {
           if ($(event.target).is(_this._element)) {
             _this._ignoreBackdropClick = true;
-      ***REMOVED***
-    ***REMOVED***);
-  ***REMOVED***);
+          }
+        });
+      });
 
       this._showBackdrop(function () {
         return _this._showElement(relatedTarget);
-  ***REMOVED***);
-***REMOVED***;
+      });
+    };
 
     _proto.hide = function hide(event) {
       var _this2 = this;
 
       if (event) {
         event.preventDefault();
-  ***REMOVED***
+      }
 
       if (!this._isShown || this._isTransitioning) {
         return;
-  ***REMOVED***
+      }
 
       var hideEvent = $.Event(Event$5.HIDE);
       $(this._element).trigger(hideEvent);
 
       if (!this._isShown || hideEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       this._isShown = false;
       var transition = $(this._element).hasClass(ClassName$5.FADE);
 
       if (transition) {
         this._isTransitioning = true;
-  ***REMOVED***
+      }
 
       this._setEscapeEvent();
 
@@ -2199,21 +2199,21 @@
         var transitionDuration = Util.getTransitionDurationFromElement(this._element);
         $(this._element).one(Util.TRANSITION_END, function (event) {
           return _this2._hideModal(event);
-    ***REMOVED***).emulateTransitionEnd(transitionDuration);
-  ***REMOVED*** else {
+        }).emulateTransitionEnd(transitionDuration);
+      } else {
         this._hideModal();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.dispose = function dispose() {
       [window, this._element, this._dialog].forEach(function (htmlElement) {
         return $(htmlElement).off(EVENT_KEY$5);
-  ***REMOVED***);
-  ***REMOVED***
-  ***REMOVED***`document` has 2 events `Event.FOCUSIN` and `Event.CLICK_DATA_API`
-  ***REMOVED***Do not move `document` in `htmlElements` array
-  ***REMOVED***It will remove `Event.CLICK_DATA_API` event that should remain
-  ***REMOVED***
+      });
+      /**
+       * `document` has 2 events `Event.FOCUSIN` and `Event.CLICK_DATA_API`
+       * Do not move `document` in `htmlElements` array
+       * It will remove `Event.CLICK_DATA_API` event that should remain
+       */
 
       $(document).off(Event$5.FOCUSIN);
       $.removeData(this._element, DATA_KEY$5);
@@ -2226,18 +2226,18 @@
       this._ignoreBackdropClick = null;
       this._isTransitioning = null;
       this._scrollbarWidth = null;
-***REMOVED***;
+    };
 
     _proto.handleUpdate = function handleUpdate() {
       this._adjustDialog();
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default$3, config);
       Util.typeCheckConfig(NAME$5, config, DefaultType$3);
       return config;
-***REMOVED***;
+    };
 
     _proto._showElement = function _showElement(relatedTarget) {
       var _this3 = this;
@@ -2247,7 +2247,7 @@
       if (!this._element.parentNode || this._element.parentNode.nodeType !== Node.ELEMENT_NODE) {
         // Don't move modal's DOM position
         document.body.appendChild(this._element);
-  ***REMOVED***
+      }
 
       this._element.style.display = 'block';
 
@@ -2257,40 +2257,40 @@
 
       if ($(this._dialog).hasClass(ClassName$5.SCROLLABLE)) {
         this._dialog.querySelector(Selector$5.MODAL_BODY).scrollTop = 0;
-  ***REMOVED*** else {
+      } else {
         this._element.scrollTop = 0;
-  ***REMOVED***
+      }
 
       if (transition) {
         Util.reflow(this._element);
-  ***REMOVED***
+      }
 
       $(this._element).addClass(ClassName$5.SHOW);
 
       if (this._config.focus) {
         this._enforceFocus();
-  ***REMOVED***
+      }
 
       var shownEvent = $.Event(Event$5.SHOWN, {
         relatedTarget: relatedTarget
-  ***REMOVED***);
+      });
 
       var transitionComplete = function transitionComplete() {
         if (_this3._config.focus) {
           _this3._element.focus();
-    ***REMOVED***
+        }
 
         _this3._isTransitioning = false;
         $(_this3._element).trigger(shownEvent);
-  ***REMOVED***;
+      };
 
       if (transition) {
         var transitionDuration = Util.getTransitionDurationFromElement(this._dialog);
         $(this._dialog).one(Util.TRANSITION_END, transitionComplete).emulateTransitionEnd(transitionDuration);
-  ***REMOVED*** else {
+      } else {
         transitionComplete();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._enforceFocus = function _enforceFocus() {
       var _this4 = this;
@@ -2299,9 +2299,9 @@
       .on(Event$5.FOCUSIN, function (event) {
         if (document !== event.target && _this4._element !== event.target && $(_this4._element).has(event.target).length === 0) {
           _this4._element.focus();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _proto._setEscapeEvent = function _setEscapeEvent() {
       var _this5 = this;
@@ -2312,12 +2312,12 @@
             event.preventDefault();
 
             _this5.hide();
-      ***REMOVED***
-    ***REMOVED***);
-  ***REMOVED*** else if (!this._isShown) {
+          }
+        });
+      } else if (!this._isShown) {
         $(this._element).off(Event$5.KEYDOWN_DISMISS);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._setResizeEvent = function _setResizeEvent() {
       var _this6 = this;
@@ -2325,11 +2325,11 @@
       if (this._isShown) {
         $(window).on(Event$5.RESIZE, function (event) {
           return _this6.handleUpdate(event);
-    ***REMOVED***);
-  ***REMOVED*** else {
+        });
+      } else {
         $(window).off(Event$5.RESIZE);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._hideModal = function _hideModal() {
       var _this7 = this;
@@ -2350,15 +2350,15 @@
         _this7._resetScrollbar();
 
         $(_this7._element).trigger(Event$5.HIDDEN);
-  ***REMOVED***);
-***REMOVED***;
+      });
+    };
 
     _proto._removeBackdrop = function _removeBackdrop() {
       if (this._backdrop) {
         $(this._backdrop).remove();
         this._backdrop = null;
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._showBackdrop = function _showBackdrop(callback) {
       var _this8 = this;
@@ -2371,44 +2371,44 @@
 
         if (animate) {
           this._backdrop.classList.add(animate);
-    ***REMOVED***
+        }
 
         $(this._backdrop).appendTo(document.body);
         $(this._element).on(Event$5.CLICK_DISMISS, function (event) {
           if (_this8._ignoreBackdropClick) {
             _this8._ignoreBackdropClick = false;
             return;
-      ***REMOVED***
+          }
 
           if (event.target !== event.currentTarget) {
             return;
-      ***REMOVED***
+          }
 
           if (_this8._config.backdrop === 'static') {
             _this8._element.focus();
-      ***REMOVED*** else {
+          } else {
             _this8.hide();
-      ***REMOVED***
-    ***REMOVED***);
+          }
+        });
 
         if (animate) {
           Util.reflow(this._backdrop);
-    ***REMOVED***
+        }
 
         $(this._backdrop).addClass(ClassName$5.SHOW);
 
         if (!callback) {
           return;
-    ***REMOVED***
+        }
 
         if (!animate) {
           callback();
           return;
-    ***REMOVED***
+        }
 
         var backdropTransitionDuration = Util.getTransitionDurationFromElement(this._backdrop);
         $(this._backdrop).one(Util.TRANSITION_END, callback).emulateTransitionEnd(backdropTransitionDuration);
-  ***REMOVED*** else if (!this._isShown && this._backdrop) {
+      } else if (!this._isShown && this._backdrop) {
         $(this._backdrop).removeClass(ClassName$5.SHOW);
 
         var callbackRemove = function callbackRemove() {
@@ -2416,20 +2416,20 @@
 
           if (callback) {
             callback();
-      ***REMOVED***
-    ***REMOVED***;
+          }
+        };
 
         if ($(this._element).hasClass(ClassName$5.FADE)) {
           var _backdropTransitionDuration = Util.getTransitionDurationFromElement(this._backdrop);
 
           $(this._backdrop).one(Util.TRANSITION_END, callbackRemove).emulateTransitionEnd(_backdropTransitionDuration);
-    ***REMOVED*** else {
+        } else {
           callbackRemove();
-    ***REMOVED***
-  ***REMOVED*** else if (callback) {
+        }
+      } else if (callback) {
         callback();
-  ***REMOVED***
-***REMOVED*** // ----------------------------------------------------------------------
+      }
+    } // ----------------------------------------------------------------------
     // the following methods are used to handle overflowing modals
     // todo (fat): these should probably be refactored out of modal.js
     // ----------------------------------------------------------------------
@@ -2440,23 +2440,23 @@
 
       if (!this._isBodyOverflowing && isModalOverflowing) {
         this._element.style.paddingLeft = this._scrollbarWidth + "px";
-  ***REMOVED***
+      }
 
       if (this._isBodyOverflowing && !isModalOverflowing) {
         this._element.style.paddingRight = this._scrollbarWidth + "px";
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._resetAdjustments = function _resetAdjustments() {
       this._element.style.paddingLeft = '';
       this._element.style.paddingRight = '';
-***REMOVED***;
+    };
 
     _proto._checkScrollbar = function _checkScrollbar() {
       var rect = document.body.getBoundingClientRect();
       this._isBodyOverflowing = rect.left + rect.right < window.innerWidth;
       this._scrollbarWidth = this._getScrollbarWidth();
-***REMOVED***;
+    };
 
     _proto._setScrollbar = function _setScrollbar() {
       var _this9 = this;
@@ -2471,21 +2471,21 @@
           var actualPadding = element.style.paddingRight;
           var calculatedPadding = $(element).css('padding-right');
           $(element).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + _this9._scrollbarWidth + "px");
-    ***REMOVED***); // Adjust sticky content margin
+        }); // Adjust sticky content margin
 
         $(stickyContent).each(function (index, element) {
           var actualMargin = element.style.marginRight;
           var calculatedMargin = $(element).css('margin-right');
           $(element).data('margin-right', actualMargin).css('margin-right', parseFloat(calculatedMargin) - _this9._scrollbarWidth + "px");
-    ***REMOVED***); // Adjust body padding
+        }); // Adjust body padding
 
         var actualPadding = document.body.style.paddingRight;
         var calculatedPadding = $(document.body).css('padding-right');
         $(document.body).data('padding-right', actualPadding).css('padding-right', parseFloat(calculatedPadding) + this._scrollbarWidth + "px");
-  ***REMOVED***
+      }
 
       $(document.body).addClass(ClassName$5.OPEN);
-***REMOVED***;
+    };
 
     _proto._resetScrollbar = function _resetScrollbar() {
       // Restore fixed content padding
@@ -2494,7 +2494,7 @@
         var padding = $(element).data('padding-right');
         $(element).removeData('padding-right');
         element.style.paddingRight = padding ? padding : '';
-  ***REMOVED***); // Restore sticky content
+      }); // Restore sticky content
 
       var elements = [].slice.call(document.querySelectorAll("" + Selector$5.STICKY_CONTENT));
       $(elements).each(function (index, element) {
@@ -2502,13 +2502,13 @@
 
         if (typeof margin !== 'undefined') {
           $(element).css('margin-right', margin).removeData('margin-right');
-    ***REMOVED***
-  ***REMOVED***); // Restore body padding
+        }
+      }); // Restore body padding
 
       var padding = $(document.body).data('padding-right');
       $(document.body).removeData('padding-right');
       document.body.style.paddingRight = padding ? padding : '';
-***REMOVED***;
+    };
 
     _proto._getScrollbarWidth = function _getScrollbarWidth() {
       // thx d.walsh
@@ -2518,7 +2518,7 @@
       var scrollbarWidth = scrollDiv.getBoundingClientRect().width - scrollDiv.clientWidth;
       document.body.removeChild(scrollDiv);
       return scrollbarWidth;
-***REMOVED*** // Static
+    } // Static
     ;
 
     Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
@@ -2530,31 +2530,31 @@
         if (!data) {
           data = new Modal(this, _config);
           $(this).data(DATA_KEY$5, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config](relatedTarget);
-    ***REMOVED*** else if (_config.show) {
+        } else if (_config.show) {
           data.show(relatedTarget);
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(Modal, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$5;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default$3;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Modal;
   }();
@@ -2573,26 +2573,26 @@
 
     if (selector) {
       target = document.querySelector(selector);
-***REMOVED***
+    }
 
     var config = $(target).data(DATA_KEY$5) ? 'toggle' : _objectSpread({}, $(target).data(), $(this).data());
 
     if (this.tagName === 'A' || this.tagName === 'AREA') {
       event.preventDefault();
-***REMOVED***
+    }
 
     var $target = $(target).one(Event$5.SHOW, function (showEvent) {
       if (showEvent.isDefaultPrevented()) {
         // Only register focus restorer if modal will actually get shown
         return;
-  ***REMOVED***
+      }
 
       $target.one(Event$5.HIDDEN, function () {
         if ($(_this10).is(':visible')) {
           _this10.focus();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***);
+        }
+      });
+    });
 
     Modal._jQueryInterface.call($(target), config, this);
   });
@@ -2650,11 +2650,11 @@
     strong: [],
     u: [],
     ul: []
-***REMOVED***
-***REMOVED***A pattern that recognizes a commonly useful subset of URLs that are safe.
+    /**
+     * A pattern that recognizes a commonly useful subset of URLs that are safe.
      *
-***REMOVED***Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
-***REMOVED***
+     * Shoutout to Angular 7 https://github.com/angular/angular/blob/7.2.4/packages/core/src/sanitization/url_sanitizer.ts
+     */
 
   };
   var SAFE_URL_PATTERN = /^(?:(?:https?|mailto|ftp|tel|file):|[^&:/?#]*(?:[/?#]|$))/gi;
@@ -2672,20 +2672,20 @@
     if (allowedAttributeList.indexOf(attrName) !== -1) {
       if (uriAttrs.indexOf(attrName) !== -1) {
         return Boolean(attr.nodeValue.match(SAFE_URL_PATTERN) || attr.nodeValue.match(DATA_URL_PATTERN));
-  ***REMOVED***
+      }
 
       return true;
-***REMOVED***
+    }
 
     var regExp = allowedAttributeList.filter(function (attrRegex) {
       return attrRegex instanceof RegExp;
-***REMOVED***); // Check if a regular expression validates the attribute.
+    }); // Check if a regular expression validates the attribute.
 
     for (var i = 0, l = regExp.length; i < l; i++) {
       if (attrName.match(regExp[i])) {
         return true;
-  ***REMOVED***
-***REMOVED***
+      }
+    }
 
     return false;
   }
@@ -2693,11 +2693,11 @@
   function sanitizeHtml(unsafeHtml, whiteList, sanitizeFn) {
     if (unsafeHtml.length === 0) {
       return unsafeHtml;
-***REMOVED***
+    }
 
     if (sanitizeFn && typeof sanitizeFn === 'function') {
       return sanitizeFn(unsafeHtml);
-***REMOVED***
+    }
 
     var domParser = new window.DOMParser();
     var createdDocument = domParser.parseFromString(unsafeHtml, 'text/html');
@@ -2711,22 +2711,22 @@
       if (whitelistKeys.indexOf(el.nodeName.toLowerCase()) === -1) {
         el.parentNode.removeChild(el);
         return "continue";
-  ***REMOVED***
+      }
 
       var attributeList = [].slice.call(el.attributes);
       var whitelistedAttributes = [].concat(whiteList['*'] || [], whiteList[elName] || []);
       attributeList.forEach(function (attr) {
         if (!allowedAttribute(attr, whitelistedAttributes)) {
           el.removeAttribute(attr.nodeName);
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     for (var i = 0, len = elements.length; i < len; i++) {
       var _ret = _loop(i, len);
 
       if (_ret === "continue") continue;
-***REMOVED***
+    }
 
     return createdDocument.body.innerHTML;
   }
@@ -2816,11 +2816,11 @@
     FOCUS: 'focus',
     CLICK: 'click',
     MANUAL: 'manual'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -2828,13 +2828,13 @@
   /*#__PURE__*/
   function () {
     function Tooltip(element, config) {
-  ***REMOVED***
-  ***REMOVED***Check for Popper dependency
-  ***REMOVED***Popper - https://popper.js.org
-  ***REMOVED***
+      /**
+       * Check for Popper dependency
+       * Popper - https://popper.js.org
+       */
       if (typeof Popper === 'undefined') {
         throw new TypeError('Bootstrap\'s tooltips require Popper.js (https://popper.js.org/)');
-  ***REMOVED*** // private
+      } // private
 
 
       this._isEnabled = true;
@@ -2848,7 +2848,7 @@
       this.tip = null;
 
       this._setListeners();
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Tooltip.prototype;
@@ -2856,20 +2856,20 @@
     // Public
     _proto.enable = function enable() {
       this._isEnabled = true;
-***REMOVED***;
+    };
 
     _proto.disable = function disable() {
       this._isEnabled = false;
-***REMOVED***;
+    };
 
     _proto.toggleEnabled = function toggleEnabled() {
       this._isEnabled = !this._isEnabled;
-***REMOVED***;
+    };
 
     _proto.toggle = function toggle(event) {
       if (!this._isEnabled) {
         return;
-  ***REMOVED***
+      }
 
       if (event) {
         var dataKey = this.constructor.DATA_KEY;
@@ -2878,25 +2878,25 @@
         if (!context) {
           context = new this.constructor(event.currentTarget, this._getDelegateConfig());
           $(event.currentTarget).data(dataKey, context);
-    ***REMOVED***
+        }
 
         context._activeTrigger.click = !context._activeTrigger.click;
 
         if (context._isWithActiveTrigger()) {
           context._enter(null, context);
-    ***REMOVED*** else {
+        } else {
           context._leave(null, context);
-    ***REMOVED***
-  ***REMOVED*** else {
+        }
+      } else {
         if ($(this.getTipElement()).hasClass(ClassName$6.SHOW)) {
           this._leave(null, this);
 
           return;
-    ***REMOVED***
+        }
 
         this._enter(null, this);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.dispose = function dispose() {
       clearTimeout(this._timeout);
@@ -2906,7 +2906,7 @@
 
       if (this.tip) {
         $(this.tip).remove();
-  ***REMOVED***
+      }
 
       this._isEnabled = null;
       this._timeout = null;
@@ -2915,20 +2915,20 @@
 
       if (this._popper !== null) {
         this._popper.destroy();
-  ***REMOVED***
+      }
 
       this._popper = null;
       this.element = null;
       this.config = null;
       this.tip = null;
-***REMOVED***;
+    };
 
     _proto.show = function show() {
       var _this = this;
 
       if ($(this.element).css('display') === 'none') {
         throw new Error('Please use show on visible elements');
-  ***REMOVED***
+      }
 
       var showEvent = $.Event(this.constructor.Event.SHOW);
 
@@ -2939,7 +2939,7 @@
 
         if (showEvent.isDefaultPrevented() || !isInTheDom) {
           return;
-    ***REMOVED***
+        }
 
         var tip = this.getTipElement();
         var tipId = Util.getUID(this.constructor.NAME);
@@ -2949,7 +2949,7 @@
 
         if (this.config.animation) {
           $(tip).addClass(ClassName$6.FADE);
-    ***REMOVED***
+        }
 
         var placement = typeof this.config.placement === 'function' ? this.config.placement.call(this, tip, this.element) : this.config.placement;
 
@@ -2963,7 +2963,7 @@
 
         if (!$.contains(this.element.ownerDocument.documentElement, this.tip)) {
           $(tip).appendTo(container);
-    ***REMOVED***
+        }
 
         $(this.element).trigger(this.constructor.Event.INSERTED);
         this._popper = new Popper(this.element, tip, {
@@ -2972,23 +2972,23 @@
             offset: this._getOffset(),
             flip: {
               behavior: this.config.fallbackPlacement
-        ***REMOVED***,
+            },
             arrow: {
               element: Selector$6.ARROW
-        ***REMOVED***,
+            },
             preventOverflow: {
               boundariesElement: this.config.boundary
-        ***REMOVED***
-      ***REMOVED***,
+            }
+          },
           onCreate: function onCreate(data) {
             if (data.originalPlacement !== data.placement) {
               _this._handlePopperPlacementChange(data);
-        ***REMOVED***
-      ***REMOVED***,
+            }
+          },
           onUpdate: function onUpdate(data) {
             return _this._handlePopperPlacementChange(data);
-      ***REMOVED***
-    ***REMOVED***);
+          }
+        });
         $(tip).addClass(ClassName$6.SHOW); // If this is a touch-enabled device we add extra
         // empty mouseover listeners to the body's immediate children;
         // only needed because of broken event delegation on iOS
@@ -2996,12 +2996,12 @@
 
         if ('ontouchstart' in document.documentElement) {
           $(document.body).children().on('mouseover', null, $.noop);
-    ***REMOVED***
+        }
 
         var complete = function complete() {
           if (_this.config.animation) {
             _this._fixTransition();
-      ***REMOVED***
+          }
 
           var prevHoverState = _this._hoverState;
           _this._hoverState = null;
@@ -3009,17 +3009,17 @@
 
           if (prevHoverState === HoverState.OUT) {
             _this._leave(null, _this);
-      ***REMOVED***
-    ***REMOVED***;
+          }
+        };
 
         if ($(this.tip).hasClass(ClassName$6.FADE)) {
           var transitionDuration = Util.getTransitionDurationFromElement(this.tip);
           $(this.tip).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-    ***REMOVED*** else {
+        } else {
           complete();
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***;
+        }
+      }
+    };
 
     _proto.hide = function hide(callback) {
       var _this2 = this;
@@ -3030,7 +3030,7 @@
       var complete = function complete() {
         if (_this2._hoverState !== HoverState.SHOW && tip.parentNode) {
           tip.parentNode.removeChild(tip);
-    ***REMOVED***
+        }
 
         _this2._cleanTipClass();
 
@@ -3040,25 +3040,25 @@
 
         if (_this2._popper !== null) {
           _this2._popper.destroy();
-    ***REMOVED***
+        }
 
         if (callback) {
           callback();
-    ***REMOVED***
-  ***REMOVED***;
+        }
+      };
 
       $(this.element).trigger(hideEvent);
 
       if (hideEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       $(tip).removeClass(ClassName$6.SHOW); // If this is a touch-enabled device we remove the extra
       // empty mouseover listeners we added for iOS support
 
       if ('ontouchstart' in document.documentElement) {
         $(document.body).children().off('mouseover', null, $.noop);
-  ***REMOVED***
+      }
 
       this._activeTrigger[Trigger.CLICK] = false;
       this._activeTrigger[Trigger.FOCUS] = false;
@@ -3067,38 +3067,38 @@
       if ($(this.tip).hasClass(ClassName$6.FADE)) {
         var transitionDuration = Util.getTransitionDurationFromElement(tip);
         $(tip).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-  ***REMOVED*** else {
+      } else {
         complete();
-  ***REMOVED***
+      }
 
       this._hoverState = '';
-***REMOVED***;
+    };
 
     _proto.update = function update() {
       if (this._popper !== null) {
         this._popper.scheduleUpdate();
-  ***REMOVED***
-***REMOVED*** // Protected
+      }
+    } // Protected
     ;
 
     _proto.isWithContent = function isWithContent() {
       return Boolean(this.getTitle());
-***REMOVED***;
+    };
 
     _proto.addAttachmentClass = function addAttachmentClass(attachment) {
       $(this.getTipElement()).addClass(CLASS_PREFIX + "-" + attachment);
-***REMOVED***;
+    };
 
     _proto.getTipElement = function getTipElement() {
       this.tip = this.tip || $(this.config.template)[0];
       return this.tip;
-***REMOVED***;
+    };
 
     _proto.setContent = function setContent() {
       var tip = this.getTipElement();
       this.setElementContent($(tip.querySelectorAll(Selector$6.TOOLTIP_INNER)), this.getTitle());
       $(tip).removeClass(ClassName$6.FADE + " " + ClassName$6.SHOW);
-***REMOVED***;
+    };
 
     _proto.setElementContent = function setElementContent($element, content) {
       if (typeof content === 'object' && (content.nodeType || content.jquery)) {
@@ -3106,34 +3106,34 @@
         if (this.config.html) {
           if (!$(content).parent().is($element)) {
             $element.empty().append(content);
-      ***REMOVED***
-    ***REMOVED*** else {
+          }
+        } else {
           $element.text($(content).text());
-    ***REMOVED***
+        }
 
         return;
-  ***REMOVED***
+      }
 
       if (this.config.html) {
         if (this.config.sanitize) {
           content = sanitizeHtml(content, this.config.whiteList, this.config.sanitizeFn);
-    ***REMOVED***
+        }
 
         $element.html(content);
-  ***REMOVED*** else {
+      } else {
         $element.text(content);
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.getTitle = function getTitle() {
       var title = this.element.getAttribute('data-original-title');
 
       if (!title) {
         title = typeof this.config.title === 'function' ? this.config.title.call(this.element) : this.config.title;
-  ***REMOVED***
+      }
 
       return title;
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getOffset = function _getOffset() {
@@ -3145,29 +3145,29 @@
         offset.fn = function (data) {
           data.offsets = _objectSpread({}, data.offsets, _this3.config.offset(data.offsets, _this3.element) || {});
           return data;
-    ***REMOVED***;
-  ***REMOVED*** else {
+        };
+      } else {
         offset.offset = this.config.offset;
-  ***REMOVED***
+      }
 
       return offset;
-***REMOVED***;
+    };
 
     _proto._getContainer = function _getContainer() {
       if (this.config.container === false) {
         return document.body;
-  ***REMOVED***
+      }
 
       if (Util.isElement(this.config.container)) {
         return $(this.config.container);
-  ***REMOVED***
+      }
 
       return $(document).find(this.config.container);
-***REMOVED***;
+    };
 
     _proto._getAttachment = function _getAttachment(placement) {
       return AttachmentMap$1[placement.toUpperCase()];
-***REMOVED***;
+    };
 
     _proto._setListeners = function _setListeners() {
       var _this4 = this;
@@ -3177,32 +3177,32 @@
         if (trigger === 'click') {
           $(_this4.element).on(_this4.constructor.Event.CLICK, _this4.config.selector, function (event) {
             return _this4.toggle(event);
-      ***REMOVED***);
-    ***REMOVED*** else if (trigger !== Trigger.MANUAL) {
+          });
+        } else if (trigger !== Trigger.MANUAL) {
           var eventIn = trigger === Trigger.HOVER ? _this4.constructor.Event.MOUSEENTER : _this4.constructor.Event.FOCUSIN;
           var eventOut = trigger === Trigger.HOVER ? _this4.constructor.Event.MOUSELEAVE : _this4.constructor.Event.FOCUSOUT;
           $(_this4.element).on(eventIn, _this4.config.selector, function (event) {
             return _this4._enter(event);
-      ***REMOVED***).on(eventOut, _this4.config.selector, function (event) {
+          }).on(eventOut, _this4.config.selector, function (event) {
             return _this4._leave(event);
-      ***REMOVED***);
-    ***REMOVED***
-  ***REMOVED***);
+          });
+        }
+      });
       $(this.element).closest('.modal').on('hide.bs.modal', function () {
         if (_this4.element) {
           _this4.hide();
-    ***REMOVED***
-  ***REMOVED***);
+        }
+      });
 
       if (this.config.selector) {
         this.config = _objectSpread({}, this.config, {
           trigger: 'manual',
           selector: ''
-    ***REMOVED***);
-  ***REMOVED*** else {
+        });
+      } else {
         this._fixTitle();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._fixTitle = function _fixTitle() {
       var titleType = typeof this.element.getAttribute('data-original-title');
@@ -3210,8 +3210,8 @@
       if (this.element.getAttribute('title') || titleType !== 'string') {
         this.element.setAttribute('data-original-title', this.element.getAttribute('title') || '');
         this.element.setAttribute('title', '');
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._enter = function _enter(event, context) {
       var dataKey = this.constructor.DATA_KEY;
@@ -3220,16 +3220,16 @@
       if (!context) {
         context = new this.constructor(event.currentTarget, this._getDelegateConfig());
         $(event.currentTarget).data(dataKey, context);
-  ***REMOVED***
+      }
 
       if (event) {
         context._activeTrigger[event.type === 'focusin' ? Trigger.FOCUS : Trigger.HOVER] = true;
-  ***REMOVED***
+      }
 
       if ($(context.getTipElement()).hasClass(ClassName$6.SHOW) || context._hoverState === HoverState.SHOW) {
         context._hoverState = HoverState.SHOW;
         return;
-  ***REMOVED***
+      }
 
       clearTimeout(context._timeout);
       context._hoverState = HoverState.SHOW;
@@ -3237,14 +3237,14 @@
       if (!context.config.delay || !context.config.delay.show) {
         context.show();
         return;
-  ***REMOVED***
+      }
 
       context._timeout = setTimeout(function () {
         if (context._hoverState === HoverState.SHOW) {
           context.show();
-    ***REMOVED***
-  ***REMOVED***, context.config.delay.show);
-***REMOVED***;
+        }
+      }, context.config.delay.show);
+    };
 
     _proto._leave = function _leave(event, context) {
       var dataKey = this.constructor.DATA_KEY;
@@ -3253,15 +3253,15 @@
       if (!context) {
         context = new this.constructor(event.currentTarget, this._getDelegateConfig());
         $(event.currentTarget).data(dataKey, context);
-  ***REMOVED***
+      }
 
       if (event) {
         context._activeTrigger[event.type === 'focusout' ? Trigger.FOCUS : Trigger.HOVER] = false;
-  ***REMOVED***
+      }
 
       if (context._isWithActiveTrigger()) {
         return;
-  ***REMOVED***
+      }
 
       clearTimeout(context._timeout);
       context._hoverState = HoverState.OUT;
@@ -3269,57 +3269,57 @@
       if (!context.config.delay || !context.config.delay.hide) {
         context.hide();
         return;
-  ***REMOVED***
+      }
 
       context._timeout = setTimeout(function () {
         if (context._hoverState === HoverState.OUT) {
           context.hide();
-    ***REMOVED***
-  ***REMOVED***, context.config.delay.hide);
-***REMOVED***;
+        }
+      }, context.config.delay.hide);
+    };
 
     _proto._isWithActiveTrigger = function _isWithActiveTrigger() {
       for (var trigger in this._activeTrigger) {
         if (this._activeTrigger[trigger]) {
           return true;
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       return false;
-***REMOVED***;
+    };
 
     _proto._getConfig = function _getConfig(config) {
       var dataAttributes = $(this.element).data();
       Object.keys(dataAttributes).forEach(function (dataAttr) {
         if (DISALLOWED_ATTRIBUTES.indexOf(dataAttr) !== -1) {
           delete dataAttributes[dataAttr];
-    ***REMOVED***
-  ***REMOVED***);
+        }
+      });
       config = _objectSpread({}, this.constructor.Default, dataAttributes, typeof config === 'object' && config ? config : {});
 
       if (typeof config.delay === 'number') {
         config.delay = {
           show: config.delay,
           hide: config.delay
-    ***REMOVED***;
-  ***REMOVED***
+        };
+      }
 
       if (typeof config.title === 'number') {
         config.title = config.title.toString();
-  ***REMOVED***
+      }
 
       if (typeof config.content === 'number') {
         config.content = config.content.toString();
-  ***REMOVED***
+      }
 
       Util.typeCheckConfig(NAME$6, config, this.constructor.DefaultType);
 
       if (config.sanitize) {
         config.template = sanitizeHtml(config.template, config.whiteList, config.sanitizeFn);
-  ***REMOVED***
+      }
 
       return config;
-***REMOVED***;
+    };
 
     _proto._getDelegateConfig = function _getDelegateConfig() {
       var config = {};
@@ -3328,12 +3328,12 @@
         for (var key in this.config) {
           if (this.constructor.Default[key] !== this.config[key]) {
             config[key] = this.config[key];
-      ***REMOVED***
-    ***REMOVED***
-  ***REMOVED***
+          }
+        }
+      }
 
       return config;
-***REMOVED***;
+    };
 
     _proto._cleanTipClass = function _cleanTipClass() {
       var $tip = $(this.getTipElement());
@@ -3341,8 +3341,8 @@
 
       if (tabClass !== null && tabClass.length) {
         $tip.removeClass(tabClass.join(''));
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._handlePopperPlacementChange = function _handlePopperPlacementChange(popperData) {
       var popperInstance = popperData.instance;
@@ -3351,7 +3351,7 @@
       this._cleanTipClass();
 
       this.addAttachmentClass(this._getAttachment(popperData.placement));
-***REMOVED***;
+    };
 
     _proto._fixTransition = function _fixTransition() {
       var tip = this.getTipElement();
@@ -3359,14 +3359,14 @@
 
       if (tip.getAttribute('x-placement') !== null) {
         return;
-  ***REMOVED***
+      }
 
       $(tip).removeClass(ClassName$6.FADE);
       this.config.animation = false;
       this.hide();
       this.show();
       this.config.animation = initConfigAnimation;
-***REMOVED*** // Static
+    } // Static
     ;
 
     Tooltip._jQueryInterface = function _jQueryInterface(config) {
@@ -3377,59 +3377,59 @@
 
         if (!data && /dispose|hide/.test(config)) {
           return;
-    ***REMOVED***
+        }
 
         if (!data) {
           data = new Tooltip(this, _config);
           $(this).data(DATA_KEY$6, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config]();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(Tooltip, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$6;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default$4;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "NAME",
       get: function get() {
         return NAME$6;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "DATA_KEY",
       get: function get() {
         return DATA_KEY$6;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Event",
       get: function get() {
         return Event$6;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "EVENT_KEY",
       get: function get() {
         return EVENT_KEY$6;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "DefaultType",
       get: function get() {
         return DefaultType$4;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Tooltip;
   }();
@@ -3492,11 +3492,11 @@
     FOCUSOUT: "focusout" + EVENT_KEY$7,
     MOUSEENTER: "mouseenter" + EVENT_KEY$7,
     MOUSELEAVE: "mouseleave" + EVENT_KEY$7
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -3507,23 +3507,23 @@
 
     function Popover() {
       return _Tooltip.apply(this, arguments) || this;
-***REMOVED***
+    }
 
     var _proto = Popover.prototype;
 
     // Overrides
     _proto.isWithContent = function isWithContent() {
       return this.getTitle() || this._getContent();
-***REMOVED***;
+    };
 
     _proto.addAttachmentClass = function addAttachmentClass(attachment) {
       $(this.getTipElement()).addClass(CLASS_PREFIX$1 + "-" + attachment);
-***REMOVED***;
+    };
 
     _proto.getTipElement = function getTipElement() {
       this.tip = this.tip || $(this.config.template)[0];
       return this.tip;
-***REMOVED***;
+    };
 
     _proto.setContent = function setContent() {
       var $tip = $(this.getTipElement()); // We use append for html objects to maintain js events
@@ -3534,16 +3534,16 @@
 
       if (typeof content === 'function') {
         content = content.call(this.element);
-  ***REMOVED***
+      }
 
       this.setElementContent($tip.find(Selector$7.CONTENT), content);
       $tip.removeClass(ClassName$7.FADE + " " + ClassName$7.SHOW);
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getContent = function _getContent() {
       return this.element.getAttribute('data-content') || this.config.content;
-***REMOVED***;
+    };
 
     _proto._cleanTipClass = function _cleanTipClass() {
       var $tip = $(this.getTipElement());
@@ -3551,8 +3551,8 @@
 
       if (tabClass !== null && tabClass.length > 0) {
         $tip.removeClass(tabClass.join(''));
-  ***REMOVED***
-***REMOVED*** // Static
+      }
+    } // Static
     ;
 
     Popover._jQueryInterface = function _jQueryInterface(config) {
@@ -3563,60 +3563,60 @@
 
         if (!data && /dispose|hide/.test(config)) {
           return;
-    ***REMOVED***
+        }
 
         if (!data) {
           data = new Popover(this, _config);
           $(this).data(DATA_KEY$7, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config]();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(Popover, null, [{
       key: "VERSION",
       // Getters
       get: function get() {
         return VERSION$7;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default$5;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "NAME",
       get: function get() {
         return NAME$7;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "DATA_KEY",
       get: function get() {
         return DATA_KEY$7;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Event",
       get: function get() {
         return Event$7;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "EVENT_KEY",
       get: function get() {
         return EVENT_KEY$7;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "DefaultType",
       get: function get() {
         return DefaultType$5;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Popover;
   }(Tooltip);
@@ -3681,11 +3681,11 @@
   var OffsetMethod = {
     OFFSET: 'offset',
     POSITION: 'position'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -3705,11 +3705,11 @@
       this._scrollHeight = 0;
       $(this._scrollElement).on(Event$8.SCROLL, function (event) {
         return _this._process(event);
-  ***REMOVED***);
+      });
       this.refresh();
 
       this._process();
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = ScrollSpy.prototype;
@@ -3731,7 +3731,7 @@
 
         if (targetSelector) {
           target = document.querySelector(targetSelector);
-    ***REMOVED***
+        }
 
         if (target) {
           var targetBCR = target.getBoundingClientRect();
@@ -3739,20 +3739,20 @@
           if (targetBCR.width || targetBCR.height) {
             // TODO (fat): remove sketch reliance on jQuery position/offset
             return [$(target)[offsetMethod]().top + offsetBase, targetSelector];
-      ***REMOVED***
-    ***REMOVED***
+          }
+        }
 
         return null;
-  ***REMOVED***).filter(function (item) {
+      }).filter(function (item) {
         return item;
-  ***REMOVED***).sort(function (a, b) {
+      }).sort(function (a, b) {
         return a[0] - b[0];
-  ***REMOVED***).forEach(function (item) {
+      }).forEach(function (item) {
         _this2._offsets.push(item[0]);
 
         _this2._targets.push(item[1]);
-  ***REMOVED***);
-***REMOVED***;
+      });
+    };
 
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY$8);
@@ -3765,7 +3765,7 @@
       this._targets = null;
       this._activeTarget = null;
       this._scrollHeight = null;
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getConfig = function _getConfig(config) {
@@ -3777,26 +3777,26 @@
         if (!id) {
           id = Util.getUID(NAME$8);
           $(config.target).attr('id', id);
-    ***REMOVED***
+        }
 
         config.target = "#" + id;
-  ***REMOVED***
+      }
 
       Util.typeCheckConfig(NAME$8, config, DefaultType$6);
       return config;
-***REMOVED***;
+    };
 
     _proto._getScrollTop = function _getScrollTop() {
       return this._scrollElement === window ? this._scrollElement.pageYOffset : this._scrollElement.scrollTop;
-***REMOVED***;
+    };
 
     _proto._getScrollHeight = function _getScrollHeight() {
       return this._scrollElement.scrollHeight || Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-***REMOVED***;
+    };
 
     _proto._getOffsetHeight = function _getOffsetHeight() {
       return this._scrollElement === window ? window.innerHeight : this._scrollElement.getBoundingClientRect().height;
-***REMOVED***;
+    };
 
     _proto._process = function _process() {
       var scrollTop = this._getScrollTop() + this._config.offset;
@@ -3807,17 +3807,17 @@
 
       if (this._scrollHeight !== scrollHeight) {
         this.refresh();
-  ***REMOVED***
+      }
 
       if (scrollTop >= maxScroll) {
         var target = this._targets[this._targets.length - 1];
 
         if (this._activeTarget !== target) {
           this._activate(target);
-    ***REMOVED***
+        }
 
         return;
-  ***REMOVED***
+      }
 
       if (this._activeTarget && scrollTop < this._offsets[0] && this._offsets[0] > 0) {
         this._activeTarget = null;
@@ -3825,7 +3825,7 @@
         this._clear();
 
         return;
-  ***REMOVED***
+      }
 
       var offsetLength = this._offsets.length;
 
@@ -3834,9 +3834,9 @@
 
         if (isActiveTarget) {
           this._activate(this._targets[i]);
-    ***REMOVED***
-  ***REMOVED***
-***REMOVED***;
+        }
+      }
+    };
 
     _proto._activate = function _activate(target) {
       this._activeTarget = target;
@@ -3845,14 +3845,14 @@
 
       var queries = this._selector.split(',').map(function (selector) {
         return selector + "[data-target=\"" + target + "\"]," + selector + "[href=\"" + target + "\"]";
-  ***REMOVED***);
+      });
 
       var $link = $([].slice.call(document.querySelectorAll(queries.join(','))));
 
       if ($link.hasClass(ClassName$8.DROPDOWN_ITEM)) {
         $link.closest(Selector$8.DROPDOWN).find(Selector$8.DROPDOWN_TOGGLE).addClass(ClassName$8.ACTIVE);
         $link.addClass(ClassName$8.ACTIVE);
-  ***REMOVED*** else {
+      } else {
         // Set triggered link as active
         $link.addClass(ClassName$8.ACTIVE); // Set triggered links parents as active
         // With both <ul> and <nav> markup a parent is the previous sibling of any nav ancestor
@@ -3860,20 +3860,20 @@
         $link.parents(Selector$8.NAV_LIST_GROUP).prev(Selector$8.NAV_LINKS + ", " + Selector$8.LIST_ITEMS).addClass(ClassName$8.ACTIVE); // Handle special case when .nav-link is inside .nav-item
 
         $link.parents(Selector$8.NAV_LIST_GROUP).prev(Selector$8.NAV_ITEMS).children(Selector$8.NAV_LINKS).addClass(ClassName$8.ACTIVE);
-  ***REMOVED***
+      }
 
       $(this._scrollElement).trigger(Event$8.ACTIVATE, {
         relatedTarget: target
-  ***REMOVED***);
-***REMOVED***;
+      });
+    };
 
     _proto._clear = function _clear() {
       [].slice.call(document.querySelectorAll(this._selector)).filter(function (node) {
         return node.classList.contains(ClassName$8.ACTIVE);
-  ***REMOVED***).forEach(function (node) {
+      }).forEach(function (node) {
         return node.classList.remove(ClassName$8.ACTIVE);
-  ***REMOVED***);
-***REMOVED*** // Static
+      });
+    } // Static
     ;
 
     ScrollSpy._jQueryInterface = function _jQueryInterface(config) {
@@ -3885,29 +3885,29 @@
         if (!data) {
           data = new ScrollSpy(this, _config);
           $(this).data(DATA_KEY$8, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config]();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(ScrollSpy, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$8;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default$6;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return ScrollSpy;
   }();
@@ -3926,7 +3926,7 @@
       var $spy = $(scrollSpys[i]);
 
       ScrollSpy._jQueryInterface.call($spy, $spy.data());
-***REMOVED***
+    }
   });
   /**
    * ------------------------------------------------------------------------
@@ -3976,11 +3976,11 @@
     DATA_TOGGLE: '[data-toggle="tab"], [data-toggle="pill"], [data-toggle="list"]',
     DROPDOWN_TOGGLE: '.dropdown-toggle',
     DROPDOWN_ACTIVE_CHILD: '> .dropdown-menu .active'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -3989,7 +3989,7 @@
   function () {
     function Tab(element) {
       this._element = element;
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Tab.prototype;
@@ -4000,7 +4000,7 @@
 
       if (this._element.parentNode && this._element.parentNode.nodeType === Node.ELEMENT_NODE && $(this._element).hasClass(ClassName$9.ACTIVE) || $(this._element).hasClass(ClassName$9.DISABLED)) {
         return;
-  ***REMOVED***
+      }
 
       var target;
       var previous;
@@ -4011,53 +4011,53 @@
         var itemSelector = listElement.nodeName === 'UL' || listElement.nodeName === 'OL' ? Selector$9.ACTIVE_UL : Selector$9.ACTIVE;
         previous = $.makeArray($(listElement).find(itemSelector));
         previous = previous[previous.length - 1];
-  ***REMOVED***
+      }
 
       var hideEvent = $.Event(Event$9.HIDE, {
         relatedTarget: this._element
-  ***REMOVED***);
+      });
       var showEvent = $.Event(Event$9.SHOW, {
         relatedTarget: previous
-  ***REMOVED***);
+      });
 
       if (previous) {
         $(previous).trigger(hideEvent);
-  ***REMOVED***
+      }
 
       $(this._element).trigger(showEvent);
 
       if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) {
         return;
-  ***REMOVED***
+      }
 
       if (selector) {
         target = document.querySelector(selector);
-  ***REMOVED***
+      }
 
       this._activate(this._element, listElement);
 
       var complete = function complete() {
         var hiddenEvent = $.Event(Event$9.HIDDEN, {
           relatedTarget: _this._element
-    ***REMOVED***);
+        });
         var shownEvent = $.Event(Event$9.SHOWN, {
           relatedTarget: previous
-    ***REMOVED***);
+        });
         $(previous).trigger(hiddenEvent);
         $(_this._element).trigger(shownEvent);
-  ***REMOVED***;
+      };
 
       if (target) {
         this._activate(target, target.parentNode, complete);
-  ***REMOVED*** else {
+      } else {
         complete();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.dispose = function dispose() {
       $.removeData(this._element, DATA_KEY$9);
       this._element = null;
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._activate = function _activate(element, container, callback) {
@@ -4069,15 +4069,15 @@
 
       var complete = function complete() {
         return _this2._transitionComplete(element, active, callback);
-  ***REMOVED***;
+      };
 
       if (active && isTransitioning) {
         var transitionDuration = Util.getTransitionDurationFromElement(active);
         $(active).removeClass(ClassName$9.SHOW).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-  ***REMOVED*** else {
+      } else {
         complete();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto._transitionComplete = function _transitionComplete(element, active, callback) {
       if (active) {
@@ -4086,24 +4086,24 @@
 
         if (dropdownChild) {
           $(dropdownChild).removeClass(ClassName$9.ACTIVE);
-    ***REMOVED***
+        }
 
         if (active.getAttribute('role') === 'tab') {
           active.setAttribute('aria-selected', false);
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
 
       $(element).addClass(ClassName$9.ACTIVE);
 
       if (element.getAttribute('role') === 'tab') {
         element.setAttribute('aria-selected', true);
-  ***REMOVED***
+      }
 
       Util.reflow(element);
 
       if (element.classList.contains(ClassName$9.FADE)) {
         element.classList.add(ClassName$9.SHOW);
-  ***REMOVED***
+      }
 
       if (element.parentNode && $(element.parentNode).hasClass(ClassName$9.DROPDOWN_MENU)) {
         var dropdownElement = $(element).closest(Selector$9.DROPDOWN)[0];
@@ -4111,15 +4111,15 @@
         if (dropdownElement) {
           var dropdownToggleList = [].slice.call(dropdownElement.querySelectorAll(Selector$9.DROPDOWN_TOGGLE));
           $(dropdownToggleList).addClass(ClassName$9.ACTIVE);
-    ***REMOVED***
+        }
 
         element.setAttribute('aria-expanded', true);
-  ***REMOVED***
+      }
 
       if (callback) {
         callback();
-  ***REMOVED***
-***REMOVED*** // Static
+      }
+    } // Static
     ;
 
     Tab._jQueryInterface = function _jQueryInterface(config) {
@@ -4130,24 +4130,24 @@
         if (!data) {
           data = new Tab(this);
           $this.data(DATA_KEY$9, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config]();
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(Tab, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$9;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Tab;
   }();
@@ -4213,11 +4213,11 @@
   };
   var Selector$a = {
     DATA_DISMISS: '[data-dismiss="toast"]'
-***REMOVED***
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***Class Definition
-***REMOVED***------------------------------------------------------------------------
-***REMOVED***
+    /**
+     * ------------------------------------------------------------------------
+     * Class Definition
+     * ------------------------------------------------------------------------
+     */
 
   };
 
@@ -4230,7 +4230,7 @@
       this._timeout = null;
 
       this._setListeners();
-***REMOVED*** // Getters
+    } // Getters
 
 
     var _proto = Toast.prototype;
@@ -4243,7 +4243,7 @@
 
       if (this._config.animation) {
         this._element.classList.add(ClassName$a.FADE);
-  ***REMOVED***
+      }
 
       var complete = function complete() {
         _this._element.classList.remove(ClassName$a.SHOWING);
@@ -4254,8 +4254,8 @@
 
         if (_this._config.autohide) {
           _this.hide();
-    ***REMOVED***
-  ***REMOVED***;
+        }
+      };
 
       this._element.classList.remove(ClassName$a.HIDE);
 
@@ -4264,28 +4264,28 @@
       if (this._config.animation) {
         var transitionDuration = Util.getTransitionDurationFromElement(this._element);
         $(this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-  ***REMOVED*** else {
+      } else {
         complete();
-  ***REMOVED***
-***REMOVED***;
+      }
+    };
 
     _proto.hide = function hide(withoutTimeout) {
       var _this2 = this;
 
       if (!this._element.classList.contains(ClassName$a.SHOW)) {
         return;
-  ***REMOVED***
+      }
 
       $(this._element).trigger(Event$a.HIDE);
 
       if (withoutTimeout) {
         this._close();
-  ***REMOVED*** else {
+      } else {
         this._timeout = setTimeout(function () {
           _this2._close();
-    ***REMOVED***, this._config.delay);
-  ***REMOVED***
-***REMOVED***;
+        }, this._config.delay);
+      }
+    };
 
     _proto.dispose = function dispose() {
       clearTimeout(this._timeout);
@@ -4293,28 +4293,28 @@
 
       if (this._element.classList.contains(ClassName$a.SHOW)) {
         this._element.classList.remove(ClassName$a.SHOW);
-  ***REMOVED***
+      }
 
       $(this._element).off(Event$a.CLICK_DISMISS);
       $.removeData(this._element, DATA_KEY$a);
       this._element = null;
       this._config = null;
-***REMOVED*** // Private
+    } // Private
     ;
 
     _proto._getConfig = function _getConfig(config) {
       config = _objectSpread({}, Default$7, $(this._element).data(), typeof config === 'object' && config ? config : {});
       Util.typeCheckConfig(NAME$a, config, this.constructor.DefaultType);
       return config;
-***REMOVED***;
+    };
 
     _proto._setListeners = function _setListeners() {
       var _this3 = this;
 
       $(this._element).on(Event$a.CLICK_DISMISS, Selector$a.DATA_DISMISS, function () {
         return _this3.hide(true);
-  ***REMOVED***);
-***REMOVED***;
+      });
+    };
 
     _proto._close = function _close() {
       var _this4 = this;
@@ -4323,17 +4323,17 @@
         _this4._element.classList.add(ClassName$a.HIDE);
 
         $(_this4._element).trigger(Event$a.HIDDEN);
-  ***REMOVED***;
+      };
 
       this._element.classList.remove(ClassName$a.SHOW);
 
       if (this._config.animation) {
         var transitionDuration = Util.getTransitionDurationFromElement(this._element);
         $(this._element).one(Util.TRANSITION_END, complete).emulateTransitionEnd(transitionDuration);
-  ***REMOVED*** else {
+      } else {
         complete();
-  ***REMOVED***
-***REMOVED*** // Static
+      }
+    } // Static
     ;
 
     Toast._jQueryInterface = function _jQueryInterface(config) {
@@ -4346,34 +4346,34 @@
         if (!data) {
           data = new Toast(this, _config);
           $element.data(DATA_KEY$a, data);
-    ***REMOVED***
+        }
 
         if (typeof config === 'string') {
           if (typeof data[config] === 'undefined') {
             throw new TypeError("No method named \"" + config + "\"");
-      ***REMOVED***
+          }
 
           data[config](this);
-    ***REMOVED***
-  ***REMOVED***);
-***REMOVED***;
+        }
+      });
+    };
 
     _createClass(Toast, null, [{
       key: "VERSION",
       get: function get() {
         return VERSION$a;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "DefaultType",
       get: function get() {
         return DefaultType$7;
-  ***REMOVED***
-***REMOVED***, {
+      }
+    }, {
       key: "Default",
       get: function get() {
         return Default$7;
-  ***REMOVED***
-***REMOVED***]);
+      }
+    }]);
 
     return Toast;
   }();
@@ -4402,7 +4402,7 @@
   (function () {
     if (typeof $ === 'undefined') {
       throw new TypeError('Bootstrap\'s JavaScript requires jQuery. jQuery must be included before Bootstrap\'s JavaScript.');
-***REMOVED***
+    }
 
     var version = $.fn.jquery.split(' ')[0].split('.');
     var minMajor = 1;
@@ -4413,7 +4413,7 @@
 
     if (version[0] < ltMajor && version[1] < minMinor || version[0] === minMajor && version[1] === minMinor && version[2] < minPatch || version[0] >= maxMajor) {
       throw new Error('Bootstrap\'s JavaScript requires at least jQuery v1.9.1 but less than v4.0.0');
-***REMOVED***
+    }
   })();
 
   exports.Util = Util;

@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once '../includes/common.php';
 require_once '../includes/bid.php';
 
@@ -40,34 +40,34 @@ if (!$errors) {
 
         if (!$courseDAO->retrieveByCode($course)) {
             $errors[] = "invalid course";
-    ***REMOVED*** else {
+        } else {
             if (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
                 $errors[] = "invalid section";
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
         if (!$userDAO->retrieveById($userId)) {
             $errors[] = "invalid userid";
-    ***REMOVED***
+        }
 
         if (!$roundDAO->roundIsActive()) {
             $errors[] = "round ended";
-    ***REMOVED***
+        }
 
         $currentRound = $roundDAO->getCurrentRound()['round'];
         // if ($roundDAO->roundIsActive() and ($sectionDAO->retrieveByCodeAndSection($course, $section) and $userDAO->retrieveById($userId)){
         //     if ($bidDAO->retrieveBidsByCodeAndSection($userId, $course, $section, $currentRound)){
 
-        // ***REMOVED***
+        //     }
         // }
         if (!$errors and !$bidDAO->retrieveBidsByCodeAndSection($userId, $course, $section, $currentRound)) {
             $errors[] = "no such bid";
-    ***REMOVED***
+        }
 
         if (!$errors) {
             $refundSuccessful = $bidDAO->refundbidamount($userId, $course, $section, $currentRound);
-    ***REMOVED***
-***REMOVED***
+        }
+    }
 }
 
 if (!$errors) {
