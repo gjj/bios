@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 	require_once 'includes/common.php';
 
 	// Check if form has posted the userId and password fields i.e. not empty.

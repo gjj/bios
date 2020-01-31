@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 class UserDAO
 {
@@ -19,7 +19,7 @@ class UserDAO
 
         // Returns my result set i.e. userid, password, role (see SQL statement above) on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveById($userId)
     {
@@ -37,7 +37,7 @@ class UserDAO
 
         // Returns my result set i.e. userid, password, role (see SQL statement above) on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveAll()
     {
@@ -54,7 +54,7 @@ class UserDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveStudentById($userId)
     {
@@ -72,7 +72,7 @@ class UserDAO
 
         // Returns my result set i.e. userid, password, role (see SQL statement above) on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveAllStudents()
     {
@@ -92,11 +92,11 @@ class UserDAO
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $row['edollar'] = (float)$row['edollar'];
             $result[] = $row;
-    ***REMOVED***
+        }
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function add($user)
     {
@@ -119,10 +119,10 @@ class UserDAO
         $isAddOK = False;
         if ($query->execute()) {
             $isAddOK = True;
-    ***REMOVED***
+        }
 
         return $isAddOK;
-***REMOVED***
+    }
 
     public function truncateAllTable()
     {
@@ -138,6 +138,6 @@ class UserDAO
         $query->execute();
         $query->closeCursor();
 
-***REMOVED***
+    }
 
 }

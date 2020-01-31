@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
     require_once '../includes/common.php';
 
     header("Content-Type: application/json");
@@ -29,9 +29,9 @@
 
             if (!$user) {
                 $errors[] = "invalid userid";
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+            }
+        }
+    }
 
     if (!$errors) {
         $result = [
@@ -40,12 +40,12 @@
         
         // Why need to merge? See https://wiki.smu.edu.sg/is212/Project#Dump_.28User.29
         $result = array_merge($result, $user);
-***REMOVED***
+    }
     else {
         $result = [
             "status" => "error",
             "message" => array_values($errors)
         ];
-***REMOVED***
+    }
 
     echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK);

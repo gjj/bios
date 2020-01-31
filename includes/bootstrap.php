@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once 'common.php';
 require_once 'bootstrap-validation.php';
 
@@ -25,7 +25,7 @@ function doBootstrap()
     # check file size
     if ($_FILES["bootstrap-file"]["size"] <= 0) {
         $errors[] = "input files not found";
-***REMOVED***
+    }
     else {
         $zip = new ZipArchive;
         $res = $zip->open($zip_file);
@@ -54,33 +54,33 @@ function doBootstrap()
                 if (!empty($students)) {
                     fclose($students);
                     @unlink($students_path);
-            ***REMOVED***
+                }
 
                 if (!empty($bids)) {
                     fclose($bids);
                     @unlink($bids_path);
-            ***REMOVED***
+                }
 
                 if (!empty($courses)) {
                     fclose($courses);
                     @unlink($courses_path);
-            ***REMOVED***
+                }
 
                 if (!empty($courses_completed)) {
                     fclose($courses_completed);
                     @unlink($courses_completed_path);
-            ***REMOVED***
+                }
 
                 if (!empty($prerequisites)) {
                     fclose($prerequisites);
                     @unlink($prerequisites_path);
-            ***REMOVED***
+                }
 
                 if (!empty($sections)) {
                     fclose($sections);
                     @unlink($sections_path);
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             else {
                 $connMgr = new ConnectionManager();
                 $conn = $connMgr->getConnection();
@@ -112,7 +112,7 @@ function doBootstrap()
                     // If common validation fails, we don't even proceed with file-specific validation
                     if (!$validationErrors) {
                         $validationErrors = validateStudent($data);
-                ***REMOVED***
+                    }
 
                     if ($validationErrors) {
                         // If there are validation errors.
@@ -121,15 +121,15 @@ function doBootstrap()
                             'line' => $student_row,
                             'message' => $validationErrors
                         ];
-                ***REMOVED***
+                    }
                     else {
                         $studentObj = new User($data[0], $data[1], $data[2], $data[3], $data[4]);
                         $userDAO->add($studentObj);
                         $students_processed++;
-                ***REMOVED***
+                    }
 
                     $student_row++;
-            ***REMOVED***
+                }
                 
                 // Begin importing course.csv.
                 $data = fgetcsv($courses); // Skip first row.
@@ -144,7 +144,7 @@ function doBootstrap()
                     // If common validation fails, we don't even proceed with file-specific validation
                     if (!$validationErrors) {
                         $validationErrors = validateCourse($data);
-                ***REMOVED***
+                    }
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -153,15 +153,15 @@ function doBootstrap()
                             'line' => $course_row,
                             'message' => $validationErrors
                         ];
-                ***REMOVED***
+                    }
                     else {
                         $coursesObj = new Course($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6]);
                         $courseDAO->addCourses($coursesObj);
                         $courses_processed++;
-                ***REMOVED***
+                    }
 
                     $course_row++;
-            ***REMOVED***
+                }
 
                 // Begin importing section.csv.
                 $header = fgetcsv($sections); // Skip first row.
@@ -176,7 +176,7 @@ function doBootstrap()
                     // If common validation fails, we don't even proceed with file-specific validation
                     if (!$validationErrors) {
                         $validationErrors = validateSection($data);
-                ***REMOVED***
+                    }
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -185,15 +185,15 @@ function doBootstrap()
                             'line' => $section_row,
                             'message' => $validationErrors
                         ];
-                ***REMOVED***
+                    }
                     else {
                         $sectionsObj = new Section($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7]);
                         $sectionDAO->add($sectionsObj);
                         $sections_processed++;
-                ***REMOVED***
+                    }
 
                     $section_row++;
-            ***REMOVED***
+                }
 
                 // Begin importing prerequisite.csv.
                 $header = fgetcsv($prerequisites); // Skip first row.
@@ -208,7 +208,7 @@ function doBootstrap()
                     // If common validation fails, we don't even proceed with file-specific validation
                     if (!$validationErrors) {
                         $validationErrors = validatePrerequisite($data);
-                ***REMOVED***
+                    }
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -217,16 +217,16 @@ function doBootstrap()
                             'line' => $prerequisite_row,
                             'message' => $validationErrors
                         ];
-                ***REMOVED***
+                    }
                     else {
                         $course = $data[0];
                         $prerequisite = $data[1];
                         $courseDAO->addPrerequisites($course, $prerequisite);
                         $prerequisites_processed++;
-                ***REMOVED***
+                    }
 
                     $prerequisite_row++;
-            ***REMOVED***
+                }
 
                 // Begin importing course_completed.csv.
                 $header = fgetcsv($courses_completed); // Skip first row.
@@ -241,7 +241,7 @@ function doBootstrap()
                     // If common validation fails, we don't even proceed with file-specific validation
                     if (!$validationErrors) {
                         $validationErrors = validateCourseCompletion($data);
-                ***REMOVED***
+                    }
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -250,16 +250,16 @@ function doBootstrap()
                             'line' => $courses_completed_row,
                             'message' => $validationErrors
                         ];
-                ***REMOVED***
+                    }
                     else {
                         $userId = $data[0];
                         $code = $data[1];
                         $courseDAO->addCompletedCourses($userId, $code);
                         $courses_completed_processed++;
-                ***REMOVED***
+                    }
 
                     $courses_completed_row++;
-            ***REMOVED***
+                }
 
                 // Before we import bid.csv, we sort our $dataSections array to increase code performance.
                 /*global $dataSections;
@@ -273,8 +273,8 @@ function doBootstrap()
                             'start' => $section['start'],
                             'end' => $section['end']
                         ];
-                ***REMOVED***
-            ***REMOVED***
+                    }
+                }
 
                 array_multisort(
                     array_column($dataSectionsCompressed, 'day'), SORT_ASC,
@@ -295,7 +295,7 @@ function doBootstrap()
                     // If common validation fails, we don't even proceed with file-specific validation
                     if (!$validationErrors) {
                         $validationErrors = validateBid($data);
-                ***REMOVED***
+                    }
 
                     if ($validationErrors) {
                         // If errors exist.
@@ -304,7 +304,7 @@ function doBootstrap()
                             'line' => $bids_row,
                             'message' => $validationErrors
                         ];
-                ***REMOVED***
+                    }
                     else {
                         $userId = $data[0];
                         $amount = $data[1];
@@ -313,9 +313,9 @@ function doBootstrap()
 
                         $bidDAO->addBid($userId, $course, $section, $amount);
                         $bids_processed++;
-                ***REMOVED***
+                    }
                     $bids_row++;
-            ***REMOVED***
+                }
 
 
                 fclose($courses);
@@ -339,9 +339,9 @@ function doBootstrap()
                 
 
 
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+            }
+        }
+    }
 
     if ($errors) {
         array_multisort(
@@ -362,7 +362,7 @@ function doBootstrap()
             ],
             "error" => $errors
         ];
-***REMOVED***
+    }
     else {
         $result = [
             "status" => "success",
@@ -375,7 +375,7 @@ function doBootstrap()
                 ["student.csv" => $students_processed]
             ]
         ];
-***REMOVED***
+    }
 
     return json_encode($result, JSON_PRETTY_PRINT);
 

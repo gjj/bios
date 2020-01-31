@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once 'includes/common.php';
 
 if (!isset($_SESSION['userid'])) {
@@ -12,11 +12,11 @@ $courseDAO = new CourseDAO();
 if ($_POST) {
     if (isset($_POST['school'])) {
         $school = $_POST['school'];
-***REMOVED***
+    }
 
     if (isset($_POST['title'])) {
         $title = $_POST['title'];
-***REMOVED***
+    }
 }
 
 include 'includes/views/header.php';
@@ -33,26 +33,26 @@ include 'includes/views/header.php';
                     <h5 class="card-title">Module search</h5>
                     <div id="formStatus">
                         <i>
-                            ***REMOVED***
+                            <?php
                             if ($_POST) {
                                 if ($school or $title) {
                                     echo '<div class="alert alert-primary" role="alert">';
                                     if ($school) {
                                         if ($school == "all") {
                                             echo "Currently showing courses from <b>all</b> schools";
-                                    ***REMOVED*** else {
+                                        } else {
                                             echo "Currently showing courses by school <b>{$school}</b>";
-                                    ***REMOVED***
+                                        }
 
                                         if ($title) {
                                             echo " and course title containing the text \"<b>{$title}</b>\".";
-                                    ***REMOVED***
-                                ***REMOVED*** else if ($title) {
+                                        }
+                                    } else if ($title) {
                                         echo "Currently showing courses with course title containing the text \"<b>{$title}</b>\".";
-                                ***REMOVED***
+                                    }
                                     echo '</div>';
-                            ***REMOVED***
-                        ***REMOVED***
+                                }
+                            }
                             ?>
                         </i>
                     </div>
@@ -62,12 +62,12 @@ include 'includes/views/header.php';
                                 <label for="school">Search by school</label>
                                 <select class="form-control" name="school">
                                     <option value="all">All schools</option>
-                                    ***REMOVED***
+                                    <?php
                                     $schoolsList = $courseDAO->retrieveAllSchools();
 
                                     foreach ($schoolsList as $schoolText) {
                                         echo "<option value=\"{$schoolText['school']}\">{$schoolText['school']}</option>";
-                                ***REMOVED***
+                                    }
                                     ?>
                                 </select>
                             </div>
@@ -88,17 +88,17 @@ include 'includes/views/header.php';
 
     <div class="row">
         <div class="col-md-12">
-            ***REMOVED***
+            <?php
 
             if (isset($school) and isset($title)) {
                 $courses = $courseDAO->retrieveAll($school, $title);
-        ***REMOVED*** else if (isset($school)) {
+            } else if (isset($school)) {
                 $courses = $courseDAO->retrieveAll($school);
-        ***REMOVED*** else if (isset($title)) {
+            } else if (isset($title)) {
                 $courses = $courseDAO->retrieveAll("", $title);
-        ***REMOVED*** else {
+            } else {
                 $courses = $courseDAO->retrieveAll();
-        ***REMOVED***
+            }
 
 
             foreach ($courses as $course) {
@@ -106,46 +106,46 @@ include 'includes/views/header.php';
                 <div class="row pb-5">
                     <div class="col-md-8">
                         <header>
-                            <h5><a href="courses_view?course=***REMOVED*** echo $course['course']; ?>">***REMOVED*** echo $course['course'] . " " . $course['title']; ?></a></h5>
-                            <span>***REMOVED*** echo $course['school']; ?></span>
+                            <h5><a href="courses_view?course=<?php echo $course['course']; ?>"><?php echo $course['course'] . " " . $course['title']; ?></a></h5>
+                            <span><?php echo $course['school']; ?></span>
                         </header>
 
                         <p class="pt-2">
-                            ***REMOVED*** echo $course['description']; ?>
+                            <?php echo $course['description']; ?>
                         </p>
 
                         <!--<span><b>Sections Offered</b></span>
                         <p>
-                            ***REMOVED***
+                            <?php
 
                                 echo $courseDAO->sectionsCount($course['course'])['sections_offered'];
                                 ?>
                         </p>-->
 
-                        ***REMOVED***
+                        <?php
                             $prerequisites = $courseDAO->searchPrerequisites($course['course']);
 
                             if ($prerequisites) {
                                 ?>
                             <span><b>Prerequisite</b></span>
                             <p>
-                                ***REMOVED***
+                                <?php
                                         echo implode(", ", $prerequisites);
                                         ?>
                             </p>
-                        ***REMOVED***
-                        ***REMOVED***
+                        <?php
+                            }
                             ?>
                     </div>
                     <div class="col-md-4">
                         <section>
                             <span><b>Exam</b></span>
-                            <p>***REMOVED*** echo $course['exam date']; ?> ***REMOVED*** echo $course['exam start']; ?> - ***REMOVED*** echo $course['exam end']; ?></p>
+                            <p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?> - <?php echo $course['exam end']; ?></p>
                         </section>
                     </div>
                 </div>
-            ***REMOVED***
-        ***REMOVED***
+            <?php
+            }
             ?>
         </div>
         <div class="col-md-4">
@@ -154,6 +154,6 @@ include 'includes/views/header.php';
     </div>
 </main>
 
-***REMOVED***
+<?php
 include 'includes/views/footer.php';
 ?>

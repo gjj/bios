@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 class CourseDAO
 {
@@ -10,19 +10,19 @@ class CourseDAO
 
         if ($school or $search) {
             $sql .= " WHERE ";
-    ***REMOVED***
+        }
 
         if ($school) {
             $sql .= " school = :school";
-    ***REMOVED***
+        }
 
         if ($search) {
             if ($school) {
                 $sql .= " AND ";
-        ***REMOVED***
+            }
             $search = "%" . $search . "%";
             $sql .= " title LIKE :search";
-    ***REMOVED***
+        }
 
         $connMgr = new ConnectionManager();
         $db = $connMgr->getConnection();
@@ -37,7 +37,7 @@ class CourseDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveAllSchools()
     {
@@ -54,7 +54,7 @@ class CourseDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function retrieveByCode($courseCode)
     {
@@ -72,7 +72,7 @@ class CourseDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function sectionsCount($courseCode)
     {
@@ -90,7 +90,7 @@ class CourseDAO
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function searchPrerequisites($courseCode)
     {
@@ -109,11 +109,11 @@ class CourseDAO
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             array_push($result, $row['prerequisite']);
-    ***REMOVED***
+        }
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function searchPrerequisitesOf($courseCode)
     {
@@ -132,11 +132,11 @@ class CourseDAO
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             array_push($result, $row['course']);
-    ***REMOVED***
+        }
 
         // Returns my result set on success.
         return $result;
-***REMOVED***
+    }
 
     public function addCourses($course)
     {
@@ -159,10 +159,10 @@ class CourseDAO
         $isAddOK = False;
         if ($query->execute()) {
             $isAddOK = True;
-    ***REMOVED***
+        }
 
         return $isAddOK;
-***REMOVED***
+    }
 
     public function addCompletedCourses($user_id, $course)
     {
@@ -179,10 +179,10 @@ class CourseDAO
         $isAddOK = False;
         if ($query->execute()) {
             $isAddOK = True;
-    ***REMOVED***
+        }
 
         return $isAddOK;
-***REMOVED***
+    }
 
     public function addPrerequisites($course, $prerequisite)
     {
@@ -198,10 +198,10 @@ class CourseDAO
         $isAddOK = False;
         if ($query->execute()) {
             $isAddOK = True;
-    ***REMOVED***
+        }
 
         return $isAddOK;
-***REMOVED***
+    }
 
 
 }

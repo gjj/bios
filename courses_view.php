@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once 'includes/common.php';
 
 if (!isLoggedIn()) {
@@ -23,8 +23,8 @@ if (!empty($_POST))
             if ($currentRound['round'] == 1) {
                 if (!$bidDAO->checkOwnSchoolCourse($user['school'], $courseCode)) {
                     addError("You cannot bid for courses not offered by your school in Round 1. [error: not own school course]");
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
 
             if ($currentRound['round'] == 2) {
                 // round 2 must check vacancy left
@@ -34,14 +34,14 @@ if (!empty($_POST))
 
                 if ($vacancy == 0) {
                     addError("No vacancy left for course $courseCode, $section. [error: no vacancy]");
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
 
             $hasSuccessfulBid = $bidDAO->getSuccessfulBid($user['userid'], $courseCode);
 
             if ($hasSuccessfulBid) {
                 addError("You're already enrolled in the course $courseCode.");
-        ***REMOVED***
+            }
 
             $hasPrerequisites = $bidDAO->hasPrerequisites($courseCode);
             $hasCompletedPrerequisites = $bidDAO->hasCompletedPrerequisites($user['userid'], $courseCode);
@@ -49,15 +49,15 @@ if (!empty($_POST))
             if ($hasPrerequisites) {
                 if (!$hasCompletedPrerequisites) {
                     addError("You have not completed the prerequisites. [error: incomplete prerequisites]");
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
 
             if ($bidDAO->hasCompletedCourse($user['userid'], $courseCode)) {
                 addError("You've already completed the course. Why do you want to take again? [error: course completed]");
-        ***REMOVED***
-    ***REMOVED*** else {
+            }
+        } else {
             addError("No active rounds currently.");
-    ***REMOVED***
+        }
 
         // If no errors until now... means passed all my previous validations!!
         if (empty($_SESSION['errors'])) {
@@ -65,14 +65,14 @@ if (!empty($_POST))
                 // Do further validation. Make sure POST-ed course and section code exists
                 if (!$bidDAO->checkIfAddedToCart($user['userid'], $courseCode, $section, $currentRound['round'])) {
                     $bidDAO->addToCart($user['userid'], $courseCode, $section, $currentRound['round']);
-            ***REMOVED*** else {
+                } else {
                     addError("Already added to cart!");
-            ***REMOVED***
-        ***REMOVED*** else {
+                }
+            } else {
                 addError("Course and section code pair does not exist. Nice try!");
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+            }
+        }
+    }
 
 if (isset($_GET['course'])) {
     $courseCode = $_GET['course'];
@@ -192,10 +192,10 @@ if (isset($_GET['course'])) {
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
         <div class="justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">
-                <span class="course-code">***REMOVED*** echo $course['course']; ?></span>
-                ***REMOVED*** echo $course['title']; ?>
+                <span class="course-code"><?php echo $course['course']; ?></span>
+                <?php echo $course['title']; ?>
             </h1>
-            <p class="pt-2">***REMOVED*** echo $course['school']; ?></p>
+            <p class="pt-2"><?php echo $course['school']; ?></p>
         </div>
 
         <div class="row">
@@ -203,10 +203,10 @@ if (isset($_GET['course'])) {
                 <div class="row pb-5">
                     <div class="col-md-12">
                         <p class="pt-2">
-                            ***REMOVED*** echo $course['description']; ?>
+                            <?php echo $course['description']; ?>
                         </p>
 
-                        ***REMOVED***
+                        <?php
                         $prerequisites = $courseDAO->searchPrerequisites($course['course']);
                         $prerequisitesOf = $courseDAO->searchPrerequisitesOf($course['course']);
 
@@ -215,40 +215,40 @@ if (isset($_GET['course'])) {
                             <span><b>Prerequisite Tree</b></span>
                             <section>
                                 <div class="container">
-                                    ***REMOVED***
+                                    <?php
                                     if ($prerequisitesOf) {
                                         ?>
                                         <!-- The current viewed course is a prerequisite of the following -->
                                         <ul class="tree">
-                                            ***REMOVED***
+                                            <?php
                                             foreach ($prerequisitesOf as $prerequisiteOf) {
                                                 ?>
                                                 <li class="branch prereqBranch">
                                                     <div class="node color-0 prereqNode">
-                                                        <a href="courses_view?course=***REMOVED*** echo $prerequisiteOf; ?>">
-                                                            ***REMOVED*** echo $prerequisiteOf; ?>
+                                                        <a href="courses_view?course=<?php echo $prerequisiteOf; ?>">
+                                                            <?php echo $prerequisiteOf; ?>
                                                         </a>
                                                     </div>
                                                 </li>
-                                                ***REMOVED***
-                                        ***REMOVED***
+                                                <?php
+                                            }
                                             ?>
                                         </ul>
                                         <div class="node conditional">needs</div>
 
-                                        ***REMOVED***
-                                ***REMOVED***
+                                        <?php
+                                    }
                                     ?>
 
                                     <!-- Root: Current course -->
                                     <ul class="prereqTree root">
                                         <li class="branch">
                                             <div class="node color-1">
-                                                <b>***REMOVED*** echo $course['course']; ?></b>
+                                                <b><?php echo $course['course']; ?></b>
                                             </div>
 
 
-                                            ***REMOVED***
+                                            <?php
                                             if ($prerequisites) {
                                                 ?>
                                                 <!-- Requires the following courses -->
@@ -257,48 +257,48 @@ if (isset($_GET['course'])) {
                                                         <div class="node conditional">all of</div>
                                                         <ul class="prereqTree">
 
-                                                            ***REMOVED***
+                                                            <?php
                                                             foreach ($prerequisites as $prerequisite) {
                                                                 ?>
                                                                 <li class="branch">
                                                                     <div class="node">
-                                                                        <a href="courses_view?course=***REMOVED*** echo $prerequisite; ?>">***REMOVED*** echo $prerequisite; ?></a>
+                                                                        <a href="courses_view?course=<?php echo $prerequisite; ?>"><?php echo $prerequisite; ?></a>
                                                                     </div>
                                                                 </li>
-                                                                ***REMOVED***
-                                                        ***REMOVED***
+                                                                <?php
+                                                            }
                                                             ?>
                                                         </ul>
                                                     </li>
                                                 </ul>
-                                                ***REMOVED***
-                                        ***REMOVED***
+                                                <?php
+                                            }
                                             ?>
                                         </li>
                                     </ul>
                                 </div>
                             </section>
                             </p>
-                            ***REMOVED***
-                    ***REMOVED***
+                            <?php
+                        }
                         ?>
                         <section>
                             <span><b>Exam</b></span>
-                            <p>***REMOVED*** echo $course['exam date']; ?> ***REMOVED*** echo $course['exam start']; ?>
-                                - ***REMOVED*** echo $course['exam end']; ?></p>
+                            <p><?php echo $course['exam date']; ?> <?php echo $course['exam start']; ?>
+                                - <?php echo $course['exam end']; ?></p>
                         </section>
 
                         <section>
                             <span><b>Sections Offered</b></span>
 
-                            ***REMOVED***
+                            <?php
                             $sections = $sectionDAO->retrieveByCode($course['course']);
 
                             if ($sections) {
                                 if (isset($_SESSION['errors'])) {
                                     ?>
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        ***REMOVED***
+                                        <?php
                                         printErrors();
                                         ?>
 
@@ -307,8 +307,8 @@ if (isset($_GET['course'])) {
                                         </button>
                                     </div>
 
-                                    ***REMOVED***
-                            ***REMOVED***
+                                    <?php
+                                }
                                 ?>
 
                                 <table class="table">
@@ -321,14 +321,14 @@ if (isset($_GET['course'])) {
                                         <th scope="col">Instructor</th>
                                         <th scope="col">Venue</th>
                                         <th scope="col">Vacancies</th>
-                                        ***REMOVED*** if ($currentRound['round'] == 2) { ?>
+                                        <?php if ($currentRound['round'] == 2) { ?>
                                             <th scope="col">Min Bid</th>
-                                        ***REMOVED*** } ?>
+                                        <?php } ?>
                                         <th scope="col"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    ***REMOVED***
+                                    <?php
                                     // Put here so that we only run 1x SQL query
                                     $courseCompleted = $bidDAO->hasCompletedCourse($user['userid'], $course['course']);
 
@@ -341,37 +341,37 @@ if (isset($_GET['course'])) {
                                     foreach ($sections as $section) {
                                         ?>
                                         <tr>
-                                            <th scope="row">***REMOVED*** echo $section['section']; ?></th>
-                                            <td>***REMOVED*** echo $section['day']; ?></td>
-                                            <td>***REMOVED*** echo $section['start']; ?></td>
-                                            <td>***REMOVED*** echo $section['end']; ?></td>
-                                            <td>***REMOVED*** echo $section['instructor']; ?></td>
-                                            <td>***REMOVED*** echo $section['venue']; ?></td>
-                                            <td>***REMOVED***
+                                            <th scope="row"><?php echo $section['section']; ?></th>
+                                            <td><?php echo $section['day']; ?></td>
+                                            <td><?php echo $section['start']; ?></td>
+                                            <td><?php echo $section['end']; ?></td>
+                                            <td><?php echo $section['instructor']; ?></td>
+                                            <td><?php echo $section['venue']; ?></td>
+                                            <td><?php
                                                 if ($currentRound['round'] == 1 and $currentRound['status'] == 'started') {
                                                     echo $section['size'];
-                                            ***REMOVED***
+                                                }
                                                 elseif ($currentRound['round'] == 1 and $currentRound['status'] == 'stopped') {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                     $vacancy = (int)$section['size'] - (int)$row;
                                                     echo $vacancy;
 
-                                            ***REMOVED***
+                                                }
                                                 elseif ($currentRound['round'] == 2 and $currentRound['status'] == 'started') {
                                                     $row = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                     $vacancy = (int)$section['size'] - (int)$row;
                                                     echo $vacancy;
 
-                                            ***REMOVED***
+                                                }
                                                 else {
                                                     $round1 = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
                                                     $round2 = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 2);
                                                     $vacancy = $section['size'] - ($round1 + $round2);
                                                     echo $vacancy;
-                                            ***REMOVED***
+                                                }
                                                 ?></td>
                                             
-                                                ***REMOVED***
+                                                <?php
                                                 
                                                 if ($currentRound['round'] == 2) {
                                                     echo "<td>";
@@ -380,30 +380,30 @@ if (isset($_GET['course'])) {
 
                                                     if (!$minBid) {
                                                         $minBid = 10; // in case is empty.
-                                                ***REMOVED***
+                                                    }
 
                                                     echo number_format($minBid, 2);
 
                                                     echo "</td>";
-                                            ***REMOVED***
+                                                }
 
                                                 ?>
                                             <td>
                                                 <form action="" method="post">
                                                     <input type="hidden" name="course"
-                                                           value="***REMOVED*** echo $course['course']; ?>"/>
+                                                           value="<?php echo $course['course']; ?>"/>
                                                     <input type="hidden" name="section"
-                                                           value="***REMOVED*** echo $section['section']; ?>"/>
-                                                    ***REMOVED***
+                                                           value="<?php echo $section['section']; ?>"/>
+                                                    <?php
 
                                                     $error = null;
 
                                                     if (!$roundDAO->roundIsActive()) {
                                                         $error = "Not in round";
-                                                ***REMOVED*** else {
+                                                    } else {
                                                         if ($hasSuccessfulBid) {
                                                             $error = "Already enrolled";
-                                                    ***REMOVED*** else {
+                                                        } else {
                                                             if ($currentRound['round'] == 2) {
                                                                 // round 2 must check vacancy left
                                                                 $allSuccessfulBids = $bidDAO->getSuccessfulByCourseCode($course['course'], $section['section'], 1);
@@ -412,48 +412,48 @@ if (isset($_GET['course'])) {
 
                                                                 if ($vacancy == 0) {
                                                                     $error = 'No vacancy';
-                                                            ***REMOVED***
-                                                        ***REMOVED***
+                                                                }
+                                                            }
 
                                                             if ($bidDAO->checkIfAddedToCart($user['userid'], $course['course'], $section['section'], $currentRound['round'])) {
                                                                 $error = 'Added to cart';
-                                                        ***REMOVED***
+                                                            }
 
                                                             if ($courseCompleted) {
                                                                 $error = 'Course completed';
-                                                        ***REMOVED***
+                                                            }
 
                                                             if ($hasPrerequisites) {
                                                                 if (!$hasCompletedPrerequisites) {
                                                                     $error = 'Prerequisite incomplete';
-                                                            ***REMOVED***
-                                                        ***REMOVED***
+                                                                }
+                                                            }
 
                                                             if ($currentRound['round'] == 1) {
                                                                 if (!$ownSchoolCourse) {
                                                                     $error = 'Not own school course';
-                                                            ***REMOVED***
-                                                        ***REMOVED***
+                                                                }
+                                                            }
 
-                                                    ***REMOVED***
-                                                ***REMOVED***
+                                                        }
+                                                    }
 
                                                     if ($error) {
                                                         echo '<button class="btn btn-info" type="submit" disabled>' . $error . '</button>';
-                                                ***REMOVED*** else {
+                                                    } else {
                                                         echo '<button class="btn btn-info" type="submit">Add to cart</button>';
-                                                ***REMOVED***
+                                                    }
                                                     ?>
                                                 </form>
                                             </td>
                                         </tr>
-                                        ***REMOVED***
-                                ***REMOVED***
+                                        <?php
+                                    }
                                     ?>
                                     </tbody>
                                 </table>
-                                ***REMOVED***
-                        ***REMOVED***
+                                <?php
+                            }
                             ?>
                         </section>
                     </div>
@@ -465,7 +465,7 @@ if (isset($_GET['course'])) {
         </div>
     </main>
 
-    ***REMOVED***
+    <?php
 }
 
 include 'includes/views/footer.php';

@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
     require_once '../includes/common.php';
 
     header("Content-Type: application/json");
@@ -33,10 +33,10 @@
 
             if (!$courseDAO->retrieveByCode($course)) {
                 $errors[] = "invalid course";
-        ***REMOVED***
+            }
             else if (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
                 $errors[] = "invalid section";
-        ***REMOVED***
+            }
 
             $roundDAO = new RoundDAO();
             $bidDAO = new BidDAO();
@@ -45,20 +45,20 @@
             $round = 1; // if ($currentRound['round'] == 2 and $currentRound['status'] == 'started') 
             if ($currentRound['round'] == 2 and $currentRound['status'] == 'stopped') $round = 2;
             $bidsSuccessful = $bidDAO->retrieveAllSuccessfulBids($round, $course, $section);
-    ***REMOVED***
-***REMOVED***
+        }
+    }
     
     if (!$errors) {
         $result = [
             "status" => "success",
             "students" => $bidsSuccessful
         ];
-***REMOVED***
+    }
     else {
         $result = [
             "status" => "error",
             "message" => array_values($errors)
         ];
-***REMOVED***
+    }
 
     echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION | JSON_NUMERIC_CHECK);

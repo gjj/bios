@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
     require_once '../includes/common.php';
     require_once '../includes/bid.php';
 
@@ -34,19 +34,19 @@
             $section = $json['section'];
             
             $errors = addOrUpdateBid($userId, $amount, $course, $section); // check errors
-    ***REMOVED***
-***REMOVED***
+        }
+    }
     
     if (!$errors) {
         $result = [
             "status" => "success"
         ];
-***REMOVED***
+    }
     else {
         $result = [
             "status" => "error",
             "message" => array_values($errors)
         ];
-***REMOVED***
+    }
 
     echo json_encode($result, JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);

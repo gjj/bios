@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
     header('Content-Type: application/json');
     
     require_once '../includes/common.php';
@@ -17,8 +17,8 @@
         ];
 
         echo json_encode($result, JSON_PRETTY_PRINT);
-***REMOVED***
+    }
     else {
         echo doBootstrap();
-***REMOVED***
+    }
 ?>

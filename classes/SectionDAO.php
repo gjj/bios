@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 class SectionDAO {
     public function retrieveAll() {
@@ -37,7 +37,7 @@ class SectionDAO {
 		
 		// Returns my result set on success.
 		return $result;
-***REMOVED***
+    }
 
     public function retrieveByCode($courseCode) {
 		$sql = "SELECT course, section, day, TIME_FORMAT(start, '%k%i') AS 'start', TIME_FORMAT(end, '%k%i') AS 'end', instructor, venue, size FROM sections WHERE sections.course = :courseCode";
@@ -56,7 +56,7 @@ class SectionDAO {
 		
 		// Returns my result set on success.
 		return $result;
-***REMOVED***
+    }
 
     public function sectionExists($courseCode, $section) {
 		$sql = "SELECT course, section, day, TIME_FORMAT(start, '%k%i') AS 'start', TIME_FORMAT(end, '%k%i') AS 'end' FROM sections WHERE sections.course = :courseCode AND sections.section = :section";
@@ -76,7 +76,7 @@ class SectionDAO {
 		
 		// Returns my result set on success.
 		return $result;
-***REMOVED***
+    }
     
     public function updateDayOfWeek($query) {
         $dayOfWeek = array(
@@ -91,11 +91,11 @@ class SectionDAO {
         if (count($query)) {
             for ($i = 0; $i < count($query); $i++) {
                 $query[$i]['day'] = $dayOfWeek[$query[$i]['day']];
-        ***REMOVED***
-    ***REMOVED***
+            }
+        }
 
         return $query;
-***REMOVED***
+    }
 
     public function removeAll() {
         $sql = 'TRUNCATE TABLE sections';
@@ -107,7 +107,7 @@ class SectionDAO {
         
         $query->execute();
         $count = $query->rowCount();
-***REMOVED*** 
+    } 
 
     public function add($section) {
         $sql = 'INSERT INTO sections (course,section,day,start,end,instructor,venue,size) VALUES (:course, :section, :day, :start, :end, :instructor, :venue, :size)';
@@ -130,10 +130,10 @@ class SectionDAO {
         $isAddOK = False;
         if ($query->execute()) {
             $isAddOK = True;
-    ***REMOVED***
+        }
 
         return $isAddOK;
-***REMOVED***
+    }
 
     public function retrieveSizeByCodeAndSection($courseCode, $section) {
 		$sql = "SELECT size FROM sections WHERE sections.course = :courseCode AND sections.section = :section";
@@ -150,7 +150,7 @@ class SectionDAO {
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
         
 		return $result;
-***REMOVED***
+    }
 
 
 

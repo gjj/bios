@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 	// this will autoload the class that we need in our code
 	spl_autoload_register(function($class) {
 		// we are assuming that it is in the same directory as common.php

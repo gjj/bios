@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 	define("BIOS_ADMIN", true);
 
 	require_once '../includes/common.php';

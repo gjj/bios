@@ -7,14 +7,14 @@
     $(".sidebar").toggleClass("toggled");
     if ($(".sidebar").hasClass("toggled")) {
       $('.sidebar .collapse').collapse('hide');
-***REMOVED***;
+    };
   });
 
   // Close any open menu accordions when window is resized below 768px
   $(window).resize(function() {
     if ($(window).width() < 768) {
       $('.sidebar .collapse').collapse('hide');
-***REMOVED***;
+    };
   });
 
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
@@ -24,7 +24,7 @@
         delta = e0.wheelDelta || -e0.detail;
       this.scrollTop += (delta < 0 ? 1 : -1) * 30;
       e.preventDefault();
-***REMOVED***
+    }
   });
 
   // Scroll to top button appear
@@ -32,9 +32,9 @@
     var scrollDistance = $(this).scrollTop();
     if (scrollDistance > 100) {
       $('.scroll-to-top').fadeIn();
-***REMOVED*** else {
+    } else {
       $('.scroll-to-top').fadeOut();
-***REMOVED***
+    }
   });
 
   // Smooth scrolling using jQuery easing
@@ -42,7 +42,7 @@
     var $anchor = $(this);
     $('html, body').stop().animate({
       scrollTop: ($($anchor.attr('href')).offset().top)
-***REMOVED***, 1000, 'easeInOutExpo');
+    }, 1000, 'easeInOutExpo');
     e.preventDefault();
   });
 

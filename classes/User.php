@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 class User {
 

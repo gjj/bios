@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
     require_once '../includes/common.php';
     require_once '../includes/round.php';
 
@@ -17,20 +17,20 @@
 
         if (verify_token($token)) {
             $json = doStart();
-    ***REMOVED***
+        }
         else {
             $errors[] = "invalid token";
-    ***REMOVED***
-***REMOVED***
+        }
+    }
 
     if (!$errors) {
         $result = $json;
-***REMOVED***
+    }
     else {
         $result = [
             "status" => "error",
             "message" => array_values($errors)
         ];
-***REMOVED***
+    }
 
     echo json_encode($result, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);

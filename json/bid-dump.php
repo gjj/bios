@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 require_once '../includes/common.php';
 
 header("Content-Type: application/json");
@@ -26,15 +26,15 @@ if (!$errors) {
 
         if (!$courseDAO->retrieveByCode($course)) {
             $errors[] = "invalid course";
-    ***REMOVED*** else if (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
+        } else if (!$sectionDAO->retrieveByCodeAndSection($course, $section)) {
             $errors[] = "invalid section";
-    ***REMOVED***
+        }
         $roundDAO = new RoundDAO();
         $bidDAO = new BidDAO();
         $currentRound = $roundDAO->getCurrentRound();
 
         $bids = $bidDAO->retrieveAllBidsBySection($course, $section);
-***REMOVED***
+    }
 }
 if (!$errors) {
     $result = [

@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 class RoundClearingDAO {
     public function roundClearing($round) {
@@ -92,7 +92,7 @@ class RoundClearingDAO {
                         $query5->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
                         $query5->execute();
                         $refundList = $query5->fetchAll(PDO::FETCH_ASSOC);
-                ***REMOVED***
+                    }
                     else {
                         // amount > $clearingPrice would exclude clearingPrice. Since all bids at clearing price will be dropped.
                         $sql3 = "UPDATE bids SET result = 'in' WHERE course = :courseCode AND section = :section AND round = :round AND amount >= :clearingPrice;";
@@ -126,21 +126,21 @@ class RoundClearingDAO {
                         $query5->execute();
                         $refundList = $query5->fetchAll(PDO::FETCH_ASSOC);
                         
-                ***REMOVED***
+                    }
 
                     // Refund only for those who didn't get it.
                     $sql6 = "";
                     foreach ($refundList as $refund) {
                         $sql6 .= "UPDATE users SET edollar = edollar + {$refund['amount']} WHERE user_id = '{$refund['user_id']}';";
-                ***REMOVED***
+                    }
 
                     // Fixed bug on 22 Oct
                     if ($refundList) {
                         $db->exec($sql6);
-                ***REMOVED***
+                    }
                     
                     
-            ***REMOVED***
+                }
                 else {
                     $minPrice = min(array_column($bids, 'amount'));
 
@@ -154,10 +154,10 @@ class RoundClearingDAO {
                     $query3->execute();
                     
                     $resultCourseSection["in"] = $query3->rowCount();
-            ***REMOVED***
+                }
 
                 array_push($result, $resultCourseSection);
-        ***REMOVED***
+            }
 
 
             // Clear all cart items.
@@ -168,7 +168,7 @@ class RoundClearingDAO {
             $query->execute();
 
             return $result;
-    ***REMOVED***
+        }
         else {
             // round 2. think should be refund only?
 
@@ -182,13 +182,13 @@ class RoundClearingDAO {
             $sql2 = "";
             foreach ($refundList as $refund) {
                 $sql2 .= "UPDATE users SET edollar = edollar + {$refund['amount']} WHERE user_id = '{$refund['user_id']}';";
-        ***REMOVED***
+            }
             
             if ($refundList) {
                 $db->exec($sql2);
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+            }
+        }
+    }
 
     // only used in round 2
     public function clearCourseSection($courseCode, $section) {
@@ -234,7 +234,7 @@ class RoundClearingDAO {
             $query2->bindParam(':section', $section, PDO::PARAM_STR);
             $query2->bindParam(':clearingPrice', $minBid, PDO::PARAM_STR);
             $query2->execute();
-    ***REMOVED***
+        }
         else {
             // Case 2: If there are N or more bids for the section,
             $clearingPrice = $bids[$vacancy-1]['amount'];
@@ -286,7 +286,7 @@ class RoundClearingDAO {
                     $query4->bindParam(':section', $section, PDO::PARAM_STR);
                     $query4->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
                     $query4->execute();
-            ***REMOVED***
+                }
                 else {
                     // Can accommodate!
 
@@ -305,8 +305,8 @@ class RoundClearingDAO {
                     $query4->bindParam(':section', $section, PDO::PARAM_STR);
                     $query4->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
                     $query4->execute();
-            ***REMOVED***
-        ***REMOVED***
+                }
+            }
             else {
                 $sql3 = "UPDATE bids SET result = 'in' WHERE result NOT IN ('cart') AND course = :courseCode AND section = :section AND round = 2 AND amount >= :clearingPrice;";
                 $query3 = $db->prepare($sql3);
@@ -323,7 +323,7 @@ class RoundClearingDAO {
                 $query4->bindParam(':section', $section, PDO::PARAM_STR);
                 $query4->bindParam(':clearingPrice', $clearingPrice, PDO::PARAM_STR);
                 $query4->execute();
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+            }
+        }
+    }
 }

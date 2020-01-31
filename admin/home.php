@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 define("BIOS_ADMIN", true);
 
 require_once '../includes/common.php';
@@ -109,37 +109,37 @@ if ($roundDAO->roundIsActive()) {
                 <h1 class="h2">Home</h1>
             </div>
             <p class="lead">
-                Current Active Round <code>***REMOVED*** echo $currentActive; ?></code>.
+                Current Active Round <code><?php echo $currentActive; ?></code>.
             </p>
 
             <div class="row">
                 <div class="col-md-12">
-                    <b>***REMOVED***
+                    <b><?php
                         if (isset($_SESSION['result'])) {
                             $result = $_SESSION['result'];
                             
                         ?>
-                            <b>Status:</b> ***REMOVED*** echo $result['status']; ?><br/>
-                            ***REMOVED*** if ($result['status'] == "success") { ?>
+                            <b>Status:</b> <?php echo $result['status']; ?><br/>
+                            <?php if ($result['status'] == "success") { ?>
                                 <b>All bids are now cleared and confirmed.</b>
-                            ***REMOVED***
-                            ***REMOVED***
+                            <?php
+                                }
                                 else if ($result['status'] == "error") { ?>
-                                <b>Error Message(s): </b>***REMOVED*** echo implode(", ", $result['message']); ?><br/>
-                            ***REMOVED***
+                                <b>Error Message(s): </b><?php echo implode(", ", $result['message']); ?><br/>
+                            <?php
                                     
-                            ***REMOVED***
+                                }
                                 unset($_SESSION['result']);
-                    ***REMOVED***
+                        }
                         ?>
                     </b>
                 </div>
             </div>
-            <form id='form_submit' action="***REMOVED*** echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get"
+            <form id='form_submit' action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="get"
                   enctype="multipart/form-data">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-                    <input type="submit" name="submit" class="btn btn-dark" value="***REMOVED*** echo $setStatus; ?>"></button>
-                    <input type="hidden" id="value" name="value" value="***REMOVED*** echo $setStatus; ?>">
+                    <input type="submit" name="submit" class="btn btn-dark" value="<?php echo $setStatus; ?>"></button>
+                    <input type="hidden" id="value" name="value" value="<?php echo $setStatus; ?>">
                 </div>
             </form>
         </main>

@@ -1,24 +1,24 @@
-***REMOVED***
+<?php
 
-***REMOVED***
-    const SECRET_KEY = "Letsgetit@spm$1";
+    // Secret key is something you hardcoded for your server/application
+    const SECRET_KEY = "letsgetit:)";
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***@return string The token
-***REMOVED***
-***REMOVED***
+    /**
+     * @param string $username Login user's username
+     * 
+     * @return string The token
+     */
+    function generate_token($username) {
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
+        // The username obtained from login form
+        return JWT::generate_token($username, SECRET_KEY);
+    }
 
-***REMOVED***
-***REMOVED***@param string $token The token to be verified
-***REMOVED***
-***REMOVED***@return mixed  If verified, return string username.  Else return boolean false.
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+    /**
+     * @param string $token The token to be verified
+     * 
+     * @return mixed  If verified, return string username.  Else return boolean false.
+     */
+    function verify_token($token) {
+        return JWT::verify_token($token, SECRET_KEY);
+    }
