@@ -3,9 +3,9 @@
 class ConnectionManager {
 
 	public function getConnection() {
-		$host = "18.136.126.161";
+		$host = "ip_here"; # deprovisioned
 		$username = "root";
-		$password = "worzr3v50e8Z";
+		$password = ""; # you can check the commit history for the password, but it doesn't work anymore! :)
 		$databaseName = "bios";
 		$port = 3306;
 
