@@ -1,7 +1,7 @@
 <?php
 
     // Secret key is something you hardcoded for your server/application
-    const SECRET_KEY = "Letsgetit@spm$1";
+    const SECRET_KEY = "letsgetit:)";
 
     /**
      * @param string $username Login user's username
